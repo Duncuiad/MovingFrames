@@ -1,6 +1,30 @@
 # Format Style Options - Created with Clang Power Tools
 ---
+AccessModifierOffset: -4
 BasedOnStyle: Microsoft
+IncludeBlocks: Regroup
+IncludeCategories: 
+  - Regex: '(OpenGLPG_Base)'
+    Priority: -1
+    SortPriority: 0
+    CaseSensitive: false
+  - Regex: '^(<|"(gtest|gmock|isl|json)/)'
+    Priority: 4
+    SortPriority: 0
+    CaseSensitive: false
+  - Regex: '^"(llvm|llvm-c|clang|clang-c)/'
+    Priority: 3
+    SortPriority: 0
+    CaseSensitive: false
+  - Regex: '<[a-z0-9_]+>'
+    Priority: 2
+    SortPriority: 0
+    CaseSensitive: false
+  - Regex: '.*'
+    Priority: 1
+    SortPriority: 0
+    CaseSensitive: false
+  
 PointerAlignment: Left
 SpaceBeforeCpp11BracedList: true
 SpaceInEmptyBlock: false

@@ -1,14 +1,14 @@
 #pragma once
 
-// GLAD needs to be included first
-#include "glad/glad.h"
-//
-
-#include "Defines.h"
-#include "GLFW/glfw3.h"
+#include "Client.h"
 
 int main();
 
+bool ClientInit(Client& aContext);
+bool GLFWInit(Client& aContext);
+bool GLADInit();
+void Render(GLFWwindow* aWindow);
+void ClientShutdown(Client& aContext);
+
 void FrameBufferSizeCallback(GLFWwindow* aWindow, int aWidth, int aHeight);
 void ProcessInput(GLFWwindow* aWindow);
-void Render(GLFWwindow* aWindow);

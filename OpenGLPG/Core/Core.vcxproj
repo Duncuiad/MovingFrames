@@ -134,13 +134,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ClientCallbacks.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Client.h" />
+    <ClInclude Include="ClientLoader.h" />
+    <ClInclude Include="OpenGLPG_Base.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="ShaderLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ClientCallbacks.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="ClientLoader.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="ShaderLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc" />
