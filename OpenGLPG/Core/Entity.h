@@ -9,8 +9,13 @@
 class Entity
 {
 public:
+    struct LoadParams
+    {
+        const ClientLoader& myClientLoader;
+    };
+
     Entity();
-    void Load();
+    void Load(const LoadParams& someParams);
     void Spawn();
     void Update();
     void Unspawn();

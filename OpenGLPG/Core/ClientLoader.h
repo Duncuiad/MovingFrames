@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MeshLoader.h"
 #include "ShaderLoader.h"
 
 #include <memory>
@@ -13,8 +14,10 @@ public:
     void Load();
     void Unload();
 
-    ShaderLoader& GetShaderLoader() { return *myShaderLoader; }
+    ShaderLoader& GetShaderLoader() const { return *myShaderLoader; }
+    MeshLoader& GetMeshLoader() const { return *myMeshLoader; }
 
 private:
-    std::unique_ptr<ShaderLoader> myShaderLoader {nullptr};
+    std::unique_ptr<ShaderLoader> myShaderLoader;
+    std::unique_ptr<MeshLoader> myMeshLoader;
 };

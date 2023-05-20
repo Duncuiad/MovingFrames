@@ -6,11 +6,11 @@ Entity::Entity()
     : myUID {UID::CreateUnique()}
 {}
 
-void Entity::Load()
+void Entity::Load(const LoadParams& someParams)
 {
     for (const auto& component : myComponents)
     {
-        component->OnLoad();
+        component->OnLoad({someParams.myClientLoader});
     }
 }
 

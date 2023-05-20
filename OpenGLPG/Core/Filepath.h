@@ -25,6 +25,8 @@ private:
 template <>
 struct std::hash<Filepath>
 {
+    // @improvement: have filepath generate a UID based on its path (a StringID) and use this to get a hash. This allows
+    // for faster access to maps indexed by filepaths (since we don't need to process potentially very long strings)
     inline std::size_t operator()(const Filepath& aFilepath) const
     {
         return std::hash<std::string> {}(aFilepath.myPath);

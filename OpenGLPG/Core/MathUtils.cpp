@@ -13,8 +13,8 @@ namespace Utils
 
 glm::mat4 Projection(float aFOV, float anAspectRatio, float aNearPlane, float aFarPlane)
 {
-    ASSERT(0.f < aFOV && aFOV < glm::pi<float>(), "Invalid FOV for projection matrix: %f", aFOV);
-    ASSERT(aNearPlane < aFarPlane, "Invalid plames for projection matrix. Near: %f, Far: %f", aNearPlane, aFarPlane);
+    ASSERT(0.f < aFOV && aFOV < glm::pi<float>(), "Invalid FOV for projection matrix: {}", aFOV);
+    ASSERT(aNearPlane < aFarPlane, "Invalid plames for projection matrix. Near: {}, Far: {}", aNearPlane, aFarPlane);
 
     const float g = 1.f / glm::tan(0.5f * aFOV);
     const float s = anAspectRatio;

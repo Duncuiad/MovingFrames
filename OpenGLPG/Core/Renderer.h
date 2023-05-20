@@ -27,7 +27,6 @@ public:
 
 private:
     void SetClearColor();
-    void LinkShaderProgram(const char* vertexShaderSource, const char* fragmentShaderSource);
 
     ShaderLoader& myShaderLoader;
     GLUID myShaderProgram;

@@ -11,11 +11,7 @@ Renderer::Renderer(const ConstructionParams& someParams)
     SetClearColor();
 }
 
-void Renderer::Init(const InitParams& someParams)
-{
-    // @improvement: directories should probably be handled by Client or ClientLoader
-    myShaderLoader.OnLoad("../Data/Assets/Shaders/");
-}
+void Renderer::Init(const InitParams& someParams) {}
 
 void Renderer::Shutdown() {}
 

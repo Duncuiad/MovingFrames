@@ -11,9 +11,9 @@
 
 Shader::Shader(const Filepath& aVertexPath, const Filepath& aFragmentPath)
 {
-    ASSERT(aVertexPath.HasExtension("vert"), "Trying to load wrong file format. %s is not a vertex shader!",
+    ASSERT(aVertexPath.HasExtension("vert"), "Trying to load wrong file format. {} is not a vertex shader!",
            aVertexPath.GetBuffer());
-    ASSERT(aFragmentPath.HasExtension("frag"), "Trying to load wrong file format. %s is not a fragment shader!",
+    ASSERT(aFragmentPath.HasExtension("frag"), "Trying to load wrong file format. {} is not a fragment shader!",
            aFragmentPath.GetBuffer());
     const std::string vertexShaderSource {LoadShaderSource(aVertexPath)};
     const std::string fragmentShaderSource {LoadShaderSource(aFragmentPath)};
@@ -31,14 +31,14 @@ std::string Shader::LoadShaderSource(const Filepath& aPath) const
 
     std::ifstream shaderFile;
     shaderFile.open(aPath.GetBuffer());
-    ASSERT(shaderFile.is_open(), "Failed opening shader %s", aPath.GetBuffer());
+    ASSERT(shaderFile.is_open(), "Failed opening shader {}", aPath.GetBuffer());
 
     std::stringstream shaderStream;
     shaderStream << shaderFile.rdbuf();
     shaderFile.close();
     shaderSource = shaderStream.str();
 
-    ASSERT(shaderFile.good(), "Failed loading shader %s", aPath.GetBuffer());
+    ASSERT(shaderFile.good(), "Failed loading shader {}", aPath.GetBuffer());
 
     return shaderSource;
 }

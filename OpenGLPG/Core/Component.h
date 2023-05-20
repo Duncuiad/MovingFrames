@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ClientLoader.h"
+
 #include <memory>
 
 class Component
@@ -7,7 +9,12 @@ class Component
 public:
     using Ptr = std::unique_ptr<Component>;
 
-    virtual void OnLoad() {}
+    struct LoadParams
+    {
+        const ClientLoader& myClientLoader;
+    };
+
+    virtual void OnLoad(const LoadParams& someParams) {}
     virtual void OnEnterWorld() {}
     virtual void Update() = 0;
     virtual void OnExitWorld() {}

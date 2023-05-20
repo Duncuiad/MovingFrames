@@ -6,10 +6,9 @@
 
 #include <fstream>
 
-void ShaderLoader::OnLoad(const Filepath& aShaderFolder)
-{
-    myShaderFolder = aShaderFolder;
-}
+ShaderLoader::ShaderLoader(const Filepath& aShaderFolder)
+    : myShaderFolder {aShaderFolder}
+{}
 
 Shader::Ptr ShaderLoader::GetShader(const Filepath& aFilepath)
 {
@@ -17,7 +16,7 @@ Shader::Ptr ShaderLoader::GetShader(const Filepath& aFilepath)
     {
         return myShaders.at(aFilepath);
     }
-    ASSERT(aFilepath.HasExtension("shader"), "Trying to load wrong file format. %s is not a shader!",
+    ASSERT(aFilepath.HasExtension("shader"), "Trying to load wrong file format. {} is not a shader!",
            aFilepath.GetBuffer());
 
     Filepath fullPath {myShaderFolder};
@@ -25,7 +24,7 @@ Shader::Ptr ShaderLoader::GetShader(const Filepath& aFilepath)
 
     std::ifstream shaderFile;
     shaderFile.open(fullPath.GetBuffer());
-    ASSERT(shaderFile.is_open(), "Failed opening shader %s", fullPath.GetBuffer());
+    ASSERT(shaderFile.is_open(), "Failed opening shader {}", fullPath.GetBuffer());
 
     char vertexPath[512];
     char fragmentPath[512];
@@ -38,7 +37,7 @@ Shader::Ptr ShaderLoader::GetShader(const Filepath& aFilepath)
     vertexShader.Append(vertexPath);
     fragmentShader.Append(fragmentPath);
 
-    // ASSERT(shaderFile.good(), "Failed loading shader %s", fullPath.GetBuffer());
+    // ASSERT(shaderFile.good(), "Failed loading shader {}", fullPath.GetBuffer());
 
     const auto& pair {myShaders.try_emplace(aFilepath, new Shader {vertexShader, fragmentShader})};
     return pair.first->second;

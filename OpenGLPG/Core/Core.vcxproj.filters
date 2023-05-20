@@ -72,9 +72,6 @@
     <ClInclude Include="Filepath.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="GraphCmp.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
@@ -98,6 +95,12 @@
     </ClInclude>
     <ClInclude Include="Assert.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoader.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,9 +140,6 @@
     <ClCompile Include="Filepath.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="GraphCmp.cpp">
       <Filter>Engine\Components</Filter>
     </ClCompile>
@@ -150,6 +150,12 @@
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshLoader.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
