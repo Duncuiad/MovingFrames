@@ -1,7 +1,32 @@
 # Format Style Options - Created with Clang Power Tools
 ---
 AccessModifierOffset: -4
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AlwaysBreakTemplateDeclarations: Yes
 BasedOnStyle: Microsoft
+BraceWrapping: 
+  AfterCaseLabel: false
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: false
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: false
+  AfterStruct: true
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
+BreakBeforeBraces: Custom
+BreakConstructorInitializers: BeforeComma
 IncludeBlocks: Regroup
 IncludeCategories: 
   - Regex: '(OpenGLPG_Base)'
@@ -24,8 +49,8 @@ IncludeCategories:
     Priority: 1
     SortPriority: 0
     CaseSensitive: false
-  
 PointerAlignment: Left
 SpaceBeforeCpp11BracedList: true
 SpaceInEmptyBlock: false
+SpaceInEmptyParentheses: false
 ...

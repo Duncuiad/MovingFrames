@@ -1,18 +1,19 @@
 #pragma once
 
 #include "Defines.h"
+#include "Filepath.h"
+#include "Shader.h"
 
-#include <string>
 #include <unordered_map>
 
 class ShaderLoader
 {
 public:
-    void OnLoad();
+    void OnLoad(const Filepath& aShaderFolder);
 
-    // @note: change to const if loader is not implemented to be lazy
-    const std::string& GetShader(const std::string& aFilePath);
+    Shader::Ptr GetShader(const Filepath& aFilepath);
 
 private:
-    std::unordered_map<std::string, std::string> myShaders;
+    std::unordered_map<Filepath, Shader::Ptr> myShaders;
+    Filepath myShaderFolder {""};
 };

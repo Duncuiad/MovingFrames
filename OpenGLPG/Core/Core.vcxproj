@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Users\feder\Documents\GLFW\lib-vc2022</LibraryPath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\feder\Documents\GLAD\include;C:\Users\feder\Documents\GLFW\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\feder\Documents\GLAD\include;C:\Users\feder\Documents\GLFW\include;C:\Users\feder\Documents\GLM\glm</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -134,26 +134,48 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Assert.h" />
+    <ClInclude Include="CameraData.h" />
     <ClInclude Include="ClientCallbacks.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Filepath.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientLoader.h" />
+    <ClInclude Include="GraphCmp.h" />
+    <ClInclude Include="MathUtils.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="OpenGLPG_Base.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderLoader.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="TransformCmp.h" />
+    <ClInclude Include="UID.h" />
+    <ClInclude Include="WorldModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientCallbacks.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Filepath.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="ClientLoader.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="GraphCmp.cpp" />
+    <ClCompile Include="MathUtils.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
+    <ClCompile Include="TransformCmp.cpp" />
+    <ClCompile Include="UID.cpp" />
+    <ClCompile Include="WorldModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc" />

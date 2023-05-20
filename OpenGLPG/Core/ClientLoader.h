@@ -13,10 +13,7 @@ public:
     void Load();
     void Unload();
 
-    ShaderLoader& GetShaderLoader()
-    {
-        return *myShaderLoader;
-    }
+    ShaderLoader& GetShaderLoader() { return *myShaderLoader; }
 
 private:
     std::unique_ptr<ShaderLoader> myShaderLoader {nullptr};

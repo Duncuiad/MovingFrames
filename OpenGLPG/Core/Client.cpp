@@ -6,7 +6,6 @@
 #include "Defines.h"
 #include "Game.h"
 
-#include <cassert>
 #include <iostream>
 
 Client::Client()
@@ -77,6 +76,4 @@ bool Client::GLADInit()
     return true;
 }
 
-void Client::ProcessInput()
-{
-}
+void Client::ProcessInput() {}

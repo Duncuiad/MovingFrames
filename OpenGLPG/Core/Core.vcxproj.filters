@@ -13,63 +13,144 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{7585d309-fcdd-4221-ab70-e7340f1101b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{a8d83c08-082b-49f4-9d01-7f53a1ace82a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{45ff4bae-c249-49f1-bb2e-406c9875421f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{cfab9344-f007-4f38-904e-990292a6fe2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Components">
+      <UniqueIdentifier>{93a6c27c-1bfe-4c39-9f9a-475da7a7a474}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Defines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ClientLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ClientCallbacks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OpenGLPG_Base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WorldModel.h">
+      <Filter>World</Filter>
+    </ClInclude>
     <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="ShaderLoader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCallbacks.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientLoader.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="UID.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Filepath.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphCmp.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformCmp.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraData.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtils.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Assert.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientCallbacks.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="WorldModel.cpp">
+      <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCallbacks.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientLoader.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="UID.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Filepath.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphCmp.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformCmp.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MathUtils.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

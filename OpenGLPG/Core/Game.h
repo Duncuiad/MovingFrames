@@ -2,6 +2,7 @@
 
 #include "ClientLoader.h"
 #include "Renderer.h"
+#include "WorldModel.h"
 
 struct GLFWwindow;
 
@@ -20,4 +21,5 @@ public:
 
 private:
     Renderer myRenderManager;
+    WorldModel myWorldModel;
 };
