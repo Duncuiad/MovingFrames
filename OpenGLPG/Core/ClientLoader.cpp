@@ -5,7 +5,7 @@
 // @improvement: find a place for system paths
 ClientLoader::ClientLoader()
     : myShaderLoader {std::make_unique<ShaderLoader>("../Data/Assets/Shaders/")}
-    , myMeshLoader {std::make_unique<MeshLoader>("../Data/Assets/Meshes/")}
+    , myModelLoader {std::make_unique<ModelLoader>("../Data/Assets/Models/")}
 {}
 
 void ClientLoader::Register() {}

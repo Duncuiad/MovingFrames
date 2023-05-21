@@ -20,6 +20,11 @@ Shader::Shader(const Filepath& aVertexPath, const Filepath& aFragmentPath)
     LinkShaderSource(vertexShaderSource.data(), fragmentShaderSource.data());
 }
 
+Shader::~Shader()
+{
+    glDeleteProgram(myID);
+}
+
 void Shader::Use() const
 {
     glUseProgram(myID);

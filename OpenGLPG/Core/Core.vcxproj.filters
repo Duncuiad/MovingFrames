@@ -99,7 +99,10 @@
     <ClInclude Include="Mesh.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="MeshLoader.h">
+    <ClInclude Include="ModelLoader.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
       <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
@@ -155,7 +158,10 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="MeshLoader.cpp">
+    <ClCompile Include="ModelLoader.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>

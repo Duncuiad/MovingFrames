@@ -7,7 +7,12 @@
 class WorldModel
 {
 public:
-    WorldModel() = default;
+    struct ConstructionParams
+    {
+        const ClientLoader& myClientLoader;
+    };
+
+    WorldModel(const ConstructionParams& someParams);
     void Init();
     void Shutdown();
     void Update();
@@ -15,8 +20,10 @@ public:
     bool IsAvailable() const;
 
     const CameraData& GetActiveCameraData();
-    const EntityContainer& GetEntities() { return myEntities; }
+    const Entity::Container& GetEntities() const { return myEntities; }
 
 private:
-    EntityContainer myEntities;
+    Entity::Container myEntities;
+
+    const ClientLoader& myClientLoader;
 };

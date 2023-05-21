@@ -2,9 +2,23 @@
 
 #include "Entity.h"
 
-Entity::Entity()
-    : myUID {UID::CreateUnique()}
-{}
+// @temp: remove once you can spawn entities
+#include "GraphCmp.h"
+
+Entity::Entity(const UID& aUID)
+    : myUID {aUID}
+{
+    // @temp: remove explicit components from Entity
+    myComponents.emplace_back(new GraphCmp("backpack/backpack.obj", "basic.shader"));
+}
+
+/*
+Entity::Entity(Entity&& anEntity) noexcept
+    : myUID {anEntity.myUID}
+{
+    myComponents = std::move(anEntity.myComponents);
+}
+*/
 
 void Entity::Load(const LoadParams& someParams)
 {

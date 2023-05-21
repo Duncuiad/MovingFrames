@@ -4,6 +4,7 @@
 
 Game::Game(const ConstructionParams& someparams)
     : myRenderManager {{someparams.myLoader.GetShaderLoader()}}
+    , myWorldModel {{someparams.myLoader}}
 {}
 
 void Game::Init()

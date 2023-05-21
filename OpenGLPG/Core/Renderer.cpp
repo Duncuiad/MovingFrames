@@ -2,11 +2,16 @@
 
 #include "Renderer.h"
 
+#include "Entity.h"
+#include "GraphCmp.h"
+#include "WorldModel.h"
+
 #include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
 Renderer::Renderer(const ConstructionParams& someParams)
-    : myShaderLoader {someParams.myShaderLoader}
+    : myShaderLoader {someParams.myShaderLoader} // @remove
 {
     SetClearColor();
 }
@@ -21,7 +26,15 @@ void Renderer::Render(const RenderParams& someParams)
 
     if (someParams.myWorldModel)
     {
+        for (const auto& [uid, entity] : someParams.myWorldModel->GetEntities())
         {
+            // @todo: retrieve transform from transform component
+            Transform entityTransform {glm::identity<glm::mat4>()};
+            entity.GetComponent<GraphCmp>()->Draw({entityTransform});
+        }
+
+        {
+            Shader::Ptr basicShader {myShaderLoader.GetShader("basic.shader")};
             float vertices[] = {
                 0.5f,  0.5f,  0.0f, // top right
                 0.5f,  -0.5f, 0.0f, // bottom right
@@ -33,35 +46,15 @@ void Renderer::Render(const RenderParams& someParams)
                 0, 1, 3, // first triangle
                 1, 2, 3  // second triangle
             };
-
-            // vao and vbo could be done just once at initialization
-            GLUID vao;
-            glGenVertexArrays(1, &vao);
-            glBindVertexArray(vao);
-            GLUID vbo;
-            glGenBuffers(1, &vbo);
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-            GLUID ebo;
-            glGenBuffers(1, &ebo);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-            glEnableVertexAttribArray(0);
-
-            Shader::Ptr shader {myShaderLoader.GetShader("basic.shader")};
-            shader->Use();
-
-            glBindVertexArray(vao);
-            if (myIsWireframe)
-            {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            }
-            else
-            {
-                glPolygonMode(GL_FRONT, GL_FILL);
-            }
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            Mesh basicMesh {Vertex::List {Vertex {{0.5f, 0.5f, 0.0f}, {}, {}}, Vertex {{0.5f, -0.5f, 0.0f}, {}, {}},
+                                          Vertex {{-0.5f, -0.5f, 0.0f}, {}, {}}, Vertex {{-0.5f, 0.5f, 0.0f}, {}, {}}},
+                            {
+                                // note that we start from 0!
+                                0, 1, 3, // first triangle
+                                1, 2, 3  // second triangle
+                            }};
+            basicShader->Use();
+            basicMesh.Draw();
         }
     }
 }

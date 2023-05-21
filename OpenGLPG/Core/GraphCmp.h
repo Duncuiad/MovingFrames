@@ -11,16 +11,17 @@ class GraphCmp : public Component
 public:
     struct DrawParams
     {
-        const glm::mat4& myModel;
+        const glm::mat4& myModelMatrix;
     };
 
+    GraphCmp(const Filepath& aModelAsset, const Filepath& aShaderAsset);
     void OnLoad(const LoadParams& someParams) override;
     void Update() override {}
-    void Draw(const DrawParams& someParams);
+    void Draw(const DrawParams& someParams) const;
 
 private:
-    Mesh::Ptr myMesh {nullptr};
+    Model::Ptr myModel {nullptr};
     Shader::Ptr myShader {nullptr};
-    Filepath myMeshAsset;
+    Filepath myModelAsset;
     Filepath myShaderAsset;
 };

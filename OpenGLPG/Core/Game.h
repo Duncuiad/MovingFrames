@@ -11,7 +11,7 @@ class Game
 public:
     struct ConstructionParams
     {
-        ClientLoader& myLoader;
+        const ClientLoader& myLoader;
     };
 
     explicit Game(const ConstructionParams& someparams);

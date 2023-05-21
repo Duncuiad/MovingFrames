@@ -9,12 +9,13 @@
 class Entity
 {
 public:
+    using Container = std::unordered_map<UID, Entity>;
+
     struct LoadParams
     {
         const ClientLoader& myClientLoader;
     };
 
-    Entity();
     void Load(const LoadParams& someParams);
     void Spawn();
     void Update();
@@ -29,11 +30,16 @@ public:
     ComponentT* GetEditableComponent() const;
 
 private:
+    Entity(const UID& aUID);
+    Entity(const Entity& anEntity) = delete;
+    // Entity(Entity&& anEntity) noexcept;
+
     UID myUID;
     std::vector<Component::Ptr> myComponents;
-};
 
-using EntityContainer = std::unordered_map<UID, Entity>;
+    friend class WorldModel;
+    friend struct std::pair<const UID, Entity>;
+};
 
 template <typename ComponentT>
 inline const ComponentT* Entity::GetComponent() const

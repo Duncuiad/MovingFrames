@@ -30,5 +30,4 @@ private:
 
     ShaderLoader& myShaderLoader;
     GLUID myShaderProgram;
-    bool myIsWireframe {true};
 };

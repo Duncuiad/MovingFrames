@@ -23,7 +23,7 @@ bool UID::IsValid()
     return *this != UID::Empty;
 }
 
-bool UID::operator==(const UID& anOther)
+bool UID::operator==(const UID& anOther) const
 {
     return myInternalID == anOther.myInternalID;
 }

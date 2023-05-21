@@ -11,7 +11,7 @@ public:
     UID(const UID& anOther);
 
     bool IsValid();
-    bool operator==(const UID& anOther);
+    bool operator==(const UID& anOther) const;
 
     static const UID Empty;
 

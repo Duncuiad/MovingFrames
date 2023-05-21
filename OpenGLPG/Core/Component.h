@@ -9,6 +9,8 @@ class Component
 public:
     using Ptr = std::unique_ptr<Component>;
 
+    virtual ~Component() = default;
+
     struct LoadParams
     {
         const ClientLoader& myClientLoader;
