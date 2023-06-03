@@ -1,9 +1,8 @@
 #pragma once
 
 #include <initializer_list>
+#include <map>
 #include <string>
-#include <string_view>
-#include <unordered_map>
 
 namespace GameInput
 {
@@ -29,12 +28,6 @@ const std::initializer_list<const char*> theInputs {
     theGamepadLookHorizontal, theGamepadLookVertical, theKeyboardMoveForward, theKeyboardMoveBackward,
     theKeyboardMoveLeft,      theKeyboardMoveRight,   theKeyboardMoveUp,      theKeyboardMoveDown,
     theGamepadMoveFrontal,    theGamepadMoveLateral,  theGamepadMoveVertical};
-
-// const std::initializer_list<std::string_view> theInputs = {
-//     "KeyboardLookRight",   "KeyboardLookLeft",    "KeyboardLookUp",       "KeyboardLookDown",
-//     "GamepadLookHorizontal", "GamepadLookVertical", "KeyboardMoveForward", "KeyboardMoveBackward",
-//     "KeyboardMoveLeft",   "KeyboardMoveRight", "KeyboardMoveUp",      "KeyboardMoveDown",    "GamepadMoveFrontal",
-//     "GamepadMoveLateral", "GamepadMoveVertical"};
 } // namespace GameInput
 
 struct GameInputData
@@ -42,6 +35,6 @@ struct GameInputData
     GameInputData();
     void Reset();
 
-    using InputContainer = std::unordered_map<std::string, float>;
+    using InputContainer = std::map<std::string, float>;
     InputContainer myInputs;
 };

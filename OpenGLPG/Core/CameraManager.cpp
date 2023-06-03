@@ -6,7 +6,6 @@
 #include "CameraUtils.h"
 
 #include <algorithm>
-#include <imgui.h>
 
 void CameraManager::Update(const UpdateParams& someParams)
 {

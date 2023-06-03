@@ -27,6 +27,8 @@ void Game::Update(const UpdateParams& someParams)
 
     const WorldModel* worldToRender {myWorldModel.IsAvailable() ? &myWorldModel : nullptr};
     myRenderManager.Render({worldToRender});
+
+    DebugGameInput();
 }
 
 void Game::ResetGameInputData()
@@ -39,3 +41,15 @@ void Game::AddGameInput(const char* anInputName, float aValue)
     ASSERT(myInputData.myInputs.contains(anInputName), "Updating unknown input! Input name: {}", anInputName);
     myInputData.myInputs[anInputName] += aValue;
 }
+
+#if DEBUG_IMGUI
+void Game::DebugGameInput() const
+{
+    ImGui::Begin("Game Input");
+    for (const auto& [name, value] : myInputData.myInputs)
+    {
+        ImGui::Text("%s: %7.3f", name.data(), value);
+    }
+    ImGui::End();
+}
+#endif

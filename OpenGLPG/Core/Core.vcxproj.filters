@@ -34,6 +34,9 @@
     <Filter Include="Camera\Behaviors">
       <UniqueIdentifier>{4e8709ab-5912-4a6e-b394-c4358daab7d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{ca943ec4-e3ff-48c3-a4fb-c5880d2ef421}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -150,6 +153,12 @@
     <ClInclude Include="MathDefines.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="InputTranslationCameraBehavior.h">
+      <Filter>Camera\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugImGui.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WorldModel.cpp">
@@ -257,10 +266,24 @@
     <ClCompile Include="GameInputData.cpp">
       <Filter>Base</Filter>
     </ClCompile>
+    <ClCompile Include="InputTranslationCameraBehavior.cpp">
+      <Filter>Camera\Behaviors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Data\Assets\Shaders\basic.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\basic.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\basic.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
