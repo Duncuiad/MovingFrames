@@ -3,10 +3,10 @@
 #include "MathUtils.h"
 
 #include "Assert.h"
+#include "Transform.h" // Mat4 glm::affineTransform(const Transform&)
 
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
 
 namespace Utils
 {

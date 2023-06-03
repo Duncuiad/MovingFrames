@@ -12,6 +12,7 @@ public:
     struct DrawParams
     {
         const glm::mat4& myModelMatrix;
+        const glm::mat4& myWorldToClipMatrix;
     };
 
     GraphCmp(const Filepath& aModelAsset, const Filepath& aShaderAsset);

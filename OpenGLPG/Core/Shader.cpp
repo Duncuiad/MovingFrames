@@ -30,6 +30,21 @@ void Shader::Use() const
     glUseProgram(myID);
 }
 
+void Shader::SetUniformInt(const char* aName, int aValue) const
+{
+    glUniform1i(glGetUniformLocation(myID, aName), aValue);
+}
+
+void Shader::SetUniformFloat(const char* aName, float aValue) const
+{
+    glUniform1f(glGetUniformLocation(myID, aName), aValue);
+}
+
+void Shader::SetUniformMat4(const char* aName, const glm::mat4& aValue) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(myID, aName), 1, false, &aValue[0][0]);
+}
+
 std::string Shader::LoadShaderSource(const Filepath& aPath) const
 {
     std::string shaderSource;

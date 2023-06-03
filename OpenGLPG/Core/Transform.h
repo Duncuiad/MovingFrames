@@ -1,5 +1,23 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "MathDefines.h"
 
-using Transform = glm::mat4;
+#include <glm/gtc/matrix_inverse.hpp>
+
+class Transform : public Mat4
+{
+public:
+    using Base = Mat4;
+    using Base::Base;
+    Transform(const Mat4& aMatrix);
+    Transform(const Mat3& anOrientation, const Vec3& aPosition);
+    Transform(const Quat& anOrientation, const Vec3& aPosition);
+};
+
+namespace glm
+{
+inline mat4 affineInverse(const Transform& aTransform)
+{
+    return affineInverse<float, highp>(aTransform);
+}
+} // namespace glm

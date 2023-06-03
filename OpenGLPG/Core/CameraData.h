@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MovingFrame.h"
 #include "Transform.h"
 
 struct CameraData
@@ -9,4 +10,5 @@ struct CameraData
     float myAspectRatio;
     float myNear;
     float myFar;
+    MovingFrame myWorldFrame;
 };

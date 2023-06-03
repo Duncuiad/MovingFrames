@@ -28,12 +28,15 @@
     <Filter Include="Engine\Components">
       <UniqueIdentifier>{93a6c27c-1bfe-4c39-9f9a-475da7a7a474}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{169d00ad-efa6-46ef-9db7-5653ae1b1cd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera\Behaviors">
+      <UniqueIdentifier>{4e8709ab-5912-4a6e-b394-c4358daab7d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenGLPG_Base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WorldModel.h">
@@ -84,9 +87,6 @@
     <ClInclude Include="Transform.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="CameraData.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="MathUtils.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -105,11 +105,53 @@
     <ClInclude Include="Model.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="OpenGLPG_Base.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraData.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInputData.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraInputData.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraUtils.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="MovingFrame.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraRequests.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSettings.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraFactory.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraBehavior.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraRuntimeData.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="InputRotationCameraBehavior.h">
+      <Filter>Camera\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="MathDefines.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WorldModel.cpp">
       <Filter>World</Filter>
     </ClCompile>
@@ -163,6 +205,57 @@
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraUtils.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingFrame.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraRequests.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraFactory.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="InputRotationCameraBehavior.cpp">
+      <Filter>Camera\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui_impl_glfw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui_impl_opengl3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui_tables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ext\imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameInputData.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -21,16 +21,27 @@ void WorldModel::Init()
     }
 
     //
+
+    CameraActivationRequest request {CameraType::FreeCam};
+    myGameplayCamera = request.GetCameraUID();
+    myCameraManager.ActivateCamera(request);
+
+    //
 }
 
-void WorldModel::Shutdown() {}
+void WorldModel::Shutdown()
+{
+    myCameraManager.DeactivateCamera({myGameplayCamera});
+}
 
-void WorldModel::Update()
+void WorldModel::Update(const UpdateParams& someParams)
 {
     for (auto& [uid, entity] : myEntities)
     {
         entity.Update();
     }
+
+    myCameraManager.Update({someParams.myGameInputData, someParams.myDeltaTime});
 }
 
 bool WorldModel::IsAvailable() const
@@ -38,13 +49,7 @@ bool WorldModel::IsAvailable() const
     return true;
 }
 
-const CameraData& WorldModel::GetActiveCameraData()
+const CameraData& WorldModel::GetActiveCameraData() const
 {
-    CameraData data;
-    data.myCameraTransform = {};
-    data.myFOV = glm::radians(45.f);
-    data.myNear = 0.5f;
-    data.myFar = 100.f;
-    data.myAspectRatio = 16.f / 9.f;
-    return data;
+    return myCameraManager.GetActiveCameraData();
 }

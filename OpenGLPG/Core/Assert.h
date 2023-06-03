@@ -5,7 +5,7 @@
 #include <iostream>
 
 #define _ASSERT_INTERNAL(CONDITION, MESSAGE)                                                                           \
-    if (!CONDITION)                                                                                                    \
+    if (!(CONDITION))                                                                                                  \
     {                                                                                                                  \
         std::cerr << "ASSERT FAILED: " << MESSAGE << std::endl;                                                        \
         assert(CONDITION);                                                                                             \

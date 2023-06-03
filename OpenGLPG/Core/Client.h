@@ -22,11 +22,18 @@ public:
 private:
     bool GLFWInit();
     bool GLADInit();
+    void ImGuiInit();
+    void ImGuiShutdown();
+    void ImGuiFrameStart();
+    void ImGuiFrameEnd();
 
     void ProcessInput();
+    void AddKeyboardInput(int aGLFWInput, const char* aGameInputName);
+    void AddGamepadInput(int aGLFWInput, const char* aGameInputName);
 
     // @improvement: wrap and centralize window logic
     GLFWwindow* myWindow {nullptr};
+    double myLastFrame {0.f};
     ClientLoader myLoader;
     std::unique_ptr<Game> myGame {nullptr};
 };

@@ -2,8 +2,10 @@
 
 #include "Renderer.h"
 
+#include "CameraData.h"
 #include "Entity.h"
 #include "GraphCmp.h"
+#include "MathUtils.h"
 #include "WorldModel.h"
 
 #include <GLFW/glfw3.h>
@@ -29,8 +31,12 @@ void Renderer::Render(const RenderParams& someParams)
         for (const auto& [uid, entity] : someParams.myWorldModel->GetEntities())
         {
             // @todo: retrieve transform from transform component
-            Transform entityTransform {glm::identity<glm::mat4>()};
-            entity.GetComponent<GraphCmp>()->Draw({entityTransform});
+
+            Transform entityTransform {Mat4 {glm::identity<glm::mat4>()}};
+            const CameraData& activeCameraData {someParams.myWorldModel->GetActiveCameraData()};
+            const glm::mat4 worldToClip {Utils::WorldToClip(activeCameraData)};
+
+            entity.GetComponent<GraphCmp>()->Draw({entityTransform, worldToClip});
         }
 
         {

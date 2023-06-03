@@ -7,7 +7,6 @@ const UID UID::Empty = UID();
 
 UID UID::CreateUnique()
 {
-    // @twothreadsgoboom
     ++ourCurrent;
     UID newUID {};
     newUID.myInternalID = ourCurrent;

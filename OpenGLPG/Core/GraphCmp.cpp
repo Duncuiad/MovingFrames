@@ -20,9 +20,9 @@ void GraphCmp::Draw(const DrawParams& someParams) const
     ASSERT(myModel, "Trying to draw a model that wasn't loaded! Asset: {}", myModelAsset.GetBuffer());
     ASSERT(myShader, "Trying to draw with a shader that wasn't loaded! Asset: {}", myShaderAsset.GetBuffer());
 
-    // @todo: implement SetUniform
-    // myShader->SetUniformMat4("ModelMatrix", someParams.myModelMatrix);
     // @improvement: try and see if I can batch the use of shaders and meshes to minimize reallocation
+    myShader->SetUniformMat4("Model", someParams.myModelMatrix);
+    myShader->SetUniformMat4("WorldToClip", someParams.myWorldToClipMatrix);
     myShader->Use();
     myModel->Draw();
 }
