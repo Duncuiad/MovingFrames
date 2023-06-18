@@ -28,17 +28,26 @@ void Renderer::Render(const RenderParams& someParams)
 
     if (someParams.myWorldModel)
     {
+        glm::mat4 viewportAdjustment {glm::identity<glm::mat4>()};
+        int viewportData[4];
+        glGetIntegerv(GL_VIEWPORT, viewportData);
+        if (viewportData[2] > 0)
+        {
+            viewportAdjustment[0][0] =
+                (static_cast<float>(viewportData[3]) * 16.f) / (static_cast<float>(viewportData[2]) * 9.f);
+        }
+        const CameraData& activeCameraData {someParams.myWorldModel->GetActiveCameraData()};
+        const glm::mat4 worldToClip {viewportAdjustment * Utils::WorldToClip(activeCameraData)};
+
         for (const auto& [uid, entity] : someParams.myWorldModel->GetEntities())
         {
             // @todo: retrieve transform from transform component
 
             Transform entityTransform {Mat4 {glm::identity<glm::mat4>()}};
-            const CameraData& activeCameraData {someParams.myWorldModel->GetActiveCameraData()};
-            const glm::mat4 worldToClip {Utils::WorldToClip(activeCameraData)};
-
             entity.GetComponent<GraphCmp>()->Draw({entityTransform, worldToClip});
         }
 
+        if constexpr (false)
         {
             Shader::Ptr basicShader {myShaderLoader.GetShader("basic.shader")};
             float vertices[] = {

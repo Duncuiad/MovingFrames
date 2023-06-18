@@ -10,14 +10,14 @@ MovingFrame::MovingFrame()
     : myPose {}
     , myTwist {}
 {
-    // dual part is orthogonal to real part (which is the identity)
-    myPose.dual.w = 0.f;
+    // real part is identity
+    myPose.real.w = 1.f;
 }
 
 MovingFrame::MovingFrame(const Quat& anOrientation, const Vec3& aPosition, Vec3 anAngularVelocity /*= Vec3 {0.f}*/,
                          Vec3 aLinearVelocity /*= Vec3 {0.f}*/)
     : myPose {anOrientation, aPosition}
-    , myTwist {Pure(anAngularVelocity), Pure(aLinearVelocity)} // @todo: decide how the twist should be stored
+    , myTwist {Pure(anAngularVelocity), Pure(aLinearVelocity)}
 {}
 
 Quat MovingFrame::GetOrientation() const
@@ -32,13 +32,11 @@ Vec3 MovingFrame::GetPosition() const
 
 Vec3 MovingFrame::GetAngularVelocity(Coord aCoord) const
 {
-    // @todo: decide how the twist should be stored
     return Im(myTwist.real);
 }
 
 Vec3 MovingFrame::GetLinearVelocity(Coord aCoord) const
 {
-    // @todo: decide how the twist should be stored
     return Im(myTwist.dual);
 }
 
@@ -55,44 +53,42 @@ void MovingFrame::ResetVelocities()
 
 void MovingFrame::AddAngularVelocity(Coord aCoord, Vec3 aVelocity)
 {
-    // @todo: decide how the twist should be stored
     switch (aCoord)
     {
     case Coord::Extrinsic:
-        myTwist.real += Pure(aVelocity);
+        myTwist.real += Pure(glm::conjugate(myPose.real) * aVelocity);
         break;
     case Coord::Intrinsic:
-        myTwist.real += Pure(myPose.real * aVelocity);
+        myTwist.real += Pure(aVelocity);
+        break;
     }
 }
 
 void MovingFrame::AddLinearVelocity(Coord aCoord, Vec3 aVelocity)
 {
-    // @todo: decide how the twist should be stored
     switch (aCoord)
     {
     case Coord::Extrinsic:
-        myTwist.dual += Pure(aVelocity);
+        myTwist.dual += Pure(glm::conjugate(myPose.real) * aVelocity);
         break;
     case Coord::Intrinsic:
-        myTwist.dual += Pure(myPose.real * aVelocity);
+        myTwist.dual += Pure(aVelocity);
+        break;
     }
 }
 
 void MovingFrame::Move(float aDeltaTime)
 {
-    // @todo: decide how the twist should be stored
-    // @todo: implement dual quaternion exponential
     const DualQuat step {aDeltaTime * myTwist};
-    myPose = Exp(step) * myPose;
+    myPose = myPose * Exp(step);
 }
 
 MovingFrame MovingFrame::operator*(const MovingFrame& aFrame) const
 {
     MovingFrame result {myPose * aFrame.myPose};
-    // @todo: decide how the twist should be stored
-    result.myTwist.real = myTwist.real + myPose.real * aFrame.myTwist.real;
-    result.myTwist.dual = myTwist.dual + myPose.real * aFrame.myTwist.dual;
+    result.myTwist.real = glm::conjugate(myPose.real) * myTwist.real + aFrame.myTwist.real;
+    result.myTwist.dual = glm::conjugate(myPose.real) * myTwist.dual + aFrame.myTwist.dual;
+    // @todo: check calc
     return result;
 }
 

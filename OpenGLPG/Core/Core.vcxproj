@@ -149,6 +149,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="DebugImGui.h" />
+    <ClInclude Include="DebugUtils.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Filepath.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientCallbacks.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="DebugUtils.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="ext\glad.c" />
     <ClCompile Include="ext\imgui.cpp" />

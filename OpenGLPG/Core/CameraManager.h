@@ -5,6 +5,7 @@
 #include "CameraFactory.h"
 #include "CameraRequests.h"
 #include "CameraRuntimeData.h"
+#include "DebugImGui.h"
 #include "GameInputData.h"
 
 #include <vector>
@@ -26,7 +27,11 @@ public:
 
 private:
     CameraInputData GetInputData(const GameInputData& someGameInputData);
-    void UpdateRuntimeData(CameraRuntimeData& anActiveCameraRuntimeData) const;
+    void UpdateRuntimeData(float aDeltaTime, CameraRuntimeData& outActiveCameraRuntimeData) const;
+
+#if DEBUG_IMGUI
+    void DebugDraw() const;
+#endif
 
     using CameraContainer = std::vector<Camera>;
 

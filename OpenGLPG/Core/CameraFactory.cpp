@@ -16,7 +16,7 @@ Camera CameraFactory::CreateCamera(const CameraSettings& someSettings, const UID
     {
     case FreeCam:
         AddCameraBehavior<InputRotationCameraBehavior>({glm::radians(50.f), glm::radians(50.f)}, newCamera);
-        AddCameraBehavior<InputTranslationCameraBehavior>({5.f}, newCamera);
+        AddCameraBehavior<InputTranslationCameraBehavior>({1.f}, newCamera);
         break;
     case Orbital:
         AddCameraBehavior<InputRotationCameraBehavior>({glm::radians(50.f), glm::radians(50.f)}, newCamera);

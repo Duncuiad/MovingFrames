@@ -159,6 +159,9 @@
     <ClInclude Include="DebugImGui.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="DebugUtils.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WorldModel.cpp">
@@ -268,6 +271,9 @@
     </ClCompile>
     <ClCompile Include="InputTranslationCameraBehavior.cpp">
       <Filter>Camera\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugUtils.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@
 #include "Assert.h"
 #include "Transform.h" // Mat4 glm::affineTransform(const Transform&)
 
+#include <glm/ext/matrix_clip_space.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
@@ -15,11 +16,7 @@ glm::mat4 Projection(float aFOV, float anAspectRatio, float aNearPlane, float aF
 {
     ASSERT(0.f < aFOV && aFOV < glm::pi<float>(), "Invalid FOV for projection matrix: {}", aFOV);
     ASSERT(aNearPlane < aFarPlane, "Invalid plames for projection matrix. Near: {}, Far: {}", aNearPlane, aFarPlane);
-
-    const float g = 1.f / glm::tan(0.5f * aFOV);
-    const float s = anAspectRatio;
-    const float d = aFarPlane / (aFarPlane - aNearPlane);
-    return {{g, 0.f, 0.f, 0.f}, {0.f, g / s, 0.f, 0.f}, {0.f, 0.f, d, 1.f}, {0.f, 0.f, -aNearPlane * d, 0.f}};
+    return glm::perspective(aFOV / anAspectRatio, anAspectRatio, aNearPlane, aFarPlane);
 }
 
 glm::mat4 WorldToClip(const CameraData& aCameraData)

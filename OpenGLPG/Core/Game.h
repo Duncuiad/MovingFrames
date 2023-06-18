@@ -3,6 +3,7 @@
 #include "ClientLoader.h"
 #include "DebugImGui.h"
 #include "GameInputData.h"
+#include "MathDefines.h"
 #include "Renderer.h"
 #include "WorldModel.h"
 
@@ -18,6 +19,8 @@ public:
     struct UpdateParams
     {
         float myDeltaTime;
+        Vec2 myViewportTL;
+        Vec2 myViewportBR;
     };
 
     explicit Game(const ConstructionParams& someparams);

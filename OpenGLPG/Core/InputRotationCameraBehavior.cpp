@@ -16,7 +16,7 @@ void InputRotationCameraBehavior::Update(const UpdateParams& someParams) const
         someParams.myCameraData.myDesiredTwist[Component::Rotational | Coordinate::Intrinsic | Frame::Reference];
 
     constexpr Vec3 upVector {0.f, 1.f, 0.f};
-    azimuthTwist += lookLR * mySettings.myHorizontalSpeed * upVector;
+    azimuthTwist -= lookLR * mySettings.myHorizontalSpeed * upVector;
 
     constexpr Vec3 rightVector {1.f, 0.f, 0.f};
     const Vec3 localRightVector {someParams.myCameraData.myLocalFrame.GetOrientation() * rightVector};

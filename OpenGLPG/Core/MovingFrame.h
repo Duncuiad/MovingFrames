@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DebugImGui.h"
+#include "DebugUtils.h"
 #include "MathDefines.h"
 
 class MovingFrame
@@ -31,6 +33,10 @@ public:
 
 private:
     MovingFrame(const DualQuat& aDualQuaternion);
+
+#if DEBUG_IMGUI
+    friend void ::ImGui::Draw(const MovingFrame&);
+#endif
 
     DualQuat myPose;
     DualQuat myTwist;

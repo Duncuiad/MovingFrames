@@ -26,3 +26,8 @@ bool UID::operator==(const UID& anOther) const
 {
     return myInternalID == anOther.myInternalID;
 }
+
+std::string UID::GetString() const
+{
+    return std::to_string(myInternalID);
+}

@@ -22,7 +22,7 @@ void WorldModel::Init()
 
     //
 
-    CameraActivationRequest request {CameraType::FreeCam};
+    CameraActivationRequest request {{CameraType::FreeCam, glm::radians(45.f), 16.f / 9.f, 0.1f, 200.f}};
     myGameplayCamera = request.GetCameraUID();
     myCameraManager.ActivateCamera(request);
 

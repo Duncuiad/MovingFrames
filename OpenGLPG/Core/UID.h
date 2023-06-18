@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <string>
 
 class UID
 {
@@ -12,6 +13,7 @@ public:
 
     bool IsValid();
     bool operator==(const UID& anOther) const;
+    std::string GetString() const;
 
     static const UID Empty;
 
