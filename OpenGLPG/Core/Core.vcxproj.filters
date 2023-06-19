@@ -162,6 +162,9 @@
     <ClInclude Include="DebugUtils.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Dual.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WorldModel.cpp">
@@ -273,6 +276,9 @@
       <Filter>Camera\Behaviors</Filter>
     </ClCompile>
     <ClCompile Include="DebugUtils.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Dual.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>

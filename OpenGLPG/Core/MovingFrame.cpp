@@ -80,7 +80,7 @@ void MovingFrame::AddLinearVelocity(Coord aCoord, Vec3 aVelocity)
 void MovingFrame::Move(float aDeltaTime)
 {
     const DualQuat step {aDeltaTime * myTwist};
-    myPose = myPose * Exp(step);
+    myPose = myPose * Exp(0.5f * step);
 }
 
 MovingFrame MovingFrame::operator*(const MovingFrame& aFrame) const
