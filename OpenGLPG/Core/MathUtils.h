@@ -13,7 +13,11 @@
 Quat Pure(const Vec3& aVector);
 float Re(const Quat& aQuaternion);
 Vec3 Im(const Quat& aQuaternion);
+Dual Norm(const DualQuat& aDualQuaternion);
+Dual Norm2(const DualQuat& aDualQuaternion);
+DualQuat Normalized(const DualQuat& aDualQuaternion);
 DualQuat Exp(const DualQuat& aDualQuaternion);
+DualQuat Log(const DualQuat& aDualQuaternion);
 
 namespace Utils
 {
@@ -39,17 +43,26 @@ inline Vec3 Im(const Quat& aQuaternion)
     return {aQuaternion.x, aQuaternion.y, aQuaternion.z};
 }
 
+inline Dual Norm(const DualQuat& aDualQuaternion)
+{
+    ASSERT(Norm2(aDualQuaternion).IsInvertible(), "Norm is undefined for non invertible dual quaternions");
+    const float normReal {glm::length(aDualQuaternion.real)};
+    return {normReal, glm::dot(aDualQuaternion.real, aDualQuaternion.dual) / normReal};
+}
+
 inline Dual Norm2(const DualQuat& aDualQuaternion)
 {
     return {glm::dot(aDualQuaternion.real, aDualQuaternion.real),
             2.f * glm::dot(aDualQuaternion.real, aDualQuaternion.dual)};
 }
 
-inline Dual Norm(const DualQuat& aDualQuaternion)
+inline DualQuat Normalized(const DualQuat& aDualQuaternion)
 {
-    ASSERT(Norm2(aDualQuaternion).IsInvertible(), "Norm is undefined for non invertible dual quaternions");
-    const float normReal {glm::length(aDualQuaternion.real)};
-    return {normReal, glm::dot(aDualQuaternion.real, aDualQuaternion.dual) / normReal};
+    ASSERT(Norm2(aDualQuaternion).IsInvertible(), "Normalizing a non invertible dual quaternion");
+    const float normReal2 {glm::dot(aDualQuaternion.real, aDualQuaternion.real)};
+    const float invNormReal {glm::inversesqrt(normReal2)};
+    const Quat dependentComp {aDualQuaternion.real * glm::dot(aDualQuaternion.real, aDualQuaternion.dual) / normReal2};
+    return DualQuat {aDualQuaternion.real, (aDualQuaternion.dual - dependentComp)} * invNormReal;
 }
 
 inline DualQuat Exp(const DualQuat& aDualQuaternion)
@@ -61,20 +74,20 @@ inline DualQuat Exp(const DualQuat& aDualQuaternion)
     const float cost {glm::cos(t)};
     const float sint {glm::sin(t)};
 
-    float a {0.5f - t * t / 6.f};
-    float b {-1.f / 24.f};
+    float a {1.f - t * t / 3.f};
+    float b {-1.f / 3.f};
 
     constexpr float expInternalEpsilon {0.01f};
     if (t > expInternalEpsilon)
     {
-        a = 0.5f * sint / t;
-        b = (cost * 0.5f - a) / (4.f * t * t);
+        a = sint / t;
+        b = (cost - a) / (t * t);
     }
 
-    DualQuat result {a * aDualQuaternion * 2.f};
+    DualQuat result {a * aDualQuaternion};
     result.real.w += cost;
-    result.dual.w -= a * c * 2.f;
-    result.dual += b * c * aDualQuaternion.real * 8.f;
+    result.dual.w -= a * c;
+    result.dual += b * c * aDualQuaternion.real;
     return result;
 }
 
