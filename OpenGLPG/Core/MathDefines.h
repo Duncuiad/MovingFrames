@@ -14,3 +14,4 @@ using Mat3 = glm::mat3;
 using Mat4 = glm::mat4;
 using Quat = glm::quat;
 using DualQuat = glm::dualquat;
+class Dual;

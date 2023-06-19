@@ -161,6 +161,7 @@
     <ClInclude Include="Dual.h" />
     <ClInclude Include="InputRotationCameraBehavior.h" />
     <ClInclude Include="InputTranslationCameraBehavior.h" />
+    <ClInclude Include="InterpolationUtils.h" />
     <ClInclude Include="MathDefines.h" />
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="Mesh.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="GraphCmp.cpp" />
     <ClCompile Include="InputRotationCameraBehavior.cpp" />
     <ClCompile Include="InputTranslationCameraBehavior.cpp" />
+    <ClCompile Include="InterpolationUtils.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModelLoader.cpp" />

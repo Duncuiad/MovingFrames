@@ -165,6 +165,9 @@
     <ClInclude Include="Dual.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="InterpolationUtils.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WorldModel.cpp">
@@ -279,6 +282,9 @@
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Dual.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpolationUtils.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
