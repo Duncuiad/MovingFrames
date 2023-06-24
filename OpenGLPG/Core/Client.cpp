@@ -4,16 +4,19 @@
 
 #include "Assert.h"
 #include "ClientCallbacks.h"
+#include "DebugImGui.h"
 #include "Defines.h"
 #include "Game.h"
 #include "GameInputData.h"
+#include "Test.h"
 
 #include <format>
-#include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <iostream>
 #include <string>
+
+constexpr float locMinFrameTime {1.f / 60.f};
 
 Client::Client()
 {
@@ -32,6 +35,8 @@ bool Client::IsRunning() const
 
 void Client::Init()
 {
+    Test::RunCustomRuntimeTests();
+
     ImGuiInit();
     myGame->Init();
     glfwSetTime(0.0);
@@ -47,19 +52,27 @@ void Client::Shutdown()
 
 void Client::Update()
 {
-    ProcessInput();
-
     double currentTime {glfwGetTime()};
-    float deltaTime = static_cast<float>(currentTime - myLastFrame);
+    const float deltaTime = static_cast<float>(currentTime - myLastFrame);
+    const float updateElapsedTime = static_cast<float>(currentTime - myLastUpdate);
 
-    ImGuiFrameStart();
-    myGame->Update({deltaTime});
+    if (deltaTime >= locMinFrameTime)
+    {
+        ProcessInput();
 
-    ImGuiFrameEnd();
-    glfwSwapBuffers(myWindow);
-    glfwPollEvents();
+        ImGuiFrameStart();
+        myGame->Update({deltaTime});
 
-    myLastFrame = currentTime;
+        ImGuiDebugDrawClient(updateElapsedTime, deltaTime);
+
+        ImGuiFrameEnd();
+        glfwSwapBuffers(myWindow);
+        glfwPollEvents();
+
+        myLastFrame = currentTime;
+    }
+
+    myLastUpdate = currentTime;
 }
 
 bool Client::GLFWInit()
@@ -96,32 +109,50 @@ bool Client::GLADInit()
 
 void Client::ImGuiInit()
 {
+#if DEBUG_IMGUI
     const std::string glslVersion {std::format("#version {}{}0", OPENGL_VERSION_MAJOR, OPENGL_VERSION_MINOR)};
     ImGui::CreateContext();
     [[maybe_unused]] bool imguiResult = true;
     imguiResult &= ImGui_ImplGlfw_InitForOpenGL(myWindow, true);
     imguiResult &= ImGui_ImplOpenGL3_Init(glslVersion.c_str());
     ASSERT(imguiResult, "Failed initializing ImGui");
+#endif
 }
 
 void Client::ImGuiShutdown()
 {
+#if DEBUG_IMGUI
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+#endif
 }
 
 void Client::ImGuiFrameStart()
 {
+#if DEBUG_IMGUI
     ImGui_ImplGlfw_NewFrame();
     ImGui_ImplOpenGL3_NewFrame();
     ImGui::NewFrame();
+#endif
 }
 
 void Client::ImGuiFrameEnd()
 {
+#if DEBUG_IMGUI
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#endif
+}
+
+void Client::ImGuiDebugDrawClient(float anUpdateElapsedTime, float aFrameTime) const
+{
+#if DEBUG_IMGUI
+    ImGui::Begin("Client");
+    ImGui::Text("Update time: %9.4f ms", (anUpdateElapsedTime * 1000.f));
+    ImGui::Text("Capped frame time: %9.4f ms", (aFrameTime * 1000.f));
+    ImGui::End();
+#endif
 }
 
 void Client::ProcessInput()

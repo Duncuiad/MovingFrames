@@ -37,6 +37,15 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{ca943ec4-e3ff-48c3-a4fb-c5880d2ef421}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Serialization">
+      <UniqueIdentifier>{0f43b27f-e04f-4769-add7-3efa2a3b2ec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{6d09fc4d-bc2c-4040-a583-1d1d53eff7d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Containers">
+      <UniqueIdentifier>{525d65f5-7893-4877-bcf8-0155a191b3ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -168,6 +177,21 @@
     <ClInclude Include="InterpolationUtils.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Serializer.h">
+      <Filter>Engine\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializable.h">
+      <Filter>Engine\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializationTest.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Array.h">
+      <Filter>Engine\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WorldModel.cpp">
@@ -286,6 +310,15 @@
     </ClCompile>
     <ClCompile Include="InterpolationUtils.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer.cpp">
+      <Filter>Engine\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializationTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
