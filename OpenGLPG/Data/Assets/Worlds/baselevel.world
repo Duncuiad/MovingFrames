@@ -1,0 +1,41 @@
+myCount
+{
+	1
+}
+
+0
+{
+	myComponents
+	{
+		myCount
+		{
+			1
+		}
+
+		0
+		{
+			GraphCmp
+			myModel
+			{
+				myPath
+				{
+					backpack/backpack.obj
+				}
+
+			}
+
+			myShader
+			{
+				myPath
+				{
+					basic.shader
+				}
+
+			}
+
+		}
+
+	}
+
+}
+

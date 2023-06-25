@@ -4,6 +4,8 @@
 
 class InputRotationCameraBehavior : public CameraBehavior
 {
+    DECLARE_SUBTYPE(InputRotationCameraBehavior)
+
 public:
     struct Settings
     {
@@ -14,6 +16,8 @@ public:
     InputRotationCameraBehavior(const Settings& someSettings)
         : mySettings {someSettings}
     {}
+
+    void Serialize(Serializer& aSerializer) override;
 
     void Update(const UpdateParams& someParams) const override;
 

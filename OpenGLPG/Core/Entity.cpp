@@ -2,15 +2,7 @@
 
 #include "Entity.h"
 
-// @temp: remove once you can spawn entities
-#include "GraphCmp.h"
-
-Entity::Entity(const UID& aUID)
-    : myUID {aUID}
-{
-    // @temp: remove explicit components from Entity
-    myComponents.emplace_back(new GraphCmp("backpack/backpack.obj", "basic.shader"));
-}
+Entity::Entity() {}
 
 /*
 Entity::Entity(Entity&& anEntity) noexcept
@@ -28,8 +20,9 @@ void Entity::Load(const LoadParams& someParams)
     }
 }
 
-void Entity::Spawn()
+void Entity::Spawn(const UID& anEntityUID)
 {
+    myUID = anEntityUID;
     for (const auto& component : myComponents)
     {
         component->OnEnterWorld();
@@ -58,6 +51,11 @@ void Entity::Unload()
     {
         component->OnUnload();
     }
+}
+
+void Entity::Serialize(Serializer& aSerializer)
+{
+    aSerializer.Process("myComponents", myComponents);
 }
 
 const UID& Entity::GetUID()

@@ -1,9 +1,12 @@
 #pragma once
 
+#include "Filepath.h"
+
 #include <glm/trigonometric.hpp>
 #include <string>
 
 enum CameraType {
+    FileBased,
     FreeCam,
     Orbital,
     Curve
@@ -12,6 +15,10 @@ enum CameraType {
 class CameraSettings
 {
 public:
+    CameraSettings(const Filepath& anAsset)
+        : myType {CameraType::FileBased}
+        , myAsset {anAsset}
+    {}
     CameraSettings(CameraType aType)
         : myType {aType}
     {}
@@ -29,5 +36,6 @@ private:
     float myAspectRatio {16.f / 9.f};
     float myNearPlane {0.1f};
     float myFarPlane {200.f};
+    Filepath myAsset {};
     friend class CameraFactory;
 };

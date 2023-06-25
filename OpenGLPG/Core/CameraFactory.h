@@ -19,5 +19,5 @@ void AddCameraBehavior(const typename BehaviorT::Settings& someSettings, Camera&
 {
     static_assert(std::is_base_of_v<CameraBehavior, BehaviorT>, "Selected type is not a CameraBehavior");
     CameraBehavior::UniquePtr newBehavior {std::make_unique<BehaviorT>(someSettings)};
-    outCamera.myBehaviors.emplace_back(std::move(newBehavior));
+    outCamera.myBehaviors.EmplaceBack(std::move(newBehavior));
 }

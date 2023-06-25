@@ -42,6 +42,13 @@ void Filepath::Append(const char* aString)
     myPath.append(aString);
 }
 
+Filepath Filepath::operator+(const Filepath& anOther) const
+{
+    Filepath result {*this};
+    result.Append(anOther.GetBuffer());
+    return result;
+}
+
 bool Filepath::operator==(const Filepath& anOther) const
 {
     return myPath == anOther.myPath;

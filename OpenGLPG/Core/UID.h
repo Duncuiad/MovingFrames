@@ -9,7 +9,10 @@ public:
     static UID CreateUnique();
 
     UID() = default;
-    UID(const UID& anOther);
+    UID(const UID& anOther) = default;
+    UID(UID&& anOther) noexcept = default;
+    UID& operator=(const UID& anOther) = default;
+    UID& operator=(UID&& anOther) noexcept = default;
 
     bool IsValid();
     bool operator==(const UID& anOther) const;

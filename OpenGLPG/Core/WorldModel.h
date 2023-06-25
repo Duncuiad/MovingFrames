@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Array.h"
 #include "CameraData.h"
 #include "CameraManager.h"
 #include "Entity.h"
+#include "Filepath.h"
 #include "UID.h"
 
 class WorldModel
@@ -11,6 +13,7 @@ public:
     struct ConstructionParams
     {
         const ClientLoader& myClientLoader;
+        Filepath aLevelName = "";
     };
     struct UpdateParams
     {
@@ -22,6 +25,7 @@ public:
     void Init();
     void Shutdown();
     void Update(const UpdateParams& someParams);
+    void SaveWorld(const std::string& aLevelName);
 
     bool IsAvailable() const;
 
@@ -30,6 +34,7 @@ public:
 
 private:
     Entity::Container myEntities;
+    Array<Entity> myEntityQueue;
 
     CameraManager myCameraManager;
     UID myGameplayCamera {UID::Empty};

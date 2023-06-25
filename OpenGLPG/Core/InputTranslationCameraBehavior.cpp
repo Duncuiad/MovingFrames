@@ -3,6 +3,14 @@
 #include "InputTranslationCameraBehavior.h"
 
 #include "CameraRuntimeData.h"
+#include "Serializer.h"
+
+REGISTER_SUBTYPE(InputTranslationCameraBehavior)
+
+void InputTranslationCameraBehavior::Serialize(Serializer& aSerializer)
+{
+    aSerializer.Process("mySpeed", mySettings.mySpeed);
+}
 
 void InputTranslationCameraBehavior::Update(const UpdateParams& someParams) const
 {

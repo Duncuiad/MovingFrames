@@ -1,12 +1,13 @@
 #pragma once
 
+#include "Array.h"
 #include "Component.h"
+#include "Serializable.h"
 #include "UID.h"
 
 #include <unordered_map>
-#include <vector>
 
-class Entity
+class Entity : public Serializable
 {
 public:
     using Container = std::unordered_map<UID, Entity>;
@@ -16,11 +17,19 @@ public:
         const ClientLoader& myClientLoader;
     };
 
+    Entity();
+    Entity(const Entity& anEntity) = delete;
+    Entity(Entity&& anEntity) noexcept = default;
+    Entity& operator=(const Entity& anEntity) = delete;
+    Entity& operator=(Entity&& anEntity) noexcept = default;
+
     void Load(const LoadParams& someParams);
-    void Spawn();
+    void Spawn(const UID& anEntityUID);
     void Update();
     void Unspawn();
     void Unload();
+
+    void Serialize(Serializer& aSerializer) override;
 
     const UID& GetUID();
 
@@ -30,12 +39,8 @@ public:
     ComponentT* GetEditableComponent() const;
 
 private:
-    Entity(const UID& aUID);
-    Entity(const Entity& anEntity) = delete;
-    // Entity(Entity&& anEntity) noexcept;
-
     UID myUID;
-    std::vector<Component::Ptr> myComponents;
+    ArrayDynamic<Component::Ptr> myComponents;
 
     friend class WorldModel;
     friend struct std::pair<const UID, Entity>;

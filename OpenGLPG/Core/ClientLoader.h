@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Filepath.h"
 #include "ModelLoader.h"
 #include "ShaderLoader.h"
 
@@ -8,7 +9,12 @@
 class ClientLoader
 {
 public:
-    ClientLoader();
+    struct ConstructionParams
+    {
+        const Filepath& myAssetFolder;
+    };
+
+    ClientLoader(const ConstructionParams& someParams);
     void Register();
     void Unregister();
     void Load();
@@ -16,6 +22,11 @@ public:
 
     ShaderLoader& GetShaderLoader() const { return *myShaderLoader; }
     ModelLoader& GetMeshLoader() const { return *myModelLoader; }
+
+    const Filepath myAssetFolder;
+    const Filepath myShaderFolder;
+    const Filepath myModelFolder;
+    const Filepath myWorldFolder;
 
 private:
     std::unique_ptr<ShaderLoader> myShaderLoader;

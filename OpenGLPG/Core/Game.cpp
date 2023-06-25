@@ -6,7 +6,7 @@
 
 Game::Game(const ConstructionParams& someparams)
     : myRenderManager {{someparams.myLoader.GetShaderLoader()}}
-    , myWorldModel {{someparams.myLoader}}
+    , myWorldModel {{someparams.myLoader, "baselevel"}}
 {}
 
 void Game::Init()

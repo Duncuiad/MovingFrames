@@ -19,6 +19,7 @@
 constexpr float locMinFrameTime {1.f / 60.f};
 
 Client::Client()
+    : myLoader {{GLOBALPATH_ASSETFOLDER}}
 {
     bool result = true;
     result &= GLFWInit();

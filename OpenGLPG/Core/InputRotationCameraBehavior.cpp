@@ -3,6 +3,15 @@
 #include "InputRotationCameraBehavior.h"
 
 #include "CameraRuntimeData.h"
+#include "Serializer.h"
+
+REGISTER_SUBTYPE(InputRotationCameraBehavior)
+
+void InputRotationCameraBehavior::Serialize(Serializer& aSerializer)
+{
+    aSerializer.Process("myHorizontalSpeed", mySettings.myHorizontalSpeed);
+    aSerializer.Process("myVerticalSpeed", mySettings.myVerticalSpeed);
+}
 
 void InputRotationCameraBehavior::Update(const UpdateParams& someParams) const
 {

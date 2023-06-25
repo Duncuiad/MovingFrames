@@ -13,10 +13,6 @@ UID UID::CreateUnique()
     return newUID;
 }
 
-UID::UID(const UID& anOther)
-    : myInternalID {anOther.myInternalID}
-{}
-
 bool UID::IsValid()
 {
     return *this != UID::Empty;

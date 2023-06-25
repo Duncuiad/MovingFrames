@@ -19,6 +19,7 @@ public:
     bool HasExtension(const char* anExtension) const;
     void Append(const char* aString);
 
+    Filepath operator+(const Filepath& anOther) const;
     bool operator==(const Filepath& anOther) const;
 
 private:

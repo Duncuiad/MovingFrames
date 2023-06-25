@@ -2,10 +2,13 @@
 
 #include "ClientLoader.h"
 
-// @improvement: find a place for system paths
-ClientLoader::ClientLoader()
-    : myShaderLoader {std::make_unique<ShaderLoader>("../Data/Assets/Shaders/")}
-    , myModelLoader {std::make_unique<ModelLoader>("../Data/Assets/Models/")}
+ClientLoader::ClientLoader(const ConstructionParams& someParams)
+    : myAssetFolder {someParams.myAssetFolder}
+    , myShaderFolder {someParams.myAssetFolder + "Shaders/"}
+    , myModelFolder {someParams.myAssetFolder + "Models/"}
+    , myWorldFolder {someParams.myAssetFolder + "Worlds/"}
+    , myShaderLoader {std::make_unique<ShaderLoader>(myShaderFolder)}
+    , myModelLoader {std::make_unique<ModelLoader>(myModelFolder)}
 {}
 
 void ClientLoader::Register() {}

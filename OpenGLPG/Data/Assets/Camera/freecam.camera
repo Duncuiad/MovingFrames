@@ -1,0 +1,54 @@
+myBehaviors
+{
+	myCount
+	{
+		2
+	}
+
+	0
+	{
+		InputRotationCameraBehavior
+		myHorizontalSpeed
+		{
+			0.872665
+		}
+
+		myVerticalSpeed
+		{
+			0.872665
+		}
+
+	}
+
+	1
+	{
+		InputTranslationCameraBehavior
+		mySpeed
+		{
+			1.000000
+		}
+
+	}
+
+}
+
+myFOV
+{
+	0.785398
+}
+
+myAspectRatio
+{
+	1.777778
+}
+
+myNearPlane
+{
+	0.100000
+}
+
+myFarPlane
+{
+	200.000000
+}
+
