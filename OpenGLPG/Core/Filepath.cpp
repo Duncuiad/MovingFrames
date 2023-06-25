@@ -2,7 +2,13 @@
 
 #include "Filepath.h"
 
+#include "Serializer.h"
+
 #include <format>
+
+Filepath::Filepath()
+    : Filepath {""}
+{}
 
 Filepath::Filepath(const char* aPath)
     : myPath {aPath}
@@ -15,6 +21,11 @@ Filepath::Filepath(const std::string& aPath)
 Filepath::Filepath(const Filepath& aPath)
     : myPath {aPath.GetBuffer()}
 {}
+
+void Filepath::Serialize(Serializer& aSerializer)
+{
+    aSerializer.Process("myPath", myPath);
+}
 
 const char* Filepath::GetBuffer() const
 {

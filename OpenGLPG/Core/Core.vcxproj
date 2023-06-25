@@ -217,6 +217,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingFrame.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Serializable.cpp" />
     <ClCompile Include="SerializationTest.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -234,6 +235,7 @@
     <None Include="..\Data\Assets\Shaders\basic.frag" />
     <None Include="..\Data\Assets\Shaders\basic.shader" />
     <None Include="..\Data\Assets\Shaders\basic.vert" />
+    <None Include="Serializer.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

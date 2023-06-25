@@ -320,6 +320,9 @@
     <ClCompile Include="Test.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="Serializable.cpp">
+      <Filter>Engine\Serialization</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc">
@@ -335,6 +338,9 @@
     </None>
     <None Include="..\Data\Assets\Shaders\basic.vert">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="Serializer.inl">
+      <Filter>Engine\Serialization</Filter>
     </None>
   </ItemGroup>
 </Project>

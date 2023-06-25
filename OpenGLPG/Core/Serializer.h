@@ -2,6 +2,7 @@
 
 #include "Assert.h"
 #include "Filepath.h"
+#include "MathDefines.h"
 #include "Serializable.h"
 
 #include <fstream>
@@ -11,7 +12,12 @@ class Serializer
 {
 public:
     virtual void Process(const char* aVariableName, Serializable& aVariable) = 0;
+    virtual void Process(const char* aVariableName, SerializableDynamic*& aPtr) = 0;
     virtual void Process(const char* aVariableName, int& aVariable) = 0;
+    virtual void Process(const char* aVariableName, float& aVariable) = 0;
+    virtual void Process(const char* aVariableName, Vec3& aVariable) = 0;
+    virtual void Process(const char* aVariableName, Vec4& aVariable) = 0;
+    virtual void Process(const char* aVariableName, std::string& aVariable) = 0;
 };
 
 template <typename Policy>
@@ -22,7 +28,12 @@ public:
     ~SerializerT();
 
     void Process(const char* aVariableName, Serializable& aVariable) override;
+    void Process(const char* aVariableName, SerializableDynamic*& aPtr) override;
     void Process(const char* aVariableName, int& aVariable) override;
+    void Process(const char* aVariableName, float& aVariable) override;
+    void Process(const char* aVariableName, Vec3& aVariable) override;
+    void Process(const char* aVariableName, Vec4& aVariable) override;
+    void Process(const char* aVariableName, std::string& aVariable) override;
 
 private:
     friend class SavePolicy;
@@ -81,122 +92,4 @@ void Serialize(SerializerT<SavePolicy>& aSerializer, SerializableT& aVariable);
 template <typename SerializableT>
 void Serialize(SerializerT<LoadPolicy>& aSerializer, SerializableT& aVariable);
 
-// Implementations
-
-template <typename Policy>
-inline SerializerT<Policy>::SerializerT(const Filepath& aFile)
-{
-    myFile.open(aFile.GetBuffer());
-    ASSERT(myFile.is_open(), "Failed opening file to serialize {}", aFile.GetBuffer());
-}
-
-template <typename Policy>
-inline SerializerT<Policy>::~SerializerT()
-{
-    myFile.close();
-}
-
-template <typename Policy>
-inline void SerializerT<Policy>::Process(const char* aVariableName, Serializable& aVariable)
-{
-    Policy::Process(aVariableName, aVariable, *this);
-}
-
-template <typename Policy>
-inline void SerializerT<Policy>::Process(const char* aVariableName, int& aVariable)
-{
-    Policy::Process(aVariableName, aVariable, *this);
-}
-
-template <typename SerializableT>
-inline void SavePolicy::Process(const char* aVariableName, SerializableT& aVariable, SerializerType& aSerializer)
-{
-    StreamType& openStream {aSerializer.myFile};
-    ASSERT(openStream.is_open(), "File is not open!");
-
-    openStream << Indent(aVariableName, aSerializer) << std::endl;
-    EnterObject(aSerializer);
-    Serialize<SerializableT>(aSerializer, aVariable);
-    ExitObject(aSerializer);
-}
-
-template <typename SerializableT>
-inline void LoadPolicy::Process(const char* aVariableName, SerializableT& aVariable, SerializerType& aSerializer)
-{
-    StreamType& openStream {aSerializer.myFile};
-    ASSERT(openStream.is_open(), "File is not open!");
-
-    std::string lineBuffer;
-    do
-    {
-        std::getline(openStream, lineBuffer);
-        lineBuffer = Indent(lineBuffer, aSerializer);
-        if (lineBuffer == std::string(aVariableName))
-        {
-            EnterObject(aSerializer);
-            Serialize<SerializableT>(aSerializer, aVariable);
-            ExitObject(aSerializer);
-            break;
-        }
-    } while (!openStream.eof());
-}
-
-template <>
-inline void Serialize<Serializable>(SerializerT<SavePolicy>& aSerializer, Serializable& aVariable)
-{
-    aVariable.Serialize(aSerializer);
-}
-
-template <>
-inline void Serialize<Serializable>(SerializerT<LoadPolicy>& aSerializer, Serializable& aVariable)
-{
-    aVariable.Serialize(aSerializer);
-}
-
-template <>
-inline void Serialize(SerializerT<SavePolicy>& aSerializer, int& aVariable)
-{
-    aSerializer.myFile << SavePolicy::Indent(std::to_string(aVariable), aSerializer) << std::endl;
-}
-
-template <>
-inline void Serialize(SerializerT<LoadPolicy>& aSerializer, int& aVariable)
-{
-    aSerializer.myFile >> aVariable;
-}
-
-template <typename SerializableT>
-inline void Serialize(SerializerT<SavePolicy>& aSerializer, SerializableT& aVariable)
-{
-    ASSERT(false, "Trying to serialize a type that is not Serializable");
-}
-
-template <typename SerializableT>
-inline void Serialize(SerializerT<LoadPolicy>& aSerializer, SerializableT& aVariable)
-{
-    ASSERT(false, "Trying to serialize a type that is not Serializable");
-}
-
-// template <typename FundamentalT, std::enable_if_t<std::is_fundamental<FundamentalT>::value, bool> = true>
-// inline void Serialize(SerializerT<SavePolicy>& aSerializer, FundamentalT& aVariable)
-//{
-//     aSerializer.myFile << SavePolicy::Indent(std::to_string(aVariable), aSerializer) << std::endl;
-// }
-//
-// template <typename FundamentalT, std::enable_if_t<std::is_fundamental<FundamentalT>::value, bool> = true>
-// inline void Serialize(SerializerT<LoadPolicy>& aSerializer, FundamentalT& aVariable)
-//{
-//     aSerializer.myFile >> aVariable;
-// }
-//
-// template <typename SerializableT, std::enable_if_t<!std::is_fundamental<SerializableT> {}, bool>>
-// inline void Serialize(SerializerT<SavePolicy>& aSerializer, SerializableT& aVariable)
-//{
-//     ASSERT(false, "Trying to serialize a type that is not Serializable");
-// }
-//
-// template <typename SerializableT, std::enable_if_t<!std::is_fundamental<SerializableT> {}, bool>>
-// inline void Serialize(SerializerT<LoadPolicy>& aSerializer, SerializableT& aVariable)
-//{
-//     ASSERT(false, "Trying to serialize a type that is not Serializable");
-// }
+#include "Serializer.inl"

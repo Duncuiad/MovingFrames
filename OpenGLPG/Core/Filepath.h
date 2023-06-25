@@ -1,16 +1,21 @@
 #pragma once
 
+#include "Serializable.h"
+
 #include <string>
 
-class Filepath
+class Filepath : public Serializable
 {
 public:
     // Intentionally not explicit
+    Filepath();
     Filepath(const char* aPath);
     Filepath(const std::string& aPath);
     Filepath(const Filepath& aPath);
-    const char* GetBuffer() const;
 
+    void Serialize(Serializer& aSerializer) override;
+
+    const char* GetBuffer() const;
     bool HasExtension(const char* anExtension) const;
     void Append(const char* aString);
 

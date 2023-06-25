@@ -5,19 +5,14 @@
 
 class TransformCmp : public Component
 {
+    DECLARE_SUBTYPE(TransformCmp)
+
+public:
+    void Serialize(Serializer& aSerializer) override;
+
     const Transform& GetTransform() const;
     void SetTransform(const Transform& aTransform);
 
 private:
     Transform myTransform;
 };
-
-inline const Transform& TransformCmp::GetTransform() const
-{
-    return myTransform;
-}
-
-inline void TransformCmp::SetTransform(const Transform& aTransform)
-{
-    myTransform = aTransform;
-}

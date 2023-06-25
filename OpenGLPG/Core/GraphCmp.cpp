@@ -3,6 +3,9 @@
 #include "GraphCmp.h"
 
 #include "Assert.h"
+#include "Serializer.h"
+
+REGISTER_SUBTYPE(GraphCmp)
 
 GraphCmp::GraphCmp(const Filepath& aModelAsset, const Filepath& aShaderAsset)
     : myModelAsset {aModelAsset}
@@ -25,4 +28,10 @@ void GraphCmp::Draw(const DrawParams& someParams) const
     myShader->SetUniformMat4("WorldToClip", someParams.myWorldToClipMatrix);
     myShader->Use();
     myModel->Draw();
+}
+
+void GraphCmp::Serialize(Serializer& aSerializer)
+{
+    aSerializer.Process("myModel", myModelAsset);
+    aSerializer.Process("myShader", myShaderAsset);
 }

@@ -8,6 +8,8 @@
 
 class GraphCmp : public Component
 {
+    DECLARE_SUBTYPE(GraphCmp)
+
 public:
     struct DrawParams
     {
@@ -19,6 +21,8 @@ public:
     void OnLoad(const LoadParams& someParams) override;
     void Update() override {}
     void Draw(const DrawParams& someParams) const;
+
+    void Serialize(Serializer& aSerializer) override;
 
 private:
     Model::Ptr myModel {nullptr};

@@ -2,7 +2,10 @@
 
 #include "SerializationTest.h"
 
+#include "Component.h"
 #include "Filepath.h"
+#include "GraphCmp.h"
+#include "TransformCmp.h"
 
 namespace Test
 {
@@ -50,6 +53,36 @@ void SerializationTest()
         test2_01.Serialize(loader2);
         SerializerSaver saver3("../Data/Assets/Test/test3.json");
         test2_01.Serialize(saver3);
+    }
+
+    {
+        std::vector<Component::Ptr> compArray;
+        TransformCmp* trCmp {new TransformCmp {}};
+        trCmp->SetTransform(Transform {glm::identity<glm::mat3>(), Vec3 {1.f, 2.f, 3.f}});
+        compArray.emplace_back(trCmp);
+        compArray.emplace_back(new GraphCmp {"backpack/backpack.obj", "basic.shader"});
+
+        Array<SerializableDynamic*> test4 {};
+        for (const auto& cmp : compArray)
+        {
+            test4.PushBack(cmp.get());
+        }
+
+        SerializerSaver saver4("../Data/Assets/Test/test4.json");
+        test4.Serialize(saver4);
+    }
+
+    {
+        Array<SerializableDynamic*> test5 {};
+
+        SerializerLoader loader5("../Data/Assets/Test/test4.json");
+        test5.Serialize(loader5);
+
+        std::vector<Component::Ptr> compArray;
+        for (int i = 0; i < test5.Count(); ++i)
+        {
+            compArray.emplace_back(static_cast<Component*>(test5[i]));
+        }
     }
 }
 } // namespace Test

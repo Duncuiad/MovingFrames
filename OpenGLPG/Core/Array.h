@@ -3,6 +3,7 @@
 #include "Serializable.h"
 #include "Serializer.h"
 
+#include <type_traits>
 #include <vector>
 
 template <typename ElemT>
@@ -29,7 +30,15 @@ inline void Array<ElemT>::Serialize(Serializer& aSerializer)
 
     for (int i = 0; i < count; ++i)
     {
+        // if (SerializableDynamic* element = dynamic_cast<SerializableDynamic*>(myElements[i]))
+        //{
+        //     aSerializer.Process(std::to_string(i).data(), element);
+        //     myElements[i] = dynamic_cast<Component*>(element);
+        // }
+        // else
+        //{
         aSerializer.Process(std::to_string(i).data(), myElements[i]);
+        //}
     }
 }
 

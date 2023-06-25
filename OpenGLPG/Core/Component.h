@@ -1,15 +1,14 @@
 #pragma once
 
 #include "ClientLoader.h"
+#include "Serializable.h"
 
 #include <memory>
 
-class Component
+class Component : public SerializableDynamic
 {
 public:
     using Ptr = std::unique_ptr<Component>;
-
-    virtual ~Component() = default;
 
     struct LoadParams
     {
@@ -18,7 +17,7 @@ public:
 
     virtual void OnLoad(const LoadParams& someParams) {}
     virtual void OnEnterWorld() {}
-    virtual void Update() = 0;
+    virtual void Update() {}
     virtual void OnExitWorld() {}
     virtual void OnUnload() {}
 };
