@@ -4,15 +4,19 @@
 #include "Serializer.h"
 
 #include <type_traits>
+#include <utility>
 #include <vector>
 
-template <typename ElemT>
+template <typename ElemT, bool IsDynamic = false>
 class Array : public Serializable
 {
 public:
     void Serialize(Serializer& aSerializer) override;
     int Count() const;
     void PushBack(const ElemT& anElement);
+
+    template <class... ValT>
+    decltype(auto) EmplaceBack(ValT&&... someVals);
 
     ElemT& operator[](size_t idx);
     const ElemT& operator[](size_t idx) const;
@@ -22,7 +26,10 @@ private:
 };
 
 template <typename ElemT>
-inline void Array<ElemT>::Serialize(Serializer& aSerializer)
+using ArrayDynamic = Array<ElemT, true>;
+
+template <typename ElemT, bool IsDynamic>
+inline void Array<ElemT, IsDynamic>::Serialize(Serializer& aSerializer)
 {
     int count {static_cast<int>(myElements.size())};
     aSerializer.Process("myCount", count);
@@ -30,38 +37,49 @@ inline void Array<ElemT>::Serialize(Serializer& aSerializer)
 
     for (int i = 0; i < count; ++i)
     {
-        // if (SerializableDynamic* element = dynamic_cast<SerializableDynamic*>(myElements[i]))
-        //{
-        //     aSerializer.Process(std::to_string(i).data(), element);
-        //     myElements[i] = dynamic_cast<Component*>(element);
-        // }
-        // else
-        //{
-        aSerializer.Process(std::to_string(i).data(), myElements[i]);
-        //}
+        if constexpr (IsDynamic)
+        {
+            SerializableDynamic* ptr {Unwrap(myElements[i])};
+            aSerializer.Process(std::to_string(i).data(), ptr);
+            if (Unwrap(myElements[i]) != ptr)
+            {
+                myElements[i] = Wrap<ElemT>(ptr);
+            }
+        }
+        else
+        {
+            aSerializer.Process(std::to_string(i).data(), myElements[i]);
+        }
     }
 }
 
-template <typename ElemT>
-inline int Array<ElemT>::Count() const
+template <typename ElemT, bool IsDynamic>
+inline int Array<ElemT, IsDynamic>::Count() const
 {
     return static_cast<int>(myElements.size());
 }
 
-template <typename ElemT>
-inline void Array<ElemT>::PushBack(const ElemT& anElement)
+template <typename ElemT, bool IsDynamic>
+inline void Array<ElemT, IsDynamic>::PushBack(const ElemT& anElement)
 {
     myElements.push_back(anElement);
 }
 
-template <typename ElemT>
-inline ElemT& Array<ElemT>::operator[](std::size_t idx)
+template <typename ElemT, bool IsDynamic>
+template <class... ValT>
+decltype(auto) Array<ElemT, IsDynamic>::EmplaceBack(ValT&&... someVals)
+{
+    myElements.emplace_back(std::forward<ValT>(someVals)...);
+}
+
+template <typename ElemT, bool IsDynamic>
+inline ElemT& Array<ElemT, IsDynamic>::operator[](std::size_t idx)
 {
     return myElements[idx];
 }
 
-template <typename ElemT>
-inline const ElemT& Array<ElemT>::operator[](std::size_t idx) const
+template <typename ElemT, bool IsDynamic>
+inline const ElemT& Array<ElemT, IsDynamic>::operator[](std::size_t idx) const
 {
     return myElements[idx];
 }

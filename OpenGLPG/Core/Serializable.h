@@ -11,16 +11,31 @@ class Serializer;
 class Serializable
 {
 public:
+    virtual ~Serializable() = default;
     virtual void Serialize(Serializer& aSerializer) = 0;
 };
 
 class SerializableDynamic
 {
 public:
+    virtual ~SerializableDynamic() = default;
     virtual void Serialize(Serializer& aSerializer) = 0;
     virtual std::string GetSubtypeId() const = 0;
-    virtual ~SerializableDynamic() = default;
 };
+
+inline SerializableDynamic* Unwrap(SerializableDynamic* aPtr)
+{
+    return aPtr;
+}
+
+template <typename PtrT>
+inline PtrT Wrap(SerializableDynamic* aPtr);
+
+template <>
+inline SerializableDynamic* Wrap<SerializableDynamic*>(SerializableDynamic* aPtr)
+{
+    return aPtr;
+}
 
 // @note: This is a singleton. It's like this to make development faster, but it doesn't have to be a singleton: you
 // could provide a custom factory to a serializer in order to tell it how to construct your custom types

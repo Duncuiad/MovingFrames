@@ -62,7 +62,7 @@ void SerializationTest()
         compArray.emplace_back(trCmp);
         compArray.emplace_back(new GraphCmp {"backpack/backpack.obj", "basic.shader"});
 
-        Array<SerializableDynamic*> test4 {};
+        Array<SerializableDynamic*, true> test4 {};
         for (const auto& cmp : compArray)
         {
             test4.PushBack(cmp.get());
@@ -73,15 +73,35 @@ void SerializationTest()
     }
 
     {
-        Array<SerializableDynamic*> test5 {};
+        Array<SerializableDynamic*, true> test6 {};
 
         SerializerLoader loader5("../Data/Assets/Test/test4.json");
-        test5.Serialize(loader5);
+        test6.Serialize(loader5);
 
         std::vector<Component::Ptr> compArray;
-        for (int i = 0; i < test5.Count(); ++i)
+        for (int i = 0; i < test6.Count(); ++i)
         {
-            compArray.emplace_back(static_cast<Component*>(test5[i]));
+            compArray.emplace_back(static_cast<Component*>(test6[i]));
+        }
+    }
+
+    {
+        {
+            Array<Component::Ptr, true> test7;
+            TransformCmp* trCmp {new TransformCmp {}};
+            trCmp->SetTransform(Transform {glm::identity<glm::mat3>(), Vec3 {1.f, 2.f, 3.f}});
+            test7.EmplaceBack(trCmp);
+            test7.EmplaceBack(new GraphCmp {"backpack/backpack.obj", "basic.shader"});
+
+            SerializerSaver saver7("../Data/Assets/Test/test7.json");
+            test7.Serialize(saver7);
+        }
+
+        {
+            Array<Component::Ptr, true> test8 {};
+
+            SerializerLoader loader8("../Data/Assets/Test/test7.json");
+            test8.Serialize(loader8);
         }
     }
 }

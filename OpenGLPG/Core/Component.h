@@ -21,3 +21,14 @@ public:
     virtual void OnExitWorld() {}
     virtual void OnUnload() {}
 };
+
+inline SerializableDynamic* Unwrap(const Component::Ptr& aPtr)
+{
+    return aPtr.get();
+}
+
+template <>
+inline Component::Ptr Wrap<Component::Ptr>(SerializableDynamic* aPtr)
+{
+    return Component::Ptr {static_cast<Component*>(aPtr)};
+}
