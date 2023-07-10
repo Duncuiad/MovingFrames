@@ -25,6 +25,9 @@ void GraphCmp::Draw(const DrawParams& someParams) const
 
     // @improvement: try and see if I can batch the use of shaders and meshes to minimize reallocation
     myShader->SetUniformMat4("Model", someParams.myModelMatrix);
+    myShader->SetUniformMat4("View", someParams.myViewMatrix);
+    myShader->SetUniformMat4("ModelView", someParams.myModelViewMatrix);
+    myShader->SetUniformMat4("Projection", someParams.myProjectionMatrix);
     myShader->SetUniformMat4("WorldToClip", someParams.myWorldToClipMatrix);
     myShader->Use();
     myModel->Draw();

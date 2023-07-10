@@ -12,7 +12,7 @@ class Shader
 public:
     using Ptr = std::shared_ptr<const Shader>;
 
-    Shader(const Filepath& aVertexPath, const Filepath& aFragmentPath);
+    Shader(const Filepath& aVertexPath, const Filepath& aFragmentPath, const Filepath* aGeometryPath = nullptr);
     ~Shader();
 
     void Use() const;
@@ -22,6 +22,7 @@ public:
 
 private:
     std::string LoadShaderSource(const Filepath& aPath) const;
-    void LinkShaderSource(const char* aVertexSource, const char* aFragmentSource);
+    void LinkShaderSource(const char* aVertexSource, const char* aFragmentSource,
+                          const char* aGeometrySource = nullptr);
     GLUID myID {0};
 };

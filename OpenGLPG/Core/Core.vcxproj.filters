@@ -342,5 +342,17 @@
     <None Include="Serializer.inl">
       <Filter>Engine\Serialization</Filter>
     </None>
+    <None Include="..\Data\Assets\Shaders\tripod.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\tripod.geom">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\tripod.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\tripod.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

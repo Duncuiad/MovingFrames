@@ -14,6 +14,9 @@ public:
     struct DrawParams
     {
         const glm::mat4& myModelMatrix;
+        const glm::mat4& myViewMatrix;
+        const glm::mat4& myModelViewMatrix;
+        const glm::mat4& myProjectionMatrix;
         const glm::mat4& myWorldToClipMatrix;
     };
 

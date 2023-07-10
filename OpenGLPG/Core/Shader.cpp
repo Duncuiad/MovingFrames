@@ -9,15 +9,26 @@
 #include <iostream>
 #include <sstream>
 
-Shader::Shader(const Filepath& aVertexPath, const Filepath& aFragmentPath)
+Shader::Shader(const Filepath& aVertexPath, const Filepath& aFragmentPath, const Filepath* aGeometryPath /*= nullptr*/)
 {
     ASSERT(aVertexPath.HasExtension("vert"), "Trying to load wrong file format. {} is not a vertex shader!",
            aVertexPath.GetBuffer());
     ASSERT(aFragmentPath.HasExtension("frag"), "Trying to load wrong file format. {} is not a fragment shader!",
            aFragmentPath.GetBuffer());
+    ASSERT(aGeometryPath == nullptr || aGeometryPath->HasExtension("geom"),
+           "Trying to load wrong file format. {} is not a geometry shader!", aGeometryPath->GetBuffer());
     const std::string vertexShaderSource {LoadShaderSource(aVertexPath)};
     const std::string fragmentShaderSource {LoadShaderSource(aFragmentPath)};
-    LinkShaderSource(vertexShaderSource.data(), fragmentShaderSource.data());
+
+    if (aGeometryPath != nullptr)
+    {
+        const std::string geometryShaderSource {LoadShaderSource(*aGeometryPath)};
+        LinkShaderSource(vertexShaderSource.data(), fragmentShaderSource.data(), geometryShaderSource.data());
+    }
+    else
+    {
+        LinkShaderSource(vertexShaderSource.data(), fragmentShaderSource.data());
+    }
 }
 
 Shader::~Shader()
@@ -63,7 +74,8 @@ std::string Shader::LoadShaderSource(const Filepath& aPath) const
     return shaderSource;
 }
 
-void Shader::LinkShaderSource(const char* aVertexSource, const char* aFragmentSource)
+void Shader::LinkShaderSource(const char* aVertexSource, const char* aFragmentSource,
+                              const char* aGeometrySource /*= nullptr*/)
 {
     int success;
     char infoLog[512];
@@ -90,8 +102,26 @@ void Shader::LinkShaderSource(const char* aVertexSource, const char* aFragmentSo
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
+    GLUID geometryShader {0u};
+    if (aGeometrySource != nullptr)
+    {
+        geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(geometryShader, 1, &aGeometrySource, nullptr);
+        glCompileShader(geometryShader);
+        glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &success);
+        if (!success)
+        {
+            glGetShaderInfoLog(geometryShader, 512, nullptr, infoLog);
+            std::cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
+        }
+    }
+
     myID = glCreateProgram();
     glAttachShader(myID, vertexShader);
+    if (geometryShader != 0u)
+    {
+        glAttachShader(myID, geometryShader);
+    }
     glAttachShader(myID, fragmentShader);
     glLinkProgram(myID);
     glGetProgramiv(myID, GL_LINK_STATUS, &success);
@@ -102,4 +132,8 @@ void Shader::LinkShaderSource(const char* aVertexSource, const char* aFragmentSo
     }
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+    if (geometryShader != 0u)
+    {
+        glDeleteShader(geometryShader);
+    }
 }

@@ -28,17 +28,22 @@ Shader::Ptr ShaderLoader::GetShader(const Filepath& aFilepath)
 
     char vertexPath[512];
     char fragmentPath[512];
+    char geometryPath[512];
     shaderFile.getline(vertexPath, 512);
     shaderFile.getline(fragmentPath, 512);
+    shaderFile.getline(geometryPath, 512);
     shaderFile.close();
 
     Filepath vertexShader {myShaderFolder};
     Filepath fragmentShader {myShaderFolder};
+    Filepath geometryShader {myShaderFolder};
     vertexShader.Append(vertexPath);
     fragmentShader.Append(fragmentPath);
+    geometryShader.Append(geometryPath);
 
     // ASSERT(shaderFile.good(), "Failed loading shader {}", fullPath.GetBuffer());
 
-    const auto& pair {myShaders.try_emplace(aFilepath, new Shader {vertexShader, fragmentShader})};
+    const Filepath* maybeGeometryShader {strcmp(geometryPath, "") ? &geometryShader : nullptr};
+    const auto& pair {myShaders.try_emplace(aFilepath, new Shader {vertexShader, fragmentShader, maybeGeometryShader})};
     return pair.first->second;
 }

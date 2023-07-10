@@ -28,7 +28,7 @@ myCount
 			{
 				myPath
 				{
-					basic.shader
+					tripod.shader
 				}
 
 			}

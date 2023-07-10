@@ -36,7 +36,13 @@ void Renderer::Render(const RenderParams& someParams)
             viewportAdjustment[0][0] =
                 (static_cast<float>(viewportData[3]) * 16.f) / (static_cast<float>(viewportData[2]) * 9.f);
         }
+
+        // @todo: refactor model-view-projection matrix calculations
         const CameraData& activeCameraData {someParams.myWorldModel->GetActiveCameraData()};
+        const glm::mat4 view {glm::affineInverse(activeCameraData.myCameraTransform)};
+        const glm::mat4 projection {viewportAdjustment *
+                                    Utils::Projection(activeCameraData.myFOV, activeCameraData.myAspectRatio,
+                                                      activeCameraData.myNear, activeCameraData.myFar)};
         const glm::mat4 worldToClip {viewportAdjustment * Utils::WorldToClip(activeCameraData)};
 
         for (const auto& [uid, entity] : someParams.myWorldModel->GetEntities())
@@ -44,7 +50,8 @@ void Renderer::Render(const RenderParams& someParams)
             // @todo: retrieve transform from transform component
 
             Transform entityTransform {Mat4 {glm::identity<glm::mat4>()}};
-            entity.GetComponent<GraphCmp>()->Draw({entityTransform, worldToClip});
+            entity.GetComponent<GraphCmp>()->Draw(
+                {entityTransform, view, view * entityTransform, projection, worldToClip});
         }
 
         if constexpr (false)

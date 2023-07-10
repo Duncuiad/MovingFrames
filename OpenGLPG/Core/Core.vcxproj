@@ -235,6 +235,10 @@
     <None Include="..\Data\Assets\Shaders\basic.frag" />
     <None Include="..\Data\Assets\Shaders\basic.shader" />
     <None Include="..\Data\Assets\Shaders\basic.vert" />
+    <None Include="..\Data\Assets\Shaders\tripod.frag" />
+    <None Include="..\Data\Assets\Shaders\tripod.geom" />
+    <None Include="..\Data\Assets\Shaders\tripod.shader" />
+    <None Include="..\Data\Assets\Shaders\tripod.vert" />
     <None Include="Serializer.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
