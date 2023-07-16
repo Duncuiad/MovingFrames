@@ -7,6 +7,8 @@
 
 #include <unordered_map>
 
+class WorldModel;
+
 class Entity : public Serializable
 {
 public:
@@ -24,7 +26,7 @@ public:
     Entity& operator=(Entity&& anEntity) noexcept = default;
 
     void Load(const LoadParams& someParams);
-    void Spawn(const UID& anEntityUID);
+    void Spawn(const UID& anEntityUID, WorldModel* aWorldModel);
     void Update();
     void Unspawn();
     void Unload();

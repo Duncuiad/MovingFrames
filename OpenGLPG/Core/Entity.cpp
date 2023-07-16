@@ -4,14 +4,6 @@
 
 Entity::Entity() {}
 
-/*
-Entity::Entity(Entity&& anEntity) noexcept
-    : myUID {anEntity.myUID}
-{
-    myComponents = std::move(anEntity.myComponents);
-}
-*/
-
 void Entity::Load(const LoadParams& someParams)
 {
     for (const auto& component : myComponents)
@@ -20,12 +12,12 @@ void Entity::Load(const LoadParams& someParams)
     }
 }
 
-void Entity::Spawn(const UID& anEntityUID)
+void Entity::Spawn(const UID& anEntityUID, WorldModel* aWorldModel)
 {
     myUID = anEntityUID;
-    for (const auto& component : myComponents)
+    for (auto& component : myComponents)
     {
-        component->OnEnterWorld();
+        component->EnterWorld(myUID, aWorldModel);
     }
 }
 
@@ -41,7 +33,7 @@ void Entity::Unspawn()
 {
     for (const auto& component : myComponents)
     {
-        component->OnExitWorld();
+        component->ExitWorld();
     }
 }
 

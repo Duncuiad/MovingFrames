@@ -149,9 +149,12 @@
     <ClInclude Include="ClientCallbacks.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="EditorImGui.h" />
+    <ClInclude Include="FrameSplineCmp.h" />
     <ClInclude Include="DebugImGui.h" />
     <ClInclude Include="DebugUtils.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="Editor_FrameSplineCmp.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Filepath.h" />
     <ClInclude Include="Game.h" />
@@ -160,6 +163,7 @@
     <ClInclude Include="GameInputData.h" />
     <ClInclude Include="GraphCmp.h" />
     <ClInclude Include="Dual.h" />
+    <ClInclude Include="FrameSpline.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="InputRotationCameraBehavior.h" />
     <ClInclude Include="InputTranslationCameraBehavior.h" />
@@ -191,9 +195,12 @@
     <ClCompile Include="CameraUtils.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientCallbacks.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="FrameSplineCmp.cpp" />
     <ClCompile Include="DebugUtils.cpp" />
     <ClCompile Include="Dual.cpp" />
+    <ClCompile Include="Editor_FrameSplineCmp.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="ext\glad.c" />
     <ClCompile Include="ext\imgui.cpp" />
@@ -216,6 +223,7 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingFrame.cpp" />
+    <ClCompile Include="FrameSpline.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Serializable.cpp" />
     <ClCompile Include="SerializationTest.cpp" />

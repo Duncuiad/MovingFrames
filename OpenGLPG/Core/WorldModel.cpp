@@ -27,7 +27,7 @@ void WorldModel::Init()
     for (auto& entity : myEntityQueue)
     {
         UID newUID {UID::CreateUnique()};
-        entity.Spawn(newUID);
+        entity.Spawn(newUID, this);
         myEntities.try_emplace(newUID, std::move(entity));
     }
 
@@ -87,3 +87,22 @@ const CameraData& WorldModel::GetActiveCameraData() const
 {
     return myCameraManager.GetActiveCameraData();
 }
+
+const Entity& WorldModel::GetEntity(const UID& anEntityUID) const
+{
+    ASSERT(myEntities.contains(anEntityUID), "Invalid Entity UID");
+    return myEntities.at(anEntityUID);
+}
+
+Entity& WorldModel::GetEntity(const UID& anEntityUID)
+{
+    ASSERT(myEntities.contains(anEntityUID), "Invalid Entity UID");
+    return myEntities.at(anEntityUID);
+}
+
+#if EDITOR_IMGUI
+void WorldModel::EditorWidgetImGui()
+{
+    // @todo: select entity and when selected show components' EditorWidgetImGui()
+}
+#endif

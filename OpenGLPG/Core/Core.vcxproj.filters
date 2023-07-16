@@ -192,6 +192,18 @@
     <ClInclude Include="Array.h">
       <Filter>Engine\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="FrameSpline.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameSplineCmp.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor_FrameSplineCmp.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorImGui.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WorldModel.cpp">
@@ -322,6 +334,18 @@
     </ClCompile>
     <ClCompile Include="Serializable.cpp">
       <Filter>Engine\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameSpline.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameSplineCmp.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor_FrameSplineCmp.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Engine\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

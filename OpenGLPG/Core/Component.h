@@ -1,9 +1,14 @@
 #pragma once
 
 #include "ClientLoader.h"
+#include "EditorImGui.h"
 #include "Serializable.h"
+#include "UID.h"
 
 #include <memory>
+
+class Entity;
+class WorldModel;
 
 class Component : public SerializableDynamic
 {
@@ -15,11 +20,24 @@ public:
         const ClientLoader& myClientLoader;
     };
 
+    void EnterWorld(const UID& anEntityUID, WorldModel* aWorldModel);
+    void ExitWorld();
+
     virtual void OnLoad(const LoadParams& someParams) {}
     virtual void OnEnterWorld() {}
     virtual void Update() {}
     virtual void OnExitWorld() {}
     virtual void OnUnload() {}
+
+#if EDITOR_IMGUI
+    virtual void EditorWidgetImGui() {}
+#endif
+
+protected:
+    Entity& GetEntity() const;
+
+    UID myEntity;
+    WorldModel* myWorld;
 };
 
 inline SerializableDynamic* Unwrap(const Component::Ptr& aPtr)

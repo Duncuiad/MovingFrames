@@ -3,8 +3,9 @@
 #include "DebugImGui.h"
 #include "DebugUtils.h"
 #include "MathDefines.h"
+#include "Serializable.h"
 
-class MovingFrame
+class MovingFrame : public Serializable
 {
 public:
     enum Coord {
@@ -14,8 +15,11 @@ public:
 
     MovingFrame();
     MovingFrame(const MovingFrame& aMovingFrame) = default;
+    explicit MovingFrame(const DualQuat& aDualQuaternion);
     MovingFrame(const Quat& anOrientation, const Vec3& aPosition, Vec3 anAngularVelocity = Vec3 {0.f},
                 Vec3 aLinearVelocity = Vec3 {0.f});
+
+    void Serialize(Serializer& aSerializer) override;
 
     Quat GetOrientation() const;
     Vec3 GetPosition() const;
@@ -32,8 +36,6 @@ public:
     MovingFrame operator/(const MovingFrame& aFrame) const;
 
 private:
-    MovingFrame(const DualQuat& aDualQuaternion);
-
 #if DEBUG_IMGUI
     friend void ::ImGui::Draw(const MovingFrame&);
 #endif

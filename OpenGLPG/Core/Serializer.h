@@ -17,6 +17,7 @@ public:
     virtual void Process(const char* aVariableName, float& aVariable) = 0;
     virtual void Process(const char* aVariableName, Vec3& aVariable) = 0;
     virtual void Process(const char* aVariableName, Vec4& aVariable) = 0;
+    virtual void Process(const char* aVariableName, Quat& aVariable) = 0;
     virtual void Process(const char* aVariableName, std::string& aVariable) = 0;
 };
 
@@ -33,6 +34,7 @@ public:
     void Process(const char* aVariableName, float& aVariable) override;
     void Process(const char* aVariableName, Vec3& aVariable) override;
     void Process(const char* aVariableName, Vec4& aVariable) override;
+    void Process(const char* aVariableName, Quat& aVariable) override;
     void Process(const char* aVariableName, std::string& aVariable) override;
 
 private:

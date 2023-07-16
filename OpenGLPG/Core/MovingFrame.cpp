@@ -3,6 +3,7 @@
 #include "MovingFrame.h"
 
 #include "MathUtils.h"
+#include "Serializer.h"
 
 #include <glm/ext/quaternion_exponential.hpp>
 
@@ -14,11 +15,24 @@ MovingFrame::MovingFrame()
     myPose.real.w = 1.f;
 }
 
+MovingFrame::MovingFrame(const DualQuat& aDualQuaternion)
+    : myPose {aDualQuaternion}
+    , myTwist {}
+{}
+
 MovingFrame::MovingFrame(const Quat& anOrientation, const Vec3& aPosition, Vec3 anAngularVelocity /*= Vec3 {0.f}*/,
                          Vec3 aLinearVelocity /*= Vec3 {0.f}*/)
     : myPose {anOrientation, aPosition}
     , myTwist {Pure(anAngularVelocity), Pure(aLinearVelocity)}
 {}
+
+void MovingFrame::Serialize(Serializer& aSerializer)
+{
+    aSerializer.Process("myPoseReal", myPose.real);
+    aSerializer.Process("myPoseDual", myPose.dual);
+    aSerializer.Process("myTwistReal", myTwist.real);
+    aSerializer.Process("myTwistDual", myTwist.dual);
+}
 
 Quat MovingFrame::GetOrientation() const
 {
@@ -96,7 +110,3 @@ MovingFrame MovingFrame::operator/(const MovingFrame& aFrame) const
 {
     return *this * aFrame.Inverse();
 }
-
-MovingFrame::MovingFrame(const DualQuat& aDualQuaternion)
-    : myPose {aDualQuaternion}
-{}

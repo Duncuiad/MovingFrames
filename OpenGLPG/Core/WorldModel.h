@@ -3,6 +3,7 @@
 #include "Array.h"
 #include "CameraData.h"
 #include "CameraManager.h"
+#include "EditorImGui.h"
 #include "Entity.h"
 #include "Filepath.h"
 #include "UID.h"
@@ -31,6 +32,12 @@ public:
 
     const CameraData& GetActiveCameraData() const;
     const Entity::Container& GetEntities() const { return myEntities; }
+    const Entity& GetEntity(const UID& anEntityUID) const;
+    Entity& GetEntity(const UID& anEntityUID);
+
+#if EDITOR_IMGUI
+    void EditorWidgetImGui();
+#endif
 
 private:
     Entity::Container myEntities;

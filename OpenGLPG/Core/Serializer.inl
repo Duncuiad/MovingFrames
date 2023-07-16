@@ -1,3 +1,4 @@
+#include "Serializer.h"
 #pragma once
 
 template <typename Policy>
@@ -45,6 +46,12 @@ inline void SerializerT<Policy>::Process(const char* aVariableName, Vec3& aVaria
 
 template <typename Policy>
 inline void SerializerT<Policy>::Process(const char* aVariableName, Vec4& aVariable)
+{
+    Policy::Process(aVariableName, aVariable, *this);
+}
+
+template <typename Policy>
+inline void SerializerT<Policy>::Process(const char* aVariableName, Quat& aVariable)
 {
     Policy::Process(aVariableName, aVariable, *this);
 }
@@ -173,6 +180,21 @@ template <>
 inline void Serialize(SerializerT<LoadPolicy>& aSerializer, Vec4& aVariable)
 {
     aSerializer.myFile >> aVariable[0] >> aVariable[1] >> aVariable[2] >> aVariable[3];
+}
+
+template <>
+inline void Serialize(SerializerT<SavePolicy>& aSerializer, Quat& aVariable)
+{
+    aSerializer.myFile << SavePolicy::Indent(std::to_string(aVariable.w), aSerializer)
+                       << SavePolicy::Indent(std::to_string(aVariable.x), aSerializer)
+                       << SavePolicy::Indent(std::to_string(aVariable.y), aSerializer)
+                       << SavePolicy::Indent(std::to_string(aVariable.z), aSerializer) << std::endl;
+}
+
+template <>
+inline void Serialize(SerializerT<LoadPolicy>& aSerializer, Quat& aVariable)
+{
+    aSerializer.myFile >> aVariable.w >> aVariable.x >> aVariable.y >> aVariable.z;
 }
 
 template <>

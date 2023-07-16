@@ -13,7 +13,11 @@ class Array : public Serializable
 public:
     void Serialize(Serializer& aSerializer) override;
     int Count() const;
-    void PushBack(const ElemT& anElement);
+    ElemT& PushBack(const ElemT& anElement);
+    ElemT& GetFirst();
+    const ElemT& GetFirst() const;
+    ElemT& GetLast();
+    const ElemT& GetLast() const;
 
     // Adapter types and methods
     using Iterator = std::vector<ElemT>::iterator;
@@ -21,13 +25,20 @@ public:
 
     template <class... ValT>
     decltype(auto) EmplaceBack(ValT&&... someVals);
+    template <typename IterT>
+    decltype(auto) Insert(IterT aPos, const ElemT& aVal);
+    template <typename IterT>
+    decltype(auto) Insert(IterT aPos, ElemT&& aVal);
     Iterator begin() noexcept;
     ConstIterator begin() const noexcept;
     Iterator end() noexcept;
     ConstIterator end() const noexcept;
+    decltype(auto) rbegin() noexcept;
+    decltype(auto) rbegin() const noexcept;
+    decltype(auto) rend() noexcept;
+    decltype(auto) rend() const noexcept;
     ElemT& operator[](size_t idx);
     const ElemT& operator[](size_t idx) const;
-    // ___
 
 private:
     std::vector<ElemT> myElements;
@@ -68,9 +79,34 @@ inline int Array<ElemT, IsDynamic>::Count() const
 }
 
 template <typename ElemT, bool IsDynamic>
-inline void Array<ElemT, IsDynamic>::PushBack(const ElemT& anElement)
+inline ElemT& Array<ElemT, IsDynamic>::PushBack(const ElemT& anElement)
 {
     myElements.push_back(anElement);
+    return myElements.back();
+}
+
+template <typename ElemT, bool IsDynamic>
+inline ElemT& Array<ElemT, IsDynamic>::GetFirst()
+{
+    return myElements.front();
+}
+
+template <typename ElemT, bool IsDynamic>
+inline const ElemT& Array<ElemT, IsDynamic>::GetFirst() const
+{
+    return myElements.front();
+}
+
+template <typename ElemT, bool IsDynamic>
+inline ElemT& Array<ElemT, IsDynamic>::GetLast()
+{
+    return myElements.back();
+}
+
+template <typename ElemT, bool IsDynamic>
+inline const ElemT& Array<ElemT, IsDynamic>::GetLast() const
+{
+    return myElements.back();
 }
 
 template <typename ElemT, bool IsDynamic>
@@ -78,6 +114,20 @@ template <class... ValT>
 decltype(auto) Array<ElemT, IsDynamic>::EmplaceBack(ValT&&... someVals)
 {
     myElements.emplace_back(std::forward<ValT>(someVals)...);
+}
+
+template <typename ElemT, bool IsDynamic>
+template <typename IterT>
+decltype(auto) Array<ElemT, IsDynamic>::Insert(IterT aPos, const ElemT& aVal)
+{
+    return myElements.insert(aPos, aVal);
+}
+
+template <typename ElemT, bool IsDynamic>
+template <typename IterT>
+decltype(auto) Array<ElemT, IsDynamic>::Insert(IterT aPos, ElemT&& aVal)
+{
+    return myElements.insert(aPos, std::forward<ElemT>(aVal));
 }
 
 template <typename ElemT, bool IsDynamic>
@@ -114,4 +164,28 @@ template <typename ElemT, bool IsDynamic>
 inline Array<ElemT, IsDynamic>::ConstIterator Array<ElemT, IsDynamic>::end() const noexcept
 {
     return myElements.end();
+}
+
+template <typename ElemT, bool IsDynamic>
+inline decltype(auto) Array<ElemT, IsDynamic>::rbegin() noexcept
+{
+    return myElements.rbegin();
+}
+
+template <typename ElemT, bool IsDynamic>
+inline decltype(auto) Array<ElemT, IsDynamic>::rbegin() const noexcept
+{
+    return myElements.rbegin();
+}
+
+template <typename ElemT, bool IsDynamic>
+inline decltype(auto) Array<ElemT, IsDynamic>::rend() noexcept
+{
+    return myElements.rend();
+}
+
+template <typename ElemT, bool IsDynamic>
+inline decltype(auto) Array<ElemT, IsDynamic>::rend() const noexcept
+{
+    return myElements.rend();
 }
