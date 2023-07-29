@@ -3,6 +3,7 @@
 #include "WorldModel.h"
 
 #include "Assert.h"
+#include "ImGuiWidgets.h"
 #include "Serializer.h"
 
 #include <utility>
@@ -99,10 +100,3 @@ Entity& WorldModel::GetEntity(const UID& anEntityUID)
     ASSERT(myEntities.contains(anEntityUID), "Invalid Entity UID");
     return myEntities.at(anEntityUID);
 }
-
-#if EDITOR_IMGUI
-void WorldModel::EditorWidgetImGui()
-{
-    // @todo: select entity and when selected show components' EditorWidgetImGui()
-}
-#endif

@@ -53,31 +53,6 @@ void Renderer::Render(const RenderParams& someParams)
             entity.GetComponent<GraphCmp>()->Draw(
                 {entityTransform, view, view * entityTransform, projection, worldToClip});
         }
-
-        if constexpr (false)
-        {
-            Shader::Ptr basicShader {myShaderLoader.GetShader("basic.shader")};
-            float vertices[] = {
-                0.5f,  0.5f,  0.0f, // top right
-                0.5f,  -0.5f, 0.0f, // bottom right
-                -0.5f, -0.5f, 0.0f, // bottom left
-                -0.5f, 0.5f,  0.0f  // top left
-            };
-            unsigned int indices[] = {
-                // note that we start from 0!
-                0, 1, 3, // first triangle
-                1, 2, 3  // second triangle
-            };
-            Mesh basicMesh {Vertex::List {Vertex {{0.5f, 0.5f, 0.0f}, {}, {}}, Vertex {{0.5f, -0.5f, 0.0f}, {}, {}},
-                                          Vertex {{-0.5f, -0.5f, 0.0f}, {}, {}}, Vertex {{-0.5f, 0.5f, 0.0f}, {}, {}}},
-                            {
-                                // note that we start from 0!
-                                0, 1, 3, // first triangle
-                                1, 2, 3  // second triangle
-                            }};
-            basicShader->Use();
-            basicMesh.Draw();
-        }
     }
 }
 

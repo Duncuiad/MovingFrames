@@ -157,6 +157,7 @@
     <ClInclude Include="Editor_FrameSplineCmp.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Filepath.h" />
+    <ClInclude Include="FrameSplineGraphCmp.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientLoader.h" />
@@ -164,6 +165,8 @@
     <ClInclude Include="GraphCmp.h" />
     <ClInclude Include="Dual.h" />
     <ClInclude Include="FrameSpline.h" />
+    <ClInclude Include="ImGuiWidgets.h" />
+    <ClInclude Include="ModelGraphCmp.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="InputRotationCameraBehavior.h" />
     <ClInclude Include="InputTranslationCameraBehavior.h" />
@@ -211,15 +214,18 @@
     <ClCompile Include="ext\imgui_tables.cpp" />
     <ClCompile Include="ext\imgui_widgets.cpp" />
     <ClCompile Include="Filepath.cpp" />
+    <ClCompile Include="FrameSplineGraphCmp.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="ClientLoader.cpp" />
     <ClCompile Include="GameInputData.cpp" />
     <ClCompile Include="GraphCmp.cpp" />
+    <ClCompile Include="ImGuiWidgets.cpp" />
     <ClCompile Include="InputRotationCameraBehavior.cpp" />
     <ClCompile Include="InputTranslationCameraBehavior.cpp" />
     <ClCompile Include="InterpolationUtils.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="ModelGraphCmp.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingFrame.cpp" />

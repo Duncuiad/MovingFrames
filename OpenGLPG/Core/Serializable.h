@@ -74,7 +74,6 @@ struct SerializationRegistration
 
 #define DECLARE_SUBTYPE(SUBTYPE)                                                                                       \
 public:                                                                                                                \
-    SUBTYPE() = default;                                                                                               \
     static std::string GetStaticSubtypeId()                                                                            \
     {                                                                                                                  \
         return #SUBTYPE;                                                                                               \

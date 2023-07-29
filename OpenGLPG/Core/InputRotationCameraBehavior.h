@@ -13,6 +13,7 @@ public:
         float myVerticalSpeed {0.f};
     };
 
+    InputRotationCameraBehavior() = default;
     InputRotationCameraBehavior(const Settings& someSettings)
         : mySettings {someSettings}
     {}

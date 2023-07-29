@@ -35,10 +35,6 @@ public:
     const Entity& GetEntity(const UID& anEntityUID) const;
     Entity& GetEntity(const UID& anEntityUID);
 
-#if EDITOR_IMGUI
-    void EditorWidgetImGui();
-#endif
-
 private:
     Entity::Container myEntities;
     Array<Entity> myEntityQueue;

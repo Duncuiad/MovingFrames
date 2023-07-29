@@ -14,7 +14,7 @@ myCount
 
 		0
 		{
-			GraphCmp
+			ModelGraphCmp
 			myModel
 			{
 				myPath

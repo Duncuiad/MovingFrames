@@ -204,6 +204,15 @@
     <ClInclude Include="EditorImGui.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="ModelGraphCmp.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameSplineGraphCmp.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiWidgets.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WorldModel.cpp">
@@ -346,6 +355,15 @@
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelGraphCmp.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameSplineGraphCmp.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiWidgets.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

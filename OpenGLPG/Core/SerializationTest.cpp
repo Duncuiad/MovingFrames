@@ -4,7 +4,7 @@
 
 #include "Component.h"
 #include "Filepath.h"
-#include "GraphCmp.h"
+#include "ModelGraphCmp.h"
 #include "TransformCmp.h"
 
 namespace Test
@@ -60,7 +60,7 @@ void SerializationTest()
         TransformCmp* trCmp {new TransformCmp {}};
         trCmp->SetTransform(Transform {glm::identity<glm::mat3>(), Vec3 {1.f, 2.f, 3.f}});
         compArray.emplace_back(trCmp);
-        compArray.emplace_back(new GraphCmp {"backpack/backpack.obj", "basic.shader"});
+        compArray.emplace_back(new ModelGraphCmp {"backpack/backpack.obj", "basic.shader"});
 
         Array<SerializableDynamic*, true> test4 {};
         for (const auto& cmp : compArray)
@@ -91,7 +91,7 @@ void SerializationTest()
             TransformCmp* trCmp {new TransformCmp {}};
             trCmp->SetTransform(Transform {glm::identity<glm::mat3>(), Vec3 {1.f, 2.f, 3.f}});
             test7.EmplaceBack(trCmp);
-            test7.EmplaceBack(new GraphCmp {"backpack/backpack.obj", "basic.shader"});
+            test7.EmplaceBack(new ModelGraphCmp {"backpack/backpack.obj", "basic.shader"});
 
             SerializerSaver saver7("../Data/Assets/Test/test7.json");
             test7.Serialize(saver7);

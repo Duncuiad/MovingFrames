@@ -12,6 +12,7 @@ public:
         float mySpeed {0.f};
     };
 
+    InputTranslationCameraBehavior() = default;
     InputTranslationCameraBehavior(const Settings& someSettings)
         : mySettings {someSettings}
     {}

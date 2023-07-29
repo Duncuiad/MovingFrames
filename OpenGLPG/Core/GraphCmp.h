@@ -2,14 +2,12 @@
 
 #include "Component.h"
 #include "Filepath.h"
-#include "Mesh.h"
+#include "Shader.h"
 
 #include <glm/matrix.hpp>
 
 class GraphCmp : public Component
 {
-    DECLARE_SUBTYPE(GraphCmp)
-
 public:
     struct DrawParams
     {
@@ -20,16 +18,13 @@ public:
         const glm::mat4& myWorldToClipMatrix;
     };
 
-    GraphCmp(const Filepath& aModelAsset, const Filepath& aShaderAsset);
+    GraphCmp() = default;
+    GraphCmp(const Filepath& aShaderAsset);
     void OnLoad(const LoadParams& someParams) override;
-    void Update() override {}
-    void Draw(const DrawParams& someParams) const;
 
-    void Serialize(Serializer& aSerializer) override;
+    virtual void Draw(const DrawParams& someParams) const = 0;
 
-private:
-    Model::Ptr myModel {nullptr};
+protected:
     Shader::Ptr myShader {nullptr};
-    Filepath myModelAsset;
     Filepath myShaderAsset;
 };
