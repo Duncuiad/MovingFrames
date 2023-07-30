@@ -44,13 +44,15 @@ Vec3 MovingFrame::GetPosition() const
     return Im(myPose.dual * glm::conjugate(myPose.real)) * 2.f;
 }
 
-Vec3 MovingFrame::GetAngularVelocity(Coord aCoord) const
+Vec3 MovingFrame::GetAngularVelocity(Coord /*aCoord*/) const
 {
+    // @todo: implement Coord selection
     return Im(myTwist.real);
 }
 
-Vec3 MovingFrame::GetLinearVelocity(Coord aCoord) const
+Vec3 MovingFrame::GetLinearVelocity(Coord /*aCoord*/) const
 {
+    // @todo: implement Coord selection
     return Im(myTwist.dual);
 }
 
@@ -58,6 +60,29 @@ MovingFrame MovingFrame::Inverse() const
 {
     // @todo: Implement inverse
     return MovingFrame();
+}
+
+void MovingFrame::SetOrientation(const Quat& anOrientation)
+{
+    myPose.real = anOrientation;
+}
+
+void MovingFrame::SetPosition(const Vec3& aPosition)
+{
+    Quat quat {0.f, aPosition.x, aPosition.y, aPosition.z};
+    myPose.dual = (quat * myPose.real) * 0.5f;
+}
+
+void MovingFrame::SetAngularVelocity(const Vec3& aVelocity, Coord /*aCoord*/)
+{
+    // @todo: implement Coord selection
+    myTwist.real = Quat {0.f, aVelocity.x, aVelocity.y, aVelocity.z};
+}
+
+void MovingFrame::SetLinearVelocity(const Vec3& aVelocity, Coord /*aCoord*/)
+{
+    // @todo: implement Coord selection
+    myTwist.dual = Quat {0.f, aVelocity.x, aVelocity.y, aVelocity.z};
 }
 
 void MovingFrame::ResetVelocities()

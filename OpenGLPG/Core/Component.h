@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ClientLoader.h"
-#include "EditorImGui.h"
 #include "Serializable.h"
 #include "UID.h"
 
@@ -28,10 +27,6 @@ public:
     virtual void Update() {}
     virtual void OnExitWorld() {}
     virtual void OnUnload() {}
-
-#if EDITOR_IMGUI
-    virtual void EditorWidgetImGui() {}
-#endif
 
 protected:
     Entity& GetEntity() const;

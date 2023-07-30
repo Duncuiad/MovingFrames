@@ -6,9 +6,9 @@
 struct CameraData
 {
     Transform myCameraTransform;
-    float myFOV;
-    float myAspectRatio;
-    float myNear;
-    float myFar;
+    float myFOV {0.f};
+    float myAspectRatio {0.f};
+    float myNear {0.f};
+    float myFar {0.f};
     MovingFrame myWorldFrame;
 };

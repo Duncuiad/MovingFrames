@@ -5,22 +5,22 @@
 #include "Assert.h"
 #include "Entity.h"
 #include "FrameSplineCmp.h"
-#include "GraphCmp.h"
+#include "FrameSplineGraphCmp.h"
+
+#include <functional>
 
 REGISTER_SUBTYPE(Editor_FrameSplineCmp)
 
-void Editor_FrameSplineCmp::Update()
+void Editor_FrameSplineCmp::OnEnterWorld()
 {
-    if (myIsDirty)
-    {
-        // @todo: update GraphCmp
-        myIsDirty = false;
-    }
+    myWidget.AttachSplineObject(&GetFrameSplineCmp().mySpline);
+    myWidget.ConnectOnChangedCallback(std::bind(&Editor_FrameSplineCmp::OnChanged, this));
 }
 
-#if EDITOR_IMGUI
-void Editor_FrameSplineCmp::EditorWidgetImGui() {}
-#endif
+void Editor_FrameSplineCmp::OnChanged() const
+{
+    // @todo: implement method
+}
 
 FrameSplineCmp& Editor_FrameSplineCmp::GetFrameSplineCmp() const
 {
@@ -29,9 +29,9 @@ FrameSplineCmp& Editor_FrameSplineCmp::GetFrameSplineCmp() const
     return *cmp;
 }
 
-GraphCmp& Editor_FrameSplineCmp::GetGraphCmp() const
+FrameSplineGraphCmp& Editor_FrameSplineCmp::GetFrameSplineGraphCmp() const
 {
-    GraphCmp* cmp {GetEntity().GetEditableComponent<GraphCmp>()};
+    FrameSplineGraphCmp* cmp {GetEntity().GetEditableComponent<FrameSplineGraphCmp>()};
     ASSERT(cmp != nullptr, "Couldn't find required component");
     return *cmp;
 }

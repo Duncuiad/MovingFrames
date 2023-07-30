@@ -3,7 +3,6 @@
 #include "WorldModel.h"
 
 #include "Assert.h"
-#include "ImGuiWidgets.h"
 #include "Serializer.h"
 
 #include <utility>
@@ -28,8 +27,12 @@ void WorldModel::Init()
     for (auto& entity : myEntityQueue)
     {
         UID newUID {UID::CreateUnique()};
-        entity.Spawn(newUID, this);
+        entity.myUID = newUID;
         myEntities.try_emplace(newUID, std::move(entity));
+    }
+    for (auto& [uid, entity] : myEntities)
+    {
+        entity.Spawn(this);
     }
 
     // Temporary camera activation flow:

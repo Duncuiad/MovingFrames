@@ -79,6 +79,10 @@ inline void LoadPolicy::Process(const char* aVariableName, SerializableT& aVaria
 {
     StreamType& openStream {aSerializer.myFile};
     ASSERT(openStream.is_open(), "File is not open!");
+    ASSERT(!openStream.fail(), "Error while reading file");
+
+    bool foundVariable {false};
+    const std::streampos oldPos {openStream.tellg()};
 
     std::string lineBuffer;
     do
@@ -87,12 +91,20 @@ inline void LoadPolicy::Process(const char* aVariableName, SerializableT& aVaria
         lineBuffer = Indent(lineBuffer, aSerializer);
         if (lineBuffer == std::string(aVariableName))
         {
+            foundVariable = true;
             EnterObject(aSerializer);
             Serialize<SerializableT>(aSerializer, aVariable);
             ExitObject(aSerializer);
             break;
         }
     } while (!openStream.eof());
+
+    if (!foundVariable)
+    {
+        openStream.clear();
+        openStream.seekg(oldPos);
+        std::cerr << "Serialization Error: couldn't find variable '" << aVariableName << "'" << std::endl;
+    }
 }
 
 template <>

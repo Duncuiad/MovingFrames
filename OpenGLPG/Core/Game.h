@@ -26,9 +26,13 @@ public:
     explicit Game(const ConstructionParams& someparams);
     void Init();
     void Shutdown();
-    void Update(const UpdateParams& someParams);
+    virtual void Update(const UpdateParams& someParams);
     void ResetGameInputData();
     void AddGameInput(const char* anInputName, float aValue);
+
+protected:
+    Renderer myRenderManager;
+    WorldModel myWorldModel;
 
 private:
 #if DEBUG_IMGUI
@@ -37,7 +41,5 @@ private:
     void DebugGameInput() const {};
 #endif
 
-    Renderer myRenderManager;
-    WorldModel myWorldModel;
     GameInputData myInputData;
 };

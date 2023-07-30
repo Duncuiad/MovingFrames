@@ -4,6 +4,10 @@
 
 #include "Serializer.h"
 
+Transform::Transform()
+    : Base {1.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f}
+{}
+
 Transform::Transform(const Mat4& aMatrix)
     : Base {aMatrix}
 {}

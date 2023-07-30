@@ -8,6 +8,7 @@
 #include "Defines.h"
 #include "Game.h"
 #include "GameInputData.h"
+#include "LevelEditor.h"
 #include "Test.h"
 
 #include <format>
@@ -26,7 +27,7 @@ Client::Client()
     result &= GLADInit();
     ASSERT(result, "Failed initializing OpenGL");
 
-    myGame = std::make_unique<Game>(Game::ConstructionParams {myLoader});
+    myGame = std::make_unique<LevelEditor>(Game::ConstructionParams {myLoader});
 }
 
 bool Client::IsRunning() const

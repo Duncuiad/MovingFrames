@@ -27,6 +27,11 @@ public:
     Vec3 GetLinearVelocity(Coord aCoord) const;
     MovingFrame Inverse() const;
 
+    void SetOrientation(const Quat& anOrientation);
+    void SetPosition(const Vec3& aPosition);
+    void SetAngularVelocity(const Vec3& aVelocity, Coord aCoord);
+    void SetLinearVelocity(const Vec3& aVelocity, Coord aCoord);
+
     void ResetVelocities();
     void AddAngularVelocity(Coord aCoord, Vec3 aVelocity);
     void AddLinearVelocity(Coord aCoord, Vec3 aVelocity);

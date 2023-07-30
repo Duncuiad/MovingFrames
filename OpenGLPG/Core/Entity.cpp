@@ -12,9 +12,8 @@ void Entity::Load(const LoadParams& someParams)
     }
 }
 
-void Entity::Spawn(const UID& anEntityUID, WorldModel* aWorldModel)
+void Entity::Spawn(WorldModel* aWorldModel)
 {
-    myUID = anEntityUID;
     for (auto& component : myComponents)
     {
         component->EnterWorld(myUID, aWorldModel);

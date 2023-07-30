@@ -46,6 +46,9 @@
     <Filter Include="Engine\Containers">
       <UniqueIdentifier>{525d65f5-7893-4877-bcf8-0155a191b3ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{5622fc0a-d762-4c99-80e5-847d9af1b399}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -213,6 +216,15 @@
     <ClInclude Include="ImGuiWidgets.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="LevelEditor.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Widget.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEditorWidget.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WorldModel.cpp">
@@ -364,6 +376,15 @@
     </ClCompile>
     <ClCompile Include="ImGuiWidgets.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelEditor.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Widget.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelEditorWidget.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

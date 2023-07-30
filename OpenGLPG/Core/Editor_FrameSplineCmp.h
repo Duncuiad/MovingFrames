@@ -1,26 +1,21 @@
 #pragma once
 
-#include "Component.h"
-#include "EditorImGui.h"
+#include "EditorCmp.h"
+#include "FrameSplineEditorWidget.h"
 
 class FrameSplineCmp;
-class GraphCmp;
+class FrameSplineGraphCmp;
 
-class Editor_FrameSplineCmp : public Component
+class Editor_FrameSplineCmp : public EditorCmp<FrameSplineEditorWidget>
 {
     DECLARE_SUBTYPE(Editor_FrameSplineCmp)
 
 public:
     void Serialize(Serializer& /*aSerializer*/) override {}
-    void Update() override;
-
-#if EDITOR_IMGUI
-    void EditorWidgetImGui() override;
-#endif
+    void OnEnterWorld() override;
+    void OnChanged() const;
 
 private:
     FrameSplineCmp& GetFrameSplineCmp() const;
-    GraphCmp& GetGraphCmp() const;
-
-    bool myIsDirty {true};
+    FrameSplineGraphCmp& GetFrameSplineGraphCmp() const;
 };

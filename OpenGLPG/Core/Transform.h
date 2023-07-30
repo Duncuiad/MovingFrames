@@ -10,6 +10,7 @@ class Transform : public Mat4, public Serializable
 public:
     using Base = Mat4;
     using Base::Base;
+    Transform();
     Transform(const Mat4& aMatrix);
     Transform(const Mat3& anOrientation, const Vec3& aPosition);
     Transform(const Quat& anOrientation, const Vec3& aPosition);

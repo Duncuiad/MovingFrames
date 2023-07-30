@@ -6,9 +6,18 @@
 
 class FrameSpline : public Serializable
 {
+public:
     enum class Interpolator {
         LinearSmoothstep,
         CubicBezier
+    };
+
+    struct KeyFrame : public Serializable
+    {
+        float myTiming {0.f};
+        MovingFrame myFrame {};
+
+        void Serialize(Serializer& aSerializer) override;
     };
 
     MovingFrame Interpolate(float aTiming) const;
@@ -17,19 +26,14 @@ class FrameSpline : public Serializable
     void Serialize(Serializer& aSerializer) override;
 
 private:
-    struct KeyFrame : public Serializable
-    {
-        float myTiming {0.f};
-        MovingFrame myFrame {};
-
-        void Serialize(Serializer& aSerializer) override;
-    };
     struct InterpolateInternalParams
     {
         const MovingFrame& myFrom;
         const MovingFrame& myTo;
         float myT;
     };
+
+    friend class FrameSplineEditor;
 
     MovingFrame InterpolateLinearSmoothstep(const InterpolateInternalParams& someParams) const;
     MovingFrame InterpolateCubicBezier(const InterpolateInternalParams& someParams) const;

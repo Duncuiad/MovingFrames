@@ -26,7 +26,7 @@ public:
     Entity& operator=(Entity&& anEntity) noexcept = default;
 
     void Load(const LoadParams& someParams);
-    void Spawn(const UID& anEntityUID, WorldModel* aWorldModel);
+    void Spawn(WorldModel* aWorldModel);
     void Update();
     void Unspawn();
     void Unload();
@@ -39,6 +39,10 @@ public:
     const ComponentT* GetComponent() const;
     template <typename ComponentT>
     ComponentT* GetEditableComponent() const;
+    template <typename ComponentT>
+    std::vector<const ComponentT*> GetComponents() const;
+    template <typename ComponentT>
+    std::vector<ComponentT*> GetEditableComponents() const;
 
 private:
     UID myUID;
@@ -68,4 +72,32 @@ inline ComponentT* Entity::GetEditableComponent() const
         }
     }
     return nullptr;
+}
+
+template <typename ComponentT>
+inline std::vector<const ComponentT*> Entity::GetComponents() const
+{
+    std::vector<const ComponentT*> components;
+    for (const auto& component : myComponents)
+    {
+        if (ComponentT* derivedComponent = dynamic_cast<ComponentT*>(component.get()))
+        {
+            components.push_back(derivedComponent);
+        }
+    }
+    return components;
+}
+
+template <typename ComponentT>
+inline std::vector<ComponentT*> Entity::GetEditableComponents() const
+{
+    std::vector<ComponentT*> components;
+    for (const auto& component : myComponents)
+    {
+        if (ComponentT* derivedComponent = dynamic_cast<ComponentT*>(component.get()))
+        {
+            components.push_back(derivedComponent);
+        }
+    }
+    return components;
 }

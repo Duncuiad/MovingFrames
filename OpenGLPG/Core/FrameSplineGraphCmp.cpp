@@ -2,6 +2,10 @@
 
 #include "FrameSplineGraphCmp.h"
 
+#include "Serializer.h"
+
+REGISTER_SUBTYPE(FrameSplineGraphCmp)
+
 FrameSplineGraphCmp::~FrameSplineGraphCmp()
 {
     glDeleteBuffers(1, &myEBO);
@@ -21,6 +25,7 @@ void FrameSplineGraphCmp::Draw(const DrawParams& someParams) const
 
 void FrameSplineGraphCmp::Serialize(Serializer& aSerializer)
 {
+    aSerializer.Process("myShader", myShaderAsset);
     aSerializer.Process("myKeys", myKeys);
 
     {
@@ -56,7 +61,7 @@ void FrameSplineGraphCmp::UpdateBuffers()
 
     {
         glBindBuffer(GL_ARRAY_BUFFER, myVBO);
-        glBufferData(GL_ARRAY_BUFFER, myKeys.Count() * sizeof(Key), &myKeys[0], GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, myKeys.Count() * sizeof(Key), myKeys.GetBuffer(), GL_STATIC_DRAW);
 
         const unsigned int keyCount {static_cast<unsigned int>(myKeys.Count())};
         unsigned int* segments {new unsigned int[keyCount * 2u]};

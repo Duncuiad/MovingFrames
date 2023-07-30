@@ -149,7 +149,8 @@
     <ClInclude Include="ClientCallbacks.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
-    <ClInclude Include="EditorImGui.h" />
+    <ClInclude Include="EditorCmp.h" />
+    <ClInclude Include="EditorWidget.h" />
     <ClInclude Include="FrameSplineCmp.h" />
     <ClInclude Include="DebugImGui.h" />
     <ClInclude Include="DebugUtils.h" />
@@ -157,6 +158,8 @@
     <ClInclude Include="Editor_FrameSplineCmp.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Filepath.h" />
+    <ClInclude Include="FrameSplineEditor.h" />
+    <ClInclude Include="FrameSplineEditorWidget.h" />
     <ClInclude Include="FrameSplineGraphCmp.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Client.h" />
@@ -166,6 +169,8 @@
     <ClInclude Include="Dual.h" />
     <ClInclude Include="FrameSpline.h" />
     <ClInclude Include="ImGuiWidgets.h" />
+    <ClInclude Include="LevelEditor.h" />
+    <ClInclude Include="LevelEditorWidget.h" />
     <ClInclude Include="ModelGraphCmp.h" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="InputRotationCameraBehavior.h" />
@@ -188,6 +193,7 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TransformCmp.h" />
     <ClInclude Include="UID.h" />
+    <ClInclude Include="Widget.h" />
     <ClInclude Include="WorldModel.h" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +206,7 @@
     <ClCompile Include="ClientCallbacks.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="EditorWidget.cpp" />
     <ClCompile Include="FrameSplineCmp.cpp" />
     <ClCompile Include="DebugUtils.cpp" />
     <ClCompile Include="Dual.cpp" />
@@ -214,6 +221,8 @@
     <ClCompile Include="ext\imgui_tables.cpp" />
     <ClCompile Include="ext\imgui_widgets.cpp" />
     <ClCompile Include="Filepath.cpp" />
+    <ClCompile Include="FrameSplineEditor.cpp" />
+    <ClCompile Include="FrameSplineEditorWidget.cpp" />
     <ClCompile Include="FrameSplineGraphCmp.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="ClientLoader.cpp" />
@@ -223,6 +232,8 @@
     <ClCompile Include="InputRotationCameraBehavior.cpp" />
     <ClCompile Include="InputTranslationCameraBehavior.cpp" />
     <ClCompile Include="InterpolationUtils.cpp" />
+    <ClCompile Include="LevelEditor.cpp" />
+    <ClCompile Include="LevelEditorWidget.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModelGraphCmp.cpp" />
@@ -240,6 +251,7 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TransformCmp.cpp" />
     <ClCompile Include="UID.cpp" />
+    <ClCompile Include="Widget.cpp" />
     <ClCompile Include="WorldModel.cpp" />
   </ItemGroup>
   <ItemGroup>

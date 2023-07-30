@@ -18,6 +18,7 @@ public:
     const ElemT& GetFirst() const;
     ElemT& GetLast();
     const ElemT& GetLast() const;
+    const ElemT* GetBuffer() const;
 
     // Adapter types and methods
     using Iterator = std::vector<ElemT>::iterator;
@@ -29,6 +30,7 @@ public:
     decltype(auto) Insert(IterT aPos, const ElemT& aVal);
     template <typename IterT>
     decltype(auto) Insert(IterT aPos, ElemT&& aVal);
+    void RemoveAt(int anIndex);
     Iterator begin() noexcept;
     ConstIterator begin() const noexcept;
     Iterator end() noexcept;
@@ -110,6 +112,12 @@ inline const ElemT& Array<ElemT, IsDynamic>::GetLast() const
 }
 
 template <typename ElemT, bool IsDynamic>
+inline const ElemT* Array<ElemT, IsDynamic>::GetBuffer() const
+{
+    return myElements.data();
+}
+
+template <typename ElemT, bool IsDynamic>
 template <class... ValT>
 decltype(auto) Array<ElemT, IsDynamic>::EmplaceBack(ValT&&... someVals)
 {
@@ -128,6 +136,12 @@ template <typename IterT>
 decltype(auto) Array<ElemT, IsDynamic>::Insert(IterT aPos, ElemT&& aVal)
 {
     return myElements.insert(aPos, std::forward<ElemT>(aVal));
+}
+
+template <typename ElemT, bool IsDynamic>
+inline void Array<ElemT, IsDynamic>::RemoveAt(int anIndex)
+{
+    myElements.erase(begin() + anIndex);
 }
 
 template <typename ElemT, bool IsDynamic>
