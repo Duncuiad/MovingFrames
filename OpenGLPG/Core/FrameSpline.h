@@ -31,6 +31,7 @@ private:
         const MovingFrame& myFrom;
         const MovingFrame& myTo;
         float myT;
+        float myDT;
     };
 
     friend class FrameSplineEditor;

@@ -204,9 +204,6 @@
     <ClInclude Include="Editor_FrameSplineCmp.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
-    <ClInclude Include="EditorImGui.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="ModelGraphCmp.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
@@ -224,6 +221,18 @@
     </ClInclude>
     <ClInclude Include="LevelEditorWidget.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorWidget.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameSplineEditorWidget.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameSplineEditor.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCmp.h">
+      <Filter>Engine\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -386,6 +395,15 @@
     <ClCompile Include="LevelEditorWidget.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="EditorWidget.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameSplineEditorWidget.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameSplineEditor.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc">
@@ -415,6 +433,18 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="..\Data\Assets\Shaders\tripod.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\point.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\point.geom">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\point.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\point.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

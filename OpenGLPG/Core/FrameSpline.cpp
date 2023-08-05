@@ -3,6 +3,7 @@
 #include "FrameSpline.h"
 
 #include "Assert.h"
+#include "InterpolationUtils.h"
 #include "Serializer.h"
 
 #include <algorithm>
@@ -17,19 +18,19 @@ MovingFrame FrameSpline::Interpolate(float aTiming) const
     }
 
     const auto& keyBefore {
-        std::upper_bound(myKeyFrames.begin(), myKeyFrames.end(), aTiming,
-                         [](float aTiming, const KeyFrame& aFrame) { return aTiming < aFrame.myTiming; })};
+        std::upper_bound(myKeyFrames.rbegin(), myKeyFrames.rend(), aTiming,
+                         [](float aTiming, const KeyFrame& aFrame) { return aFrame.myTiming <= aTiming; })};
     const auto& keyAfter {
-        std::lower_bound(myKeyFrames.begin(), myKeyFrames.end(), aTiming,
-                         [](const KeyFrame& aFrame, float aTiming) { return aFrame.myTiming < aTiming; })};
-    ASSERT(keyBefore <= keyAfter, "Invalid Order");
-    ASSERT(static_cast<unsigned int>(keyAfter - keyBefore) <= 1u, "Invalid KeyFrame ordering");
+        std::upper_bound(myKeyFrames.begin(), myKeyFrames.end(), aTiming,
+                         [](float aTiming, const KeyFrame& aFrame) { return aTiming <= aFrame.myTiming; })};
+    // ASSERT(keyBefore <= keyAfter, "Invalid Order");
+    // ASSERT(static_cast<unsigned int>(keyAfter - keyBefore) <= 1u, "Invalid KeyFrame ordering");
 
     if (keyAfter <= myKeyFrames.begin())
     {
         return myKeyFrames.GetFirst().myFrame;
     }
-    else if (keyBefore >= myKeyFrames.end())
+    else if (keyBefore <= myKeyFrames.rbegin())
     {
         return myKeyFrames.GetLast().myFrame;
     }
@@ -38,8 +39,9 @@ MovingFrame FrameSpline::Interpolate(float aTiming) const
         return keyBefore->myFrame;
     }
 
-    const float internalT {(aTiming - keyBefore->myTiming) / (keyAfter->myTiming - keyBefore->myTiming)};
-    const InterpolateInternalParams params {keyBefore->myFrame, keyAfter->myFrame, internalT};
+    const float internalT {aTiming - keyBefore->myTiming};
+    const float internalDT {keyAfter->myTiming - keyBefore->myTiming};
+    const InterpolateInternalParams params {keyBefore->myFrame, keyAfter->myFrame, internalT, internalDT};
 
     switch (myType)
     {
@@ -79,14 +81,31 @@ void FrameSpline::Serialize(Serializer& aSerializer)
 
 MovingFrame FrameSpline::InterpolateLinearSmoothstep(const InterpolateInternalParams& someParams) const
 {
-    // @todo: implement method
-    return MovingFrame();
+    MovingFrame start {someParams.myFrom};
+    MovingFrame end {someParams.myTo};
+    start.Move(someParams.myT);
+    end.Move(someParams.myT);
+
+    const float t {someParams.myT / someParams.myDT};
+    const float smoothT {(3.f - 2.f * t) * t * t};
+
+    return MovingFrame {Sclerp(start.GetPose(), end.GetPose(), smoothT)};
 }
 
 MovingFrame FrameSpline::InterpolateCubicBezier(const InterpolateInternalParams& someParams) const
 {
-    // @todo: implement method
-    return MovingFrame();
+    const MovingFrame& p0 {someParams.myFrom};
+    const MovingFrame& p3 {someParams.myTo};
+    MovingFrame p1 {p0};
+    MovingFrame p2 {p3};
+    p1.Move(someParams.myT / 3.f);
+    p2.Move((someParams.myDT - someParams.myT) / 3.f);
+
+    const float t {someParams.myT / someParams.myDT};
+    const DualQuat p02 {Sclerp(p0.GetPose(), p2.GetPose(), t)};
+    const DualQuat p13 {Sclerp(p1.GetPose(), p3.GetPose(), t)};
+
+    return MovingFrame {Sclerp(p02, p13, t)};
 }
 
 void FrameSpline::KeyFrame::Serialize(Serializer& aSerializer)

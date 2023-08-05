@@ -15,11 +15,14 @@ public:
 
     MovingFrame();
     MovingFrame(const MovingFrame& aMovingFrame) = default;
-    explicit MovingFrame(const DualQuat& aDualQuaternion);
+    explicit MovingFrame(const DualQuat& aDualQuaternion, DualQuat aTwist = {});
     MovingFrame(const Quat& anOrientation, const Vec3& aPosition, Vec3 anAngularVelocity = Vec3 {0.f},
                 Vec3 aLinearVelocity = Vec3 {0.f});
 
     void Serialize(Serializer& aSerializer) override;
+
+    const DualQuat& GetPose() const;
+    const DualQuat& GetTwist() const;
 
     Quat GetOrientation() const;
     Vec3 GetPosition() const;

@@ -17,12 +17,15 @@ public:
     };
     struct Key : public Serializable
     {
-        Vec3 myPosition;
-        Vec3 myRight;
-        Vec3 myUp;
-        Vec3 myForward;
-        Vec3 myVelocity;
-        Vec3 myAngularVelocity;
+        Key() = default;
+        Key(const Vec3&, const Vec3&, const Vec3&, const Vec3&, const Vec3&, const Vec3&);
+
+        Vec3 myPosition {};
+        Vec3 myRight {};
+        Vec3 myUp {};
+        Vec3 myForward {};
+        Vec3 myVelocity {};
+        Vec3 myAngularVelocity {};
 
         void Serialize(Serializer& aSerializer) override;
     };

@@ -15,9 +15,9 @@ MovingFrame::MovingFrame()
     myPose.real.w = 1.f;
 }
 
-MovingFrame::MovingFrame(const DualQuat& aDualQuaternion)
+MovingFrame::MovingFrame(const DualQuat& aDualQuaternion, DualQuat aTwist)
     : myPose {aDualQuaternion}
-    , myTwist {}
+    , myTwist {aTwist}
 {}
 
 MovingFrame::MovingFrame(const Quat& anOrientation, const Vec3& aPosition, Vec3 anAngularVelocity /*= Vec3 {0.f}*/,
@@ -32,6 +32,16 @@ void MovingFrame::Serialize(Serializer& aSerializer)
     aSerializer.Process("myPoseDual", myPose.dual);
     aSerializer.Process("myTwistReal", myTwist.real);
     aSerializer.Process("myTwistDual", myTwist.dual);
+}
+
+const DualQuat& MovingFrame::GetPose() const
+{
+    return myPose;
+}
+
+const DualQuat& MovingFrame::GetTwist() const
+{
+    return myTwist;
 }
 
 Quat MovingFrame::GetOrientation() const

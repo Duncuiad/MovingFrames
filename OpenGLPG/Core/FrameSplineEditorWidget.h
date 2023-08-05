@@ -8,6 +8,8 @@ class FrameSplineEditorWidget : public EditorWidget, public FrameSplineEditor
 public:
     virtual void Draw() override;
 
+    int mySampleCount {30};
+
 private:
     bool DrawNewKeyAtBeginning();
     bool DrawKeyFrame(int anIndex);

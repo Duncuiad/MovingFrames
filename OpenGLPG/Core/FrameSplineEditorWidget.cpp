@@ -12,6 +12,11 @@ void FrameSplineEditorWidget::Draw()
     auto& keys {GetKeyFrames()};
     ImGui::PushID(("FrameSpline" + myUID.GetString()).data());
 
+    changed |= ImGui::InputInt("Sample Count", &mySampleCount);
+    mySampleCount = glm::max(mySampleCount, 2);
+
+    ImGui::Separator();
+
     changed |= DrawNewKeyAtBeginning();
 
     for (int i = 0; i < keys.Count(); ++i)
@@ -60,8 +65,8 @@ bool FrameSplineEditorWidget::DrawKeyFrame(int anIndex)
     MovingFrame& key {GetKeyFrames()[anIndex].myFrame};
     changed |= Widgets::OrientationWidget("Ori", key);
     changed |= Widgets::PositionWidget("Pos", key);
-    changed |= Widgets::VelocityWidget("Vel", key);
     changed |= Widgets::AngularVelocityWidget("Ang", key);
+    changed |= Widgets::VelocityWidget("Vel", key);
 
     ImGui::PopID();
 

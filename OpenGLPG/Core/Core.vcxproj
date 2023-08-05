@@ -261,6 +261,10 @@
     <None Include="..\Data\Assets\Shaders\basic.frag" />
     <None Include="..\Data\Assets\Shaders\basic.shader" />
     <None Include="..\Data\Assets\Shaders\basic.vert" />
+    <None Include="..\Data\Assets\Shaders\point.frag" />
+    <None Include="..\Data\Assets\Shaders\point.geom" />
+    <None Include="..\Data\Assets\Shaders\point.shader" />
+    <None Include="..\Data\Assets\Shaders\point.vert" />
     <None Include="..\Data\Assets\Shaders\tripod.frag" />
     <None Include="..\Data\Assets\Shaders\tripod.geom" />
     <None Include="..\Data\Assets\Shaders\tripod.shader" />

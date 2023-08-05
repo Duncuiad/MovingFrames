@@ -23,7 +23,7 @@ bool ButtonWithInputText(const char* aButtonLabel, std::string& anInputTextOut, 
 bool OrientationWidget(const char* aLabel, MovingFrame& aFrameInOut)
 {
     Quat quat {aFrameInOut.GetOrientation()};
-    if (ImGui::InputFloat4(aLabel, &quat[0], "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+    if (ImGui::DragFloat4(aLabel, &quat[0], 0.01f, -1.f, 1.f, "%.3f"))
     {
         aFrameInOut.SetOrientation(glm::normalize(quat));
         return true;
@@ -34,7 +34,7 @@ bool OrientationWidget(const char* aLabel, MovingFrame& aFrameInOut)
 bool PositionWidget(const char* aLabel, MovingFrame& aFrameInOut)
 {
     Vec3 vec {aFrameInOut.GetPosition()};
-    if (ImGui::InputFloat3(aLabel, &vec[0], "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+    if (ImGui::DragFloat3(aLabel, &vec[0], 0.1f, 0.f, 0.f, "%.3f"))
     {
         aFrameInOut.SetPosition(vec);
         return true;
@@ -46,7 +46,7 @@ bool AngularVelocityWidget(const char* aLabel, MovingFrame& aFrameInOut)
 {
     constexpr MovingFrame::Coord coord {MovingFrame::Coord::Intrinsic};
     Vec3 vec {aFrameInOut.GetAngularVelocity(coord)};
-    if (ImGui::InputFloat3(aLabel, &vec[0], "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+    if (ImGui::DragFloat3(aLabel, &vec[0], 0.01f, 0.f, 0.f, "%.3f"))
     {
         aFrameInOut.SetAngularVelocity(vec, coord);
         return true;
@@ -58,7 +58,7 @@ bool VelocityWidget(const char* aLabel, MovingFrame& aFrameInOut)
 {
     constexpr MovingFrame::Coord coord {MovingFrame::Coord::Intrinsic};
     Vec3 vec {aFrameInOut.GetLinearVelocity(coord)};
-    if (ImGui::InputFloat3(aLabel, &vec[0], "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+    if (ImGui::DragFloat3(aLabel, &vec[0], 0.1f, 0.f, 0.f, "%.3f"))
     {
         aFrameInOut.SetLinearVelocity(vec, coord);
         return true;

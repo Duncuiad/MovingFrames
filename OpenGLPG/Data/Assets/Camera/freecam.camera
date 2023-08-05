@@ -25,7 +25,7 @@ myBehaviors
 		InputTranslationCameraBehavior
 		mySpeed
 		{
-			1.000000
+			0.300000
 		}
 
 	}
@@ -34,7 +34,7 @@ myBehaviors
 
 myFOV
 {
-	0.785398
+	0.4
 }
 
 myAspectRatio

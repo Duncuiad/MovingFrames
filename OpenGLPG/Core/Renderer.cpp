@@ -5,7 +5,9 @@
 #include "CameraData.h"
 #include "Entity.h"
 #include "GraphCmp.h"
+#include "MathDefines.h"
 #include "MathUtils.h"
+#include "TransformCmp.h"
 #include "WorldModel.h"
 
 #include <GLFW/glfw3.h>
@@ -28,7 +30,7 @@ void Renderer::Render(const RenderParams& someParams)
 
     if (someParams.myWorldModel)
     {
-        glm::mat4 viewportAdjustment {glm::identity<glm::mat4>()};
+        Mat4 viewportAdjustment {glm::identity<glm::mat4>()};
         int viewportData[4];
         glGetIntegerv(GL_VIEWPORT, viewportData);
         if (viewportData[2] > 0)
@@ -39,17 +41,15 @@ void Renderer::Render(const RenderParams& someParams)
 
         // @todo: refactor model-view-projection matrix calculations
         const CameraData& activeCameraData {someParams.myWorldModel->GetActiveCameraData()};
-        const glm::mat4 view {glm::affineInverse(activeCameraData.myCameraTransform)};
-        const glm::mat4 projection {viewportAdjustment *
-                                    Utils::Projection(activeCameraData.myFOV, activeCameraData.myAspectRatio,
-                                                      activeCameraData.myNear, activeCameraData.myFar)};
-        const glm::mat4 worldToClip {viewportAdjustment * Utils::WorldToClip(activeCameraData)};
+        const Mat4 view {glm::affineInverse(activeCameraData.myCameraTransform)};
+        const Mat4 projection {viewportAdjustment * Utils::Projection(activeCameraData.myFOV,
+                                                                      activeCameraData.myAspectRatio,
+                                                                      activeCameraData.myNear, activeCameraData.myFar)};
+        const Mat4 worldToClip {viewportAdjustment * Utils::WorldToClip(activeCameraData)};
 
         for (const auto& [uid, entity] : someParams.myWorldModel->GetEntities())
         {
-            // @todo: retrieve transform from transform component
-
-            Transform entityTransform {Mat4 {glm::identity<glm::mat4>()}};
+            Transform entityTransform {entity.GetComponent<TransformCmp>()->GetTransform()};
             entity.GetComponent<GraphCmp>()->Draw(
                 {entityTransform, view, view * entityTransform, projection, worldToClip});
         }

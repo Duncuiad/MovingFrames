@@ -15,6 +15,12 @@ FrameSplineGraphCmp::~FrameSplineGraphCmp()
 
 void FrameSplineGraphCmp::Draw(const DrawParams& someParams) const
 {
+    myShader->SetUniformMat4("Model", someParams.myModelMatrix);
+    myShader->SetUniformMat4("View", someParams.myViewMatrix);
+    myShader->SetUniformMat4("ModelView", someParams.myModelViewMatrix);
+    myShader->SetUniformMat4("Projection", someParams.myProjectionMatrix);
+    myShader->SetUniformMat4("WorldToClip", someParams.myWorldToClipMatrix);
+    // myShader->Use();
     glBindVertexArray(myVAO);
     glBindBuffer(GL_ARRAY_BUFFER, myVBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myEBO);
@@ -100,6 +106,16 @@ void FrameSplineGraphCmp::UpdateBuffers()
         glBindVertexArray(0);
     }
 }
+
+FrameSplineGraphCmp::Key::Key(const Vec3& aPosition, const Vec3& aRight, const Vec3& anUp, const Vec3& aForward,
+                              const Vec3& aVelocity, const Vec3& anAngularVelocity)
+    : myPosition {aPosition}
+    , myRight {aRight}
+    , myUp {anUp}
+    , myForward {aForward}
+    , myVelocity {aVelocity}
+    , myAngularVelocity {anAngularVelocity}
+{}
 
 void FrameSplineGraphCmp::Key::Serialize(Serializer& aSerializer)
 {
