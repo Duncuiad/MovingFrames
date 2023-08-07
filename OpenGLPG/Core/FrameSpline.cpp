@@ -96,14 +96,20 @@ MovingFrame FrameSpline::InterpolateCubicBezier(const InterpolateInternalParams&
     const MovingFrame& p3 {someParams.myTo};
     MovingFrame p1 {p0};
     MovingFrame p2 {p3};
-    p1.Move(someParams.myT / 3.f);
-    p2.Move((someParams.myT - someParams.myDT) / 3.f);
+    p1.Move(someParams.myDT / 3.f);
+    p2.Move(-someParams.myDT / 3.f);
+
+    MovingFrame p01 {p0};
+    MovingFrame p23 {p3};
+    p01.Move(someParams.myT / 3.f);
+    p23.Move((someParams.myT - someParams.myDT) / 3.f);
 
     const float t {someParams.myT / someParams.myDT};
-    const DualQuat p02 {Sclerp(p0.GetPose(), p2.GetPose(), t)};
-    const DualQuat p13 {Sclerp(p1.GetPose(), p3.GetPose(), t)};
+    const DualQuat p12 {Sclerp(p1.GetPose(), p2.GetPose(), t)};
+    const DualQuat p012 {Sclerp(p01.GetPose(), p12, t)};
+    const DualQuat p123 {Sclerp(p12, p23.GetPose(), t)};
 
-    return MovingFrame {Sclerp(p02, p13, t)};
+    return MovingFrame {Sclerp(p012, p123, t)};
 }
 
 void FrameSpline::KeyFrame::Serialize(Serializer& aSerializer)

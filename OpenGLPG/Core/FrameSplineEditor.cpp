@@ -60,3 +60,15 @@ Array<FrameSpline::KeyFrame>& FrameSplineEditor::GetKeyFrames() const
     ASSERT(mySpline != nullptr, "Failed attaching spline to widget");
     return mySpline->myKeyFrames;
 }
+
+FrameSpline::Interpolator FrameSplineEditor::GetInterpolator() const
+{
+    ASSERT(mySpline != nullptr, "Failed attaching spline to widget");
+    return mySpline->myType;
+}
+
+void FrameSplineEditor::SetInterpolator(FrameSpline::Interpolator anInterpolator) const
+{
+    ASSERT(mySpline != nullptr, "Failed attaching spline to widget");
+    mySpline->myType = anInterpolator;
+}

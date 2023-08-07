@@ -12,10 +12,36 @@ void FrameSplineEditorWidget::Draw()
     auto& keys {GetKeyFrames()};
     ImGui::PushID(("FrameSpline" + myUID.GetString()).data());
 
+    ImGui::Text("Display Options");
     changed |= ImGui::InputInt("Sample Count", &mySampleCount);
     mySampleCount = glm::max(mySampleCount, 2);
 
+    ImGui::Text("Coord Type");
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Extrinsic", myIsEditModeExtrinsic))
+    {
+        myIsEditModeExtrinsic = true;
+    }
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Intrinsic", !myIsEditModeExtrinsic))
+    {
+        myIsEditModeExtrinsic = false;
+    }
+
     ImGui::Separator();
+
+    ImGui::Text("Spline Editor");
+    int current = static_cast<int>(GetInterpolator());
+    changed |= ImGui::Combo("Interpolator", &current, "LinearSmoothstep\0CubicBezier\0\0");
+    if (const FrameSpline::Interpolator selected = static_cast<FrameSpline::Interpolator>(current);
+        selected != GetInterpolator())
+    {
+        SetInterpolator(selected);
+    }
+
+    ImGui::Separator();
+
+    ImGui::Text("Key Frames");
 
     changed |= DrawNewKeyAtBeginning();
 
@@ -63,10 +89,11 @@ bool FrameSplineEditorWidget::DrawKeyFrame(int anIndex)
     changed |= DrawKeyHeader(anIndex);
 
     MovingFrame& key {GetKeyFrames()[anIndex].myFrame};
-    changed |= Widgets::OrientationWidget("Ori", key);
-    changed |= Widgets::PositionWidget("Pos", key);
-    changed |= Widgets::AngularVelocityWidget("Ang", key);
-    changed |= Widgets::VelocityWidget("Vel", key);
+    const MovingFrame::Coord coord {myIsEditModeExtrinsic ? MovingFrame::Extrinsic : MovingFrame::Intrinsic};
+    changed |= Widgets::OrientationWidget("Ori", coord, key);
+    changed |= Widgets::PositionWidget("Pos", coord, key);
+    changed |= Widgets::AngularVelocityWidget("Ang", coord, key);
+    changed |= Widgets::VelocityWidget("Vel", coord, key);
 
     ImGui::PopID();
 

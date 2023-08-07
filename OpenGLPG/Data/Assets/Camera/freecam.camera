@@ -25,7 +25,7 @@ myBehaviors
 		InputTranslationCameraBehavior
 		mySpeed
 		{
-			0.300000
+			1.000000
 		}
 
 	}

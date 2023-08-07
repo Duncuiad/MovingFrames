@@ -19,4 +19,5 @@ private:
     bool DrawNewKeyAtEnd();
 
     int myKeyToDelete {-1};
+    bool myIsEditModeExtrinsic {true};
 };

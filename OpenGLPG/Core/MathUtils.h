@@ -66,17 +66,18 @@ inline DualQuat Normalized(const DualQuat& aDualQuaternion)
 
 inline DualQuat Exp(const DualQuat& aDualQuaternion)
 {
-    ASSERT(aDualQuaternion.real.w == 0.f && aDualQuaternion.dual.w == 0.f,
+    ASSERT(glm::epsilonEqual(aDualQuaternion.real.w, 0.f, 0.001f) &&
+               glm::epsilonEqual(aDualQuaternion.dual.w, 0.f, 0.001f),
            "Exponentiating a dual quaternion that is not pure");
     const float t {glm::length(aDualQuaternion.real)};
     const float c {glm::dot(aDualQuaternion.real, aDualQuaternion.dual)};
     const float cost {glm::cos(t)};
     const float sint {glm::sin(t)};
 
-    float a {1.f - t * t / 3.f};
-    float b {-1.f / 3.f};
+    float a {1.f - t * t / 6.f};
+    float b {-1.f / 3.f + t * t / 30.f};
 
-    constexpr float expInternalEpsilon {0.01f};
+    constexpr float expInternalEpsilon {0.0001f};
     if (t > expInternalEpsilon)
     {
         a = sint / t;
@@ -94,7 +95,7 @@ inline DualQuat Log(const DualQuat& aDualQuaternion)
 {
     ASSERT(Norm2(aDualQuaternion).CloseTo(1.f), "Taking the log of a non unitary dual quaternion");
 
-    if (glm::epsilonEqual(Re(aDualQuaternion.real), 1.f, 0.001f))
+    if (glm::epsilonEqual(Re(aDualQuaternion.real), 1.f, 0.0001f))
     {
         // the dual quaternion is a pure translation
         return {Quat {0.f, 0.f, 0.f, 0.f}, aDualQuaternion.dual};
