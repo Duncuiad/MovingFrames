@@ -5,13 +5,12 @@
 Mesh::Mesh(const Vertex::List& someVertices, const Vertex::IndexList& someIndices)
     : myVertices {someVertices}
     , myIndices {someIndices}
-// @improvement: check if I actually need to store vertices and indices in the application or if it's enough to send
-// it to the GPU once (yeah no way)
 {
     glGenVertexArrays(1, &myVAO);
     glGenBuffers(1, &myVBO);
     glGenBuffers(1, &myEBO);
 
+    glBindVertexArray(myVAO);
     {
         // @improvement: consider allowing specifying different DRAW qualifiers for each mesh (e.g. GL_STATIC_DRAW)
         glBindBuffer(GL_ARRAY_BUFFER, myVBO);
@@ -21,8 +20,6 @@ Mesh::Mesh(const Vertex::List& someVertices, const Vertex::IndexList& someIndice
     }
 
     {
-        glBindVertexArray(myVAO);
-
         // vertex positions
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -37,7 +34,7 @@ Mesh::Mesh(const Vertex::List& someVertices, const Vertex::IndexList& someIndice
     }
 }
 
-Mesh::~Mesh()
+void Mesh::DeleteBuffers()
 {
     glDeleteBuffers(1, &myEBO);
     glDeleteBuffers(1, &myVBO);
@@ -48,10 +45,6 @@ Mesh::~Mesh()
 void Mesh::Draw() const
 {
     glBindVertexArray(myVAO);
-
-    // @check: that this is correct here
-    glBindBuffer(GL_ARRAY_BUFFER, myVBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myEBO);
 
     if (myIsWireframe)
     {

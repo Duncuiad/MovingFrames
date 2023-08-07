@@ -9,12 +9,6 @@ class WorldModel;
 class Renderer
 {
 public:
-    struct ConstructionParams
-    {
-        ShaderLoader& myShaderLoader;
-    };
-    struct InitParams
-    {};
     struct RenderParams
     {
         const WorldModel* myWorldModel {nullptr};
@@ -22,8 +16,7 @@ public:
         Vec2 myViewportBR;
     };
 
-    explicit Renderer(const ConstructionParams& someParams);
-    void Init(const InitParams& someParams);
+    Renderer();
     void Shutdown();
 
     void Render(const RenderParams& someParams);
@@ -31,6 +24,5 @@ public:
 private:
     void SetClearColor();
 
-    ShaderLoader& myShaderLoader;
     GLUID myShaderProgram;
 };

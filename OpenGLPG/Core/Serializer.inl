@@ -31,6 +31,11 @@ inline void SerializerT<Policy>::Process(const char* aVariableName, int& aVariab
 {
     Policy::Process(aVariableName, aVariable, *this);
 }
+template <typename Policy>
+inline void SerializerT<Policy>::Process(const char* aVariableName, unsigned int& aVariable)
+{
+    Policy::Process(aVariableName, aVariable, *this);
+}
 
 template <typename Policy>
 inline void SerializerT<Policy>::Process(const char* aVariableName, float& aVariable)
@@ -149,6 +154,18 @@ inline void Serialize(SerializerT<SavePolicy>& aSerializer, int& aVariable)
 
 template <>
 inline void Serialize(SerializerT<LoadPolicy>& aSerializer, int& aVariable)
+{
+    aSerializer.myFile >> aVariable;
+}
+
+template <>
+inline void Serialize(SerializerT<SavePolicy>& aSerializer, unsigned int& aVariable)
+{
+    aSerializer.myFile << SavePolicy::Indent(std::to_string(aVariable), aSerializer) << std::endl;
+}
+
+template <>
+inline void Serialize(SerializerT<LoadPolicy>& aSerializer, unsigned int& aVariable)
 {
     aSerializer.myFile >> aVariable;
 }

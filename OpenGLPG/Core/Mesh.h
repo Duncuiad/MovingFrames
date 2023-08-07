@@ -23,7 +23,8 @@ public:
     using List = std::vector<Mesh>;
 
     Mesh(const Vertex::List& someVertices, const Vertex::IndexList& someIndices);
-    ~Mesh();
+
+    void DeleteBuffers();
     void Draw() const;
 
 private:

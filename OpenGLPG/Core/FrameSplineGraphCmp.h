@@ -30,6 +30,7 @@ public:
         void Serialize(Serializer& aSerializer) override;
     };
 
+    FrameSplineGraphCmp();
     ~FrameSplineGraphCmp() override;
 
     void Draw(const DrawParams& someParams) const override;
@@ -43,6 +44,8 @@ private:
 
     Array<Key> myKeys;
     DisplayStyle myStyle {DisplayStyle::Segments};
+
+    Array<unsigned int> myIndices;
 
     GLUID myVAO {0};
     GLUID myVBO {0};

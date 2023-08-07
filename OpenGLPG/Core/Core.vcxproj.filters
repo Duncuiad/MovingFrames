@@ -447,5 +447,14 @@
     <None Include="..\Data\Assets\Shaders\point.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\Data\Assets\Shaders\spline.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\spline.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\spline.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

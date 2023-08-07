@@ -31,6 +31,7 @@ public:
     template <typename IterT>
     decltype(auto) Insert(IterT aPos, ElemT&& aVal);
     void RemoveAt(int anIndex);
+    void RemoveAll();
     Iterator begin() noexcept;
     ConstIterator begin() const noexcept;
     Iterator end() noexcept;
@@ -142,6 +143,12 @@ template <typename ElemT, bool IsDynamic>
 inline void Array<ElemT, IsDynamic>::RemoveAt(int anIndex)
 {
     myElements.erase(begin() + anIndex);
+}
+
+template <typename ElemT, bool IsDynamic>
+inline void Array<ElemT, IsDynamic>::RemoveAll()
+{
+    myElements.clear();
 }
 
 template <typename ElemT, bool IsDynamic>

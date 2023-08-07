@@ -235,7 +235,7 @@ myCount
 			{
 				myPath
 				{
-					point.shader
+					spline.shader
 				}
 
 			}

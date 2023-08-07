@@ -15,6 +15,7 @@ public:
     using Ptr = std::shared_ptr<const Model>;
 
     Model(const Filepath& anAsset);
+    ~Model();
     void Draw() const;
 
 private:

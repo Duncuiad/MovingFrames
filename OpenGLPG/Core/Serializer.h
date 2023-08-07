@@ -14,6 +14,7 @@ public:
     virtual void Process(const char* aVariableName, Serializable& aVariable) = 0;
     virtual void Process(const char* aVariableName, SerializableDynamic*& aPtr) = 0;
     virtual void Process(const char* aVariableName, int& aVariable) = 0;
+    virtual void Process(const char* aVariableName, unsigned int& aVariable) = 0;
     virtual void Process(const char* aVariableName, float& aVariable) = 0;
     virtual void Process(const char* aVariableName, Vec3& aVariable) = 0;
     virtual void Process(const char* aVariableName, Vec4& aVariable) = 0;
@@ -31,6 +32,7 @@ public:
     void Process(const char* aVariableName, Serializable& aVariable) override;
     void Process(const char* aVariableName, SerializableDynamic*& aPtr) override;
     void Process(const char* aVariableName, int& aVariable) override;
+    void Process(const char* aVariableName, unsigned int& aVariable) override;
     void Process(const char* aVariableName, float& aVariable) override;
     void Process(const char* aVariableName, Vec3& aVariable) override;
     void Process(const char* aVariableName, Vec4& aVariable) override;

@@ -5,13 +5,11 @@
 #include "Assert.h"
 
 Game::Game(const ConstructionParams& someparams)
-    : myRenderManager {{someparams.myLoader.GetShaderLoader()}}
-    , myWorldModel {{someparams.myLoader, "baselevel"}}
+    : myWorldModel {{someparams.myLoader, "baselevel"}}
 {}
 
 void Game::Init()
 {
-    myRenderManager.Init({});
     myWorldModel.Init();
 }
 

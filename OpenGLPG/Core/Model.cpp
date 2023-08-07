@@ -21,6 +21,14 @@ Model::Model(const Filepath& anAsset)
     ProcessAssimpNode(scene->mRootNode, scene);
 }
 
+Model::~Model()
+{
+    for (Mesh& mesh : myMeshes)
+    {
+        mesh.DeleteBuffers();
+    }
+}
+
 void Model::Draw() const
 {
     for (const Mesh& mesh : myMeshes)

@@ -6,6 +6,13 @@
 
 REGISTER_SUBTYPE(FrameSplineGraphCmp)
 
+FrameSplineGraphCmp::FrameSplineGraphCmp()
+{
+    glGenVertexArrays(1, &myVAO);
+    glGenBuffers(1, &myVBO);
+    glGenBuffers(1, &myEBO);
+}
+
 FrameSplineGraphCmp::~FrameSplineGraphCmp()
 {
     glDeleteBuffers(1, &myEBO);
@@ -15,17 +22,14 @@ FrameSplineGraphCmp::~FrameSplineGraphCmp()
 
 void FrameSplineGraphCmp::Draw(const DrawParams& someParams) const
 {
+    myShader->Use();
     myShader->SetUniformMat4("Model", someParams.myModelMatrix);
     myShader->SetUniformMat4("View", someParams.myViewMatrix);
     myShader->SetUniformMat4("ModelView", someParams.myModelViewMatrix);
     myShader->SetUniformMat4("Projection", someParams.myProjectionMatrix);
     myShader->SetUniformMat4("WorldToClip", someParams.myWorldToClipMatrix);
-    // myShader->Use();
     glBindVertexArray(myVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, myVBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myEBO);
-
-    glDrawElements(GL_LINE, myKeys.Count(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINES, myIndices.Count(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
@@ -57,36 +61,27 @@ void FrameSplineGraphCmp::SetKeys(const Array<Key>& someKeys)
 
 void FrameSplineGraphCmp::UpdateBuffers()
 {
-    glDeleteBuffers(1, &myEBO);
-    glDeleteBuffers(1, &myVBO);
-    glDeleteVertexArrays(1, &myVAO);
-
-    glGenVertexArrays(1, &myVAO);
-    glGenBuffers(1, &myVBO);
-    glGenBuffers(1, &myEBO);
-
+    glBindVertexArray(myVAO);
     {
         glBindBuffer(GL_ARRAY_BUFFER, myVBO);
-        glBufferData(GL_ARRAY_BUFFER, myKeys.Count() * sizeof(Key), myKeys.GetBuffer(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, myKeys.Count() * sizeof(Key), myKeys.GetBuffer(), GL_DYNAMIC_DRAW);
 
+        myIndices.RemoveAll();
         const unsigned int keyCount {static_cast<unsigned int>(myKeys.Count())};
-        unsigned int* segments {new unsigned int[keyCount * 2u]};
-        for (unsigned int i = 0; i < keyCount; ++i)
+        for (unsigned int i = 0; i + 1 < keyCount; ++i)
         {
-            segments[i] = i;
-            segments[i + 1] = i + 1;
+            myIndices.PushBack(i);
+            myIndices.PushBack(i + 1);
         }
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myEBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, myKeys.Count() * 2 * sizeof(unsigned int), segments, GL_STATIC_DRAW);
-        delete[] segments;
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, myIndices.Count() * sizeof(unsigned int), myIndices.GetBuffer(),
+                     GL_DYNAMIC_DRAW);
     }
 
     {
-        glBindVertexArray(myVAO);
-
         // key positions
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Key), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Key), (void*)offsetof(Key, myPosition));
         // key right
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Key), (void*)offsetof(Key, myRight));
@@ -102,9 +97,8 @@ void FrameSplineGraphCmp::UpdateBuffers()
         // key angular velocity
         glEnableVertexAttribArray(5);
         glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(Key), (void*)offsetof(Key, myAngularVelocity));
-
-        glBindVertexArray(0);
     }
+    glBindVertexArray(0);
 }
 
 FrameSplineGraphCmp::Key::Key(const Vec3& aPosition, const Vec3& aRight, const Vec3& anUp, const Vec3& aForward,

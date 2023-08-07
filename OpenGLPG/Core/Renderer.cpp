@@ -14,19 +14,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-Renderer::Renderer(const ConstructionParams& someParams)
-    : myShaderLoader {someParams.myShaderLoader} // @remove
+Renderer::Renderer()
 {
     SetClearColor();
 }
-
-void Renderer::Init(const InitParams& someParams) {}
-
 void Renderer::Shutdown() {}
 
 void Renderer::Render(const RenderParams& someParams)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (someParams.myWorldModel)
     {

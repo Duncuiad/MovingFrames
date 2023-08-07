@@ -23,8 +23,6 @@ MovingFrame FrameSpline::Interpolate(float aTiming) const
     const auto& keyAfter {
         std::upper_bound(myKeyFrames.begin(), myKeyFrames.end(), aTiming,
                          [](float aTiming, const KeyFrame& aFrame) { return aTiming <= aFrame.myTiming; })};
-    // ASSERT(keyBefore <= keyAfter, "Invalid Order");
-    // ASSERT(static_cast<unsigned int>(keyAfter - keyBefore) <= 1u, "Invalid KeyFrame ordering");
 
     if (keyAfter <= myKeyFrames.begin())
     {
@@ -84,7 +82,7 @@ MovingFrame FrameSpline::InterpolateLinearSmoothstep(const InterpolateInternalPa
     MovingFrame start {someParams.myFrom};
     MovingFrame end {someParams.myTo};
     start.Move(someParams.myT);
-    end.Move(someParams.myT);
+    end.Move(someParams.myT - someParams.myDT);
 
     const float t {someParams.myT / someParams.myDT};
     const float smoothT {(3.f - 2.f * t) * t * t};
@@ -99,7 +97,7 @@ MovingFrame FrameSpline::InterpolateCubicBezier(const InterpolateInternalParams&
     MovingFrame p1 {p0};
     MovingFrame p2 {p3};
     p1.Move(someParams.myT / 3.f);
-    p2.Move((someParams.myDT - someParams.myT) / 3.f);
+    p2.Move((someParams.myT - someParams.myDT) / 3.f);
 
     const float t {someParams.myT / someParams.myDT};
     const DualQuat p02 {Sclerp(p0.GetPose(), p2.GetPose(), t)};
