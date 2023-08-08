@@ -36,6 +36,7 @@ public:
     void SetLinearVelocity(const Vec3& aVelocity, Coord aCoord);
 
     void ResetVelocities();
+    void SetTwist(const DualQuat& aDualQuaternion);
     void AddAngularVelocity(Coord aCoord, Vec3 aVelocity);
     void AddLinearVelocity(Coord aCoord, Vec3 aVelocity);
     void Move(float aDeltaTime);

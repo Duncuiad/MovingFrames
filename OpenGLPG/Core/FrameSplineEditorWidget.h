@@ -9,6 +9,8 @@ public:
     virtual void Draw() override;
 
     int mySampleCount {30};
+    float myKeyScale {0.1f};
+    float myTangentScale {1.0f};
 
 private:
     bool DrawNewKeyAtBeginning();

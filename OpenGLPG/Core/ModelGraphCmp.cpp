@@ -5,6 +5,8 @@
 #include "Assert.h"
 #include "Serializer.h"
 
+#include <glm/gtc/matrix_inverse.hpp>
+
 REGISTER_SUBTYPE(ModelGraphCmp)
 
 ModelGraphCmp::ModelGraphCmp(const Filepath& aModelAsset, const Filepath& aShaderAsset)
@@ -28,6 +30,7 @@ void ModelGraphCmp::Draw(const DrawParams& someParams) const
     myShader->SetUniformMat4("Model", someParams.myModelMatrix);
     myShader->SetUniformMat4("View", someParams.myViewMatrix);
     myShader->SetUniformMat4("ModelView", someParams.myModelViewMatrix);
+    myShader->SetUniformMat3("ModelViewIT", glm::inverseTranspose(glm::mat3(someParams.myModelViewMatrix)));
     myShader->SetUniformMat4("Projection", someParams.myProjectionMatrix);
     myShader->SetUniformMat4("WorldToClip", someParams.myWorldToClipMatrix);
     myModel->Draw();

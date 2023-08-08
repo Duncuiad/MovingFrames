@@ -9,6 +9,8 @@ class EditorComponent : public Component
 {
 public:
     virtual void DrawWidget() = 0;
+    virtual void OnStartDisplayWidget() {}
+    virtual void OnEndDisplayWidget() {}
     bool myIsDisplayingWidget {false};
 };
 

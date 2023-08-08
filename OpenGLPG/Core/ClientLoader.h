@@ -27,6 +27,7 @@ public:
     const Filepath myShaderFolder;
     const Filepath myModelFolder;
     const Filepath myWorldFolder;
+    const Filepath myTemplateFolder;
 
 private:
     std::unique_ptr<ShaderLoader> myShaderLoader;

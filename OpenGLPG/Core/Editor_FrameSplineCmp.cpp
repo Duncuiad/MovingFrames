@@ -7,15 +7,39 @@
 #include "FrameSpline.h"
 #include "FrameSplineCmp.h"
 #include "FrameSplineGraphCmp.h"
+#include "MathUtils.h"
 
 #include <functional>
 
 REGISTER_SUBTYPE(Editor_FrameSplineCmp)
 
+namespace Local
+{
+void AddKey(const MovingFrame& aFrame, Array<FrameSplineGraphCmp::Key>& someKeysOut)
+{
+    const Vec3 position {aFrame.GetPosition()};
+    const Mat3 orientation {aFrame.GetOrientation()};
+    someKeysOut.EmplaceBack(position, orientation[0], orientation[1], -orientation[2],
+                            aFrame.GetLinearVelocity(MovingFrame::Extrinsic),
+                            aFrame.GetAngularVelocity(MovingFrame::Extrinsic));
+}
+} // namespace Local
+
 void Editor_FrameSplineCmp::OnEnterWorld()
 {
     myWidget.AttachSplineObject(&GetFrameSplineCmp().mySpline);
     myWidget.ConnectOnChangedCallback(std::bind(&Editor_FrameSplineCmp::OnChanged, this));
+    OnChanged();
+}
+
+void Editor_FrameSplineCmp::OnStartDisplayWidget()
+{
+    GetFrameSplineGraphCmp().myShowControlKeys = true;
+}
+
+void Editor_FrameSplineCmp::OnEndDisplayWidget()
+{
+    GetFrameSplineGraphCmp().myShowControlKeys = false;
 }
 
 void Editor_FrameSplineCmp::OnChanged() const
@@ -26,20 +50,28 @@ void Editor_FrameSplineCmp::OnChanged() const
     const FrameSpline& spline {GetFrameSplineCmp().mySpline};
     FrameSplineGraphCmp& graphCmp {GetFrameSplineGraphCmp()};
 
-    Array<FrameSplineGraphCmp::Key> graphKeys;
-
-    for (int i = 0; i < myWidget.mySampleCount; ++i)
     {
-        const MovingFrame frame {spline.Interpolate(i * sampleDistance)};
-        const Vec3 position {frame.GetPosition()};
-        const Mat3 orientation {frame.GetOrientation()};
-        graphKeys.EmplaceBack(position, orientation[0], orientation[1], -orientation[2],
-                              frame.GetLinearVelocity(MovingFrame::Extrinsic),
-                              frame.GetAngularVelocity(MovingFrame::Extrinsic));
+        Array<FrameSplineGraphCmp::Key> graphKeys;
+        for (int i = 0; i < myWidget.mySampleCount; ++i)
+        {
+            const MovingFrame frame {spline.Interpolate(i * sampleDistance)};
+            Local::AddKey(frame, graphKeys);
+        }
+        // @improv: move the array
+        graphCmp.SetKeys(graphKeys);
     }
 
-    // @improv: move the array
-    graphCmp.SetKeys(graphKeys);
+    {
+        Array<FrameSplineGraphCmp::Key> graphControlKeys;
+        for (const FrameSpline::KeyFrame& keyframe : spline.GetKeyFrames())
+        {
+            Local::AddKey(keyframe.myFrame, graphControlKeys);
+        }
+        graphCmp.SetControlKeys(graphControlKeys);
+    }
+
+    graphCmp.SetKeyScale(myWidget.myKeyScale);
+    graphCmp.SetTangentScale(myWidget.myTangentScale);
 }
 
 FrameSplineCmp& Editor_FrameSplineCmp::GetFrameSplineCmp() const

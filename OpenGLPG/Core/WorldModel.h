@@ -28,6 +28,8 @@ public:
     void SaveWorld(const std::string& aLevelName);
 
     bool IsAvailable() const;
+    UID RequestEntitySpawn(const Filepath& aTemplateFilepath);
+    void RequestEntityUnspawn(const UID& anEntityUID);
 
     const CameraData& GetActiveCameraData() const;
     const Entity::Container& GetEntities() const { return myEntities; }
@@ -35,6 +37,8 @@ public:
     Entity& GetEntity(const UID& anEntityUID);
 
 private:
+    void SpawnQueuedEntities();
+
     Entity::Container myEntities;
     Array<Entity> myEntityQueue;
 

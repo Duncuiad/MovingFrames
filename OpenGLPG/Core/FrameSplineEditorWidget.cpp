@@ -16,6 +16,9 @@ void FrameSplineEditorWidget::Draw()
     changed |= ImGui::InputInt("Sample Count", &mySampleCount);
     mySampleCount = glm::max(mySampleCount, 2);
 
+    changed |= ImGui::SliderFloat("Key Scale", &myKeyScale, 0.01f, 2.f, "%.3f", ImGuiSliderFlags_Logarithmic);
+    changed |= ImGui::SliderFloat("Tangent Scale", &myTangentScale, 0.01f, 2.f, "%.3f", ImGuiSliderFlags_Logarithmic);
+
     ImGui::Text("Coord Type");
     ImGui::SameLine();
     if (ImGui::RadioButton("Extrinsic", myIsEditModeExtrinsic))

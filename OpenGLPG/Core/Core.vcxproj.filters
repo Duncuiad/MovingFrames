@@ -456,5 +456,14 @@
     <None Include="..\Data\Assets\Shaders\spline.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\Data\Assets\Shaders\spline.geom">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\path.geom">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\path.shader">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

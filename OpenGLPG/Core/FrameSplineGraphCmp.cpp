@@ -4,77 +4,132 @@
 
 #include "Serializer.h"
 
+#include <glm/gtc/matrix_inverse.hpp>
+
 REGISTER_SUBTYPE(FrameSplineGraphCmp)
 
 FrameSplineGraphCmp::FrameSplineGraphCmp()
 {
-    glGenVertexArrays(1, &myVAO);
-    glGenBuffers(1, &myVBO);
-    glGenBuffers(1, &myEBO);
+    GenerateBuffers(myKeyBuffers);
+    GenerateBuffers(myControlKeyBuffers);
 }
 
 FrameSplineGraphCmp::~FrameSplineGraphCmp()
 {
-    glDeleteBuffers(1, &myEBO);
-    glDeleteBuffers(1, &myVBO);
-    glDeleteVertexArrays(1, &myVAO);
+    DeleteBuffers(myControlKeyBuffers);
+    DeleteBuffers(myKeyBuffers);
+}
+
+void FrameSplineGraphCmp::OnLoad(const LoadParams& someParams)
+{
+    Base::OnLoad(someParams);
+    myControlKeyShader = someParams.myClientLoader.GetShaderLoader().GetShader(myControlKeyShaderAsset);
+    SetKeyScale(0.1f);
+    SetTangentScale(1.0f);
 }
 
 void FrameSplineGraphCmp::Draw(const DrawParams& someParams) const
 {
     myShader->Use();
+    myShader->SetUniformInt("IsControlKey", 0);
     myShader->SetUniformMat4("Model", someParams.myModelMatrix);
     myShader->SetUniformMat4("View", someParams.myViewMatrix);
     myShader->SetUniformMat4("ModelView", someParams.myModelViewMatrix);
+    myShader->SetUniformMat3("ModelViewIT", glm::inverseTranspose(glm::mat3(someParams.myModelViewMatrix)));
     myShader->SetUniformMat4("Projection", someParams.myProjectionMatrix);
     myShader->SetUniformMat4("WorldToClip", someParams.myWorldToClipMatrix);
-    glBindVertexArray(myVAO);
-    glDrawElements(GL_LINES, myIndices.Count(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(myKeyBuffers.myVAO);
+    glDrawElements(GL_LINES, myKeys.Count() * 2, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+
+    if (myShowControlKeys)
+    {
+        myControlKeyShader->Use();
+
+        myControlKeyShader->SetUniformInt("IsControlKey", 1);
+
+        myControlKeyShader->SetUniformMat4("Model", someParams.myModelMatrix);
+        myControlKeyShader->SetUniformMat4("View", someParams.myViewMatrix);
+        myControlKeyShader->SetUniformMat4("ModelView", someParams.myModelViewMatrix);
+        myControlKeyShader->SetUniformMat3("ModelViewIT",
+                                           glm::inverseTranspose(glm::mat3(someParams.myModelViewMatrix)));
+        myControlKeyShader->SetUniformMat4("Projection", someParams.myProjectionMatrix);
+        myControlKeyShader->SetUniformMat4("WorldToClip", someParams.myWorldToClipMatrix);
+        glBindVertexArray(myControlKeyBuffers.myVAO);
+        glDrawElements(GL_LINES, myControlKeys.Count() * 2, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+
+        myControlKeyShader->SetUniformInt("IsControlKey", 0);
+    }
 }
 
 void FrameSplineGraphCmp::Serialize(Serializer& aSerializer)
 {
     aSerializer.Process("myShader", myShaderAsset);
-    aSerializer.Process("myKeys", myKeys);
+    aSerializer.Process("myControlKeyShader", myControlKeyShaderAsset);
 
     {
         int style {static_cast<int>(myStyle)};
         aSerializer.Process("myStyle", style);
         myStyle = static_cast<DisplayStyle>(style);
     }
-
-    UpdateBuffers();
 }
 
 void FrameSplineGraphCmp::SetDisplayStyle(DisplayStyle aStyle)
 {
     myStyle = aStyle;
-    UpdateBuffers();
+}
+
+void FrameSplineGraphCmp::SetKeyScale(float aScale)
+{
+    myShader->Use();
+    myShader->SetUniformFloat("KeyScale", aScale);
+}
+
+void FrameSplineGraphCmp::SetTangentScale(float aScale)
+{
+    myShader->Use();
+    myShader->SetUniformFloat("TangentScale", aScale);
 }
 
 void FrameSplineGraphCmp::SetKeys(const Array<Key>& someKeys)
 {
     myKeys = someKeys;
-    UpdateBuffers();
+    UpdateBuffers(myKeys, myKeyBuffers);
 }
 
-void FrameSplineGraphCmp::UpdateBuffers()
+void FrameSplineGraphCmp::SetControlKeys(const Array<Key>& someKeys)
 {
-    glBindVertexArray(myVAO);
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, myVBO);
-        glBufferData(GL_ARRAY_BUFFER, myKeys.Count() * sizeof(Key), myKeys.GetBuffer(), GL_DYNAMIC_DRAW);
+    myControlKeys = someKeys;
+    UpdateBuffers(myControlKeys, myControlKeyBuffers);
+}
 
-        myIndices.RemoveAll();
-        const unsigned int keyCount {static_cast<unsigned int>(myKeys.Count())};
+void FrameSplineGraphCmp::GenerateBuffers(KeyFrameBuffers& someBuffersOut)
+{
+    glGenVertexArrays(1, &someBuffersOut.myVAO);
+    glGenBuffers(1, &someBuffersOut.myVBO);
+    glGenBuffers(1, &someBuffersOut.myEBO);
+}
+
+void FrameSplineGraphCmp::UpdateBuffers(const Array<Key>& someKeys, KeyFrameBuffers& someBuffersOut)
+{
+    glBindVertexArray(someBuffersOut.myVAO);
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, someBuffersOut.myVBO);
+        glBufferData(GL_ARRAY_BUFFER, someKeys.Count() * sizeof(Key), someKeys.GetBuffer(), GL_DYNAMIC_DRAW);
+
+        Array<unsigned int> indices;
+        const unsigned int keyCount {static_cast<unsigned int>(someKeys.Count())};
         for (unsigned int i = 0; i + 1 < keyCount; ++i)
         {
-            myIndices.PushBack(i);
-            myIndices.PushBack(i + 1);
+            indices.PushBack(i);
+            indices.PushBack(i + 1);
         }
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myEBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, myIndices.Count() * sizeof(unsigned int), myIndices.GetBuffer(),
+        indices.PushBack(keyCount - 1);
+        indices.PushBack(keyCount - 1);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, someBuffersOut.myEBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.Count() * sizeof(unsigned int), indices.GetBuffer(),
                      GL_DYNAMIC_DRAW);
     }
 
@@ -99,6 +154,13 @@ void FrameSplineGraphCmp::UpdateBuffers()
         glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(Key), (void*)offsetof(Key, myAngularVelocity));
     }
     glBindVertexArray(0);
+}
+
+void FrameSplineGraphCmp::DeleteBuffers(KeyFrameBuffers& someBuffersOut)
+{
+    glDeleteBuffers(1, &someBuffersOut.myEBO);
+    glDeleteBuffers(1, &someBuffersOut.myVBO);
+    glDeleteVertexArrays(1, &someBuffersOut.myVAO);
 }
 
 FrameSplineGraphCmp::Key::Key(const Vec3& aPosition, const Vec3& aRight, const Vec3& anUp, const Vec3& aForward,

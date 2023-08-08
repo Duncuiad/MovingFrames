@@ -13,6 +13,8 @@ class Editor_FrameSplineCmp : public EditorCmp<FrameSplineEditorWidget>
 public:
     void Serialize(Serializer& /*aSerializer*/) override {}
     void OnEnterWorld() override;
+    void OnStartDisplayWidget() override;
+    void OnEndDisplayWidget() override;
     void OnChanged() const;
 
 private:

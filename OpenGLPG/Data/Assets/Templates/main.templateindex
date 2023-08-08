@@ -1,0 +1,31 @@
+myCount
+{
+	3
+}
+
+0
+{
+	myPath
+	{
+		simpleobject.template
+	}
+	
+}
+
+1
+{
+	myPath
+	{
+		framespline.template
+	}
+	
+}
+
+2
+{
+	myPath
+	{
+		framepath.template
+	}
+	
+}

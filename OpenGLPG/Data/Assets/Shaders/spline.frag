@@ -1,9 +1,12 @@
 #version 450 core
-out vec4 FragColor;
 
-in vec4 vertexColor;
+in GS_OUT {
+    vec4 myColor;
+} fs_in;
+
+out vec4 FragColor;
 
 void main()
 {
-    FragColor = vertexColor;
+    FragColor = fs_in.myColor;
 }

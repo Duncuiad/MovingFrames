@@ -16,6 +16,7 @@ Vec3 Im(const Quat& aQuaternion);
 Dual Norm(const DualQuat& aDualQuaternion);
 Dual Norm2(const DualQuat& aDualQuaternion);
 DualQuat Normalized(const DualQuat& aDualQuaternion);
+DualQuat Pure(const DualQuat& aDualQuaternion);
 DualQuat Exp(const DualQuat& aDualQuaternion);
 DualQuat Log(const DualQuat& aDualQuaternion);
 
@@ -62,6 +63,11 @@ inline DualQuat Normalized(const DualQuat& aDualQuaternion)
     const float invNormReal {glm::inversesqrt(normReal2)};
     const Quat dependentComp {aDualQuaternion.real * glm::dot(aDualQuaternion.real, aDualQuaternion.dual) / normReal2};
     return DualQuat {aDualQuaternion.real, (aDualQuaternion.dual - dependentComp)} * invNormReal;
+}
+
+inline DualQuat Pure(const DualQuat& aDualQuaternion)
+{
+    return DualQuat {Pure(Im(aDualQuaternion.real)), Pure(Im(aDualQuaternion.dual))};
 }
 
 inline DualQuat Exp(const DualQuat& aDualQuaternion)

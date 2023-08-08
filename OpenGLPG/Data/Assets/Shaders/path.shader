@@ -1,3 +1,3 @@
 spline.vert
 spline.frag
-spline.geom
+path.geom

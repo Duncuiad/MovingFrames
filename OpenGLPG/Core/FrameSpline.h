@@ -20,6 +20,7 @@ public:
         void Serialize(Serializer& aSerializer) override;
     };
 
+    const Array<KeyFrame>& GetKeyFrames() const;
     MovingFrame Interpolate(float aTiming) const;
     MovingFrame& AddKeyFrame(float aTiming);
 

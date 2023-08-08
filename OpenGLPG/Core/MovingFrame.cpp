@@ -114,6 +114,12 @@ void MovingFrame::ResetVelocities()
     myTwist = DualQuat {Quat {0.f, 0.f, 0.f, 0.f}, Quat {0.f, 0.f, 0.f, 0.f}};
 }
 
+void MovingFrame::SetTwist(const DualQuat& aDualQuaternion)
+{
+    ASSERT(Re(aDualQuaternion.real) == 0.f && Re(aDualQuaternion.dual) == 0.f, "Dual Quaternion is not pure");
+    myTwist = aDualQuaternion;
+}
+
 void MovingFrame::AddAngularVelocity(Coord aCoord, Vec3 aVelocity)
 {
     switch (aCoord)

@@ -25,5 +25,6 @@ bool UID::operator==(const UID& anOther) const
 
 std::string UID::GetString() const
 {
-    return std::to_string(myInternalID);
+    constexpr auto strlen {std::string("0000000000000000").length()};
+    return std::string(strlen - std::to_string(myInternalID).length(), '0') + std::to_string(myInternalID);
 }

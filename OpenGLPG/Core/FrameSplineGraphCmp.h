@@ -33,21 +33,36 @@ public:
     FrameSplineGraphCmp();
     ~FrameSplineGraphCmp() override;
 
+    void OnLoad(const LoadParams& someParams) override;
     void Draw(const DrawParams& someParams) const override;
     void Serialize(Serializer& aSerializer) override;
 
     void SetDisplayStyle(DisplayStyle aStyle);
+    void SetKeyScale(float aScale);
+    void SetTangentScale(float aScale);
     void SetKeys(const Array<Key>& someKeys);
+    void SetControlKeys(const Array<Key>& someKeys);
+
+    bool myShowControlKeys {false};
 
 private:
-    void UpdateBuffers();
+    struct KeyFrameBuffers
+    {
+        GLUID myVAO {0};
+        GLUID myVBO {0};
+        GLUID myEBO {0};
+    };
+    static void GenerateBuffers(KeyFrameBuffers& someBuffersOut);
+    static void UpdateBuffers(const Array<Key>& someKeys, KeyFrameBuffers& someBuffersOut);
+    static void DeleteBuffers(KeyFrameBuffers& someBuffersOut);
+
+    Shader::Ptr myControlKeyShader {nullptr};
+    Filepath myControlKeyShaderAsset;
 
     Array<Key> myKeys;
+    Array<Key> myControlKeys;
     DisplayStyle myStyle {DisplayStyle::Segments};
 
-    Array<unsigned int> myIndices;
-
-    GLUID myVAO {0};
-    GLUID myVBO {0};
-    GLUID myEBO {0};
+    KeyFrameBuffers myKeyBuffers;
+    KeyFrameBuffers myControlKeyBuffers;
 };

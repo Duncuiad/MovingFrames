@@ -18,22 +18,14 @@ WorldModel::WorldModel(const ConstructionParams& someParams)
 
     for (auto& entity : myEntityQueue)
     {
+        entity.myUID = UID::CreateUnique();
         entity.Load({myClientLoader});
     }
 }
 
 void WorldModel::Init()
 {
-    for (auto& entity : myEntityQueue)
-    {
-        UID newUID {UID::CreateUnique()};
-        entity.myUID = newUID;
-        myEntities.try_emplace(newUID, std::move(entity));
-    }
-    for (auto& [uid, entity] : myEntities)
-    {
-        entity.Spawn(this);
-    }
+    SpawnQueuedEntities();
 
     // Temporary camera activation flow:
 
@@ -54,6 +46,12 @@ void WorldModel::Shutdown()
 
 void WorldModel::Update(const UpdateParams& someParams)
 {
+    for (auto& entity : myEntityQueue)
+    {
+        entity.Load({myClientLoader});
+    }
+    SpawnQueuedEntities();
+
     for (auto& [uid, entity] : myEntities)
     {
         entity.Update();
@@ -87,6 +85,27 @@ bool WorldModel::IsAvailable() const
     return true;
 }
 
+UID WorldModel::RequestEntitySpawn(const Filepath& aTemplateFilepath)
+{
+    ASSERT(aTemplateFilepath.HasExtension("template"), "Wrong file extension");
+    Entity newEntity;
+    SerializerLoader loader(aTemplateFilepath);
+    newEntity.Serialize(loader);
+    const UID newUID {UID::CreateUnique()};
+    newEntity.myUID = newUID;
+    myEntityQueue.EmplaceBack(std::move(newEntity));
+    return newEntity.myUID;
+}
+
+void WorldModel::RequestEntityUnspawn(const UID& anEntityUID)
+{
+    if (auto entity = myEntities.find(anEntityUID); entity != myEntities.end())
+    {
+        entity->second.Unspawn();
+        myEntities.erase(entity);
+    }
+}
+
 const CameraData& WorldModel::GetActiveCameraData() const
 {
     return myCameraManager.GetActiveCameraData();
@@ -102,4 +121,16 @@ Entity& WorldModel::GetEntity(const UID& anEntityUID)
 {
     ASSERT(myEntities.contains(anEntityUID), "Invalid Entity UID");
     return myEntities.at(anEntityUID);
+}
+
+void WorldModel::SpawnQueuedEntities()
+{
+    for (auto& entity : myEntityQueue)
+    {
+        const UID entityUID {entity.myUID};
+        auto pair {myEntities.try_emplace(entityUID, std::move(entity))};
+        Entity& newEntity {pair.first->second};
+        newEntity.Spawn(this);
+    }
+    myEntityQueue.RemoveAll();
 }

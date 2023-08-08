@@ -8,6 +8,11 @@
 
 #include <algorithm>
 
+const Array<FrameSpline::KeyFrame>& FrameSpline::GetKeyFrames() const
+{
+    return myKeyFrames;
+}
+
 MovingFrame FrameSpline::Interpolate(float aTiming) const
 {
     ASSERT(0.f <= aTiming && aTiming <= 1.f, "Invalid Timing");

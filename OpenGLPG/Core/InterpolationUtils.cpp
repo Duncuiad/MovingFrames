@@ -7,8 +7,8 @@
 
 DualQuat Sclerp(const DualQuat& aPose0, const DualQuat& aPose1, float aT)
 {
-    ASSERT(Norm2(aPose0).IsInvertible(), "Source pose in a non invertible dual quaternion");
-    return Normalized(Exp(aT * Log(aPose1 * glm::inverse(aPose0))) * aPose0);
+    ASSERT(Norm2(aPose0).IsInvertible(), "Source pose is a non invertible dual quaternion");
+    return Normalized(Exp(aT * Pure(Log(aPose1 * glm::inverse(aPose0)))) * aPose0);
 }
 
 DualQuat Sclerp(const DualQuat& aPose0, const DualQuat& aPose1, float aT, const DualQuat& aMonodromyReference)
