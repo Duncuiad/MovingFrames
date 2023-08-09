@@ -10,11 +10,7 @@
 World::World(const ConstructionParams& someParams)
     : myClientLoader {someParams.myClientLoader}
 {
-    if (someParams.aLevelName != "")
-    {
-        SerializerLoader loader(myClientLoader.myWorldFolder + someParams.aLevelName + ".world");
-        myEntityQueue.Serialize(loader);
-    }
+    myClientLoader.GetWorldLoader().LoadWorld(someParams.aLevelName, this);
 
     for (auto& entity : myEntityQueue)
     {
@@ -62,22 +58,7 @@ void World::Update(const UpdateParams& someParams)
 
 void World::SaveWorld(const std::string& aLevelName)
 {
-    ASSERT(!aLevelName.empty(), "Invalid name for asset!");
-    SerializerSaver saver {myClientLoader.myWorldFolder + aLevelName};
-
-    // @improvement: This needs to be kept in sync with the Array class deserialization parsing. Maybe let's make it
-    // smell a bit less
-    int entityCount {static_cast<int>(myEntities.size())};
-    saver.Process("myCount", entityCount);
-
-    // @note: I could use the uid instead of this counter. It wouldn't have much meaning to have uids in the level file
-    // at the moment though
-    int counter {0};
-    for (auto& [uid, entity] : myEntities)
-    {
-        saver.Process(std::to_string(counter).data(), entity);
-        ++counter;
-    }
+    myClientLoader.GetWorldLoader().SaveWorld(aLevelName, this);
 }
 
 bool World::IsAvailable() const

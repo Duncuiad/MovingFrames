@@ -4,8 +4,8 @@
 
 #include "Assert.h"
 
-Game::Game(const ConstructionParams& someparams)
-    : myWorld {{someparams.myLoader, "baselevel"}}
+Game::Game(const ConstructionParams& someParams)
+    : myWorld {{someParams.myLoader, someParams.myLevelName}}
 {}
 
 void Game::Init()

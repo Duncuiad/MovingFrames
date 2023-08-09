@@ -197,6 +197,7 @@
     <ClInclude Include="UID.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="World.h" />
+    <ClInclude Include="WorldLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -257,6 +258,7 @@
     <ClCompile Include="UID.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="World.cpp" />
+    <ClCompile Include="WorldLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc" />

@@ -22,8 +22,6 @@ void Renderer::Shutdown() {}
 
 void Renderer::Render(const RenderParams& someParams)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     if (someParams.myWorld)
     {
         Mat4 viewportAdjustment {glm::identity<glm::mat4>()};

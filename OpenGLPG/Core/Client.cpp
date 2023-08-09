@@ -12,6 +12,7 @@
 #include "Test.h"
 
 #include <format>
+#include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <iostream>
@@ -26,8 +27,6 @@ Client::Client()
     result &= GLFWInit();
     result &= GLADInit();
     ASSERT(result, "Failed initializing OpenGL");
-
-    myGame = std::make_unique<LevelEditor>(Game::ConstructionParams {myLoader});
 }
 
 bool Client::IsRunning() const
@@ -40,13 +39,17 @@ void Client::Init()
     Test::RunCustomRuntimeTests();
 
     ImGuiInit();
-    myGame->Init();
     glfwSetTime(0.0);
 }
 
 void Client::Shutdown()
 {
-    myGame->Shutdown();
+    if (myGame)
+    {
+        myGame->Shutdown();
+    }
+    myLoader.Unload();
+
     ImGuiShutdown();
 
     glfwTerminate();
@@ -60,10 +63,29 @@ void Client::Update()
 
     if (deltaTime >= locMinFrameTime)
     {
-        ProcessInput();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         ImGuiFrameStart();
-        myGame->Update({deltaTime});
+
+        if (myGame)
+        {
+            bool shouldExitGame {false};
+            ProcessInput(shouldExitGame);
+            if (shouldExitGame)
+            {
+                myGame->Shutdown();
+                myGame = nullptr;
+                glClearColor(0.f, 0.f, 0.f, 1.f);
+            }
+            else
+            {
+                myGame->Update({deltaTime});
+            }
+        }
+        else
+        {
+            ShowMainMenu();
+        }
 
         ImGuiDebugDrawClient(updateElapsedTime, deltaTime);
 
@@ -157,10 +179,18 @@ void Client::ImGuiDebugDrawClient(float anUpdateElapsedTime, float aFrameTime) c
 #endif
 }
 
-void Client::ProcessInput()
+void Client::ProcessInput(bool& aShouldExitGameOut)
 {
     ASSERT(myGame.get() != nullptr, "No Game instance exists");
     myGame->ResetGameInputData();
+
+    if (glfwGetKey(myWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        ImGui::OpenPopup("##ExitGame");
+        ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    }
+    aShouldExitGameOut = ShowExitGamePopup();
 
     AddKeyboardInput(GLFW_KEY_LEFT, GameInput::theKeyboardLookLeft);
     AddKeyboardInput(GLFW_KEY_RIGHT, GameInput::theKeyboardLookRight);
@@ -186,4 +216,45 @@ void Client::AddKeyboardInput(int aGLFWInput, const char* aGameInputName)
 void Client::AddGamepadInput(int /*aGLFWInput*/, const char* /*aGameInputName*/)
 {
     // @todo: implement method
+}
+
+void Client::ShowMainMenu()
+{
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+    ImGui::Begin("Main Menu");
+
+    for (const Filepath& filename : myLoader.GetWorldLoader().GetAvailableWorlds())
+    {
+        if (ImGui::Button(filename.GetBuffer(), ImVec2 {300.f, 20.f}))
+        {
+            myGame = std::make_unique<LevelEditor>(Game::ConstructionParams {myLoader, filename});
+            myGame->Init();
+        }
+    }
+
+    ImGui::End();
+}
+
+bool Client::ShowExitGamePopup()
+{
+    bool exitGame {false};
+    if (ImGui::BeginPopupModal("##ExitGame"))
+    {
+        ImGui::Text("Exiting the game. Have you saved?");
+        if (ImGui::Button("Confirm"))
+        {
+            exitGame = true;
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+
+    return exitGame;
 }

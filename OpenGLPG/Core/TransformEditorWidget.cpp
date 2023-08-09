@@ -22,8 +22,9 @@ void TransformEditorWidget::Draw()
 
     bool changed {false};
     const MovingFrame::Coord coord {myIsEditModeExtrinsic ? MovingFrame::Extrinsic : MovingFrame::Intrinsic};
-    changed |= Widgets::OrientationWidget("Ori", coord, myMovingFrame);
-    changed |= Widgets::PositionWidget("Pos", coord, myMovingFrame);
+    changed |= Widgets::OrientationWidget("Orientation", coord, myMovingFrame);
+    changed |= Widgets::PositionWidget("Position", coord, myMovingFrame);
+    changed |= ImGui::SliderFloat("Scale", &myScale, 0.1f, 10.f, "%.3f", ImGuiSliderFlags_Logarithmic);
 
     if (changed)
     {

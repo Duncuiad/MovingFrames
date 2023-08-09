@@ -2,6 +2,7 @@
 
 #include "ClientLoader.h"
 #include "DebugImGui.h"
+#include "Filepath.h"
 #include "GameInputData.h"
 #include "MathDefines.h"
 #include "Renderer.h"
@@ -15,6 +16,7 @@ public:
     struct ConstructionParams
     {
         const ClientLoader& myLoader;
+        const Filepath& myLevelName;
     };
     struct UpdateParams
     {

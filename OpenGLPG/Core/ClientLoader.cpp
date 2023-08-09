@@ -10,6 +10,7 @@ ClientLoader::ClientLoader(const ConstructionParams& someParams)
     , myTemplateFolder {someParams.myAssetFolder + "Templates/"}
     , myShaderLoader {std::make_unique<ShaderLoader>(myShaderFolder)}
     , myModelLoader {std::make_unique<ModelLoader>(myModelFolder)}
+    , myWorldLoader {std::make_unique<WorldLoader>(myWorldFolder)}
 {}
 
 void ClientLoader::Register() {}
@@ -18,4 +19,7 @@ void ClientLoader::Unregister() {}
 
 void ClientLoader::Load() {}
 
-void ClientLoader::Unload() {}
+void ClientLoader::Unload()
+{
+    myWorldLoader->OnUnload();
+}

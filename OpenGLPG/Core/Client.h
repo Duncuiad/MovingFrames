@@ -28,9 +28,12 @@ private:
     void ImGuiFrameEnd();
     void ImGuiDebugDrawClient(float anUpdateElapsedTime, float aFrameTime) const;
 
-    void ProcessInput();
+    void ProcessInput(bool& aShouldExitGameOut);
     void AddKeyboardInput(int aGLFWInput, const char* aGameInputName);
     void AddGamepadInput(int aGLFWInput, const char* aGameInputName);
+
+    void ShowMainMenu();
+    bool ShowExitGamePopup();
 
     // @improvement: wrap and centralize window logic
     GLFWwindow* myWindow {nullptr};

@@ -9,6 +9,7 @@ public:
     void Draw() override;
 
     MovingFrame myMovingFrame;
+    float myScale {1.f};
 
 private:
     bool myIsEditModeExtrinsic {true};

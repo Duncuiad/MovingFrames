@@ -3,6 +3,7 @@
 #include "Filepath.h"
 #include "ModelLoader.h"
 #include "ShaderLoader.h"
+#include "WorldLoader.h"
 
 #include <memory>
 
@@ -22,6 +23,7 @@ public:
 
     ShaderLoader& GetShaderLoader() const { return *myShaderLoader; }
     ModelLoader& GetMeshLoader() const { return *myModelLoader; }
+    WorldLoader& GetWorldLoader() const { return *myWorldLoader; }
 
     const Filepath myAssetFolder;
     const Filepath myShaderFolder;
@@ -32,4 +34,5 @@ public:
 private:
     std::unique_ptr<ShaderLoader> myShaderLoader;
     std::unique_ptr<ModelLoader> myModelLoader;
+    std::unique_ptr<WorldLoader> myWorldLoader;
 };

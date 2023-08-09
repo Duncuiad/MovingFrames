@@ -240,6 +240,9 @@
     <ClInclude Include="TransformEditorWidget.h">
       <Filter>Editor</Filter>
     </ClInclude>
+    <ClInclude Include="WorldLoader.h">
+      <Filter>World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -415,6 +418,9 @@
     </ClCompile>
     <ClCompile Include="TransformEditorWidget.cpp">
       <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldLoader.cpp">
+      <Filter>World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

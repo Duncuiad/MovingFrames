@@ -39,6 +39,8 @@ public:
 private:
     void SpawnQueuedEntities();
 
+    friend class WorldLoader;
+
     Entity::Container myEntities;
     Array<Entity> myEntityQueue;
 

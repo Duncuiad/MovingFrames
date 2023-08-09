@@ -1,0 +1,23 @@
+myCount
+{
+	2
+}
+
+0
+{
+	myPath
+	{
+		baselevel.world
+	}
+
+}
+
+1
+{
+	myPath
+	{
+		circle.world
+	}
+
+}
+
