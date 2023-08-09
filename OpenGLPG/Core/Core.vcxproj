@@ -151,6 +151,7 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="EditorCmp.h" />
     <ClInclude Include="EditorWidget.h" />
+    <ClInclude Include="Editor_TransformCmp.h" />
     <ClInclude Include="FrameSplineCmp.h" />
     <ClInclude Include="DebugImGui.h" />
     <ClInclude Include="DebugUtils.h" />
@@ -192,9 +193,10 @@
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TransformCmp.h" />
+    <ClInclude Include="TransformEditorWidget.h" />
     <ClInclude Include="UID.h" />
     <ClInclude Include="Widget.h" />
-    <ClInclude Include="WorldModel.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -207,6 +209,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="EditorWidget.cpp" />
+    <ClCompile Include="Editor_TransformCmp.cpp" />
     <ClCompile Include="FrameSplineCmp.cpp" />
     <ClCompile Include="DebugUtils.cpp" />
     <ClCompile Include="Dual.cpp" />
@@ -250,9 +253,10 @@
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TransformCmp.cpp" />
+    <ClCompile Include="TransformEditorWidget.cpp" />
     <ClCompile Include="UID.cpp" />
     <ClCompile Include="Widget.cpp" />
-    <ClCompile Include="WorldModel.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc" />

@@ -6,13 +6,12 @@
 
 #include <string>
 
-class WorldModel;
+class World;
 
 class LevelEditorWidget : public Widget
 {
 public:
-    LevelEditorWidget(WorldModel* aWorldModel, const Filepath& anEntityTemplateFolder,
-                      const Filepath& anEntityTemplateIndex);
+    LevelEditorWidget(World* aWorld, const Filepath& anEntityTemplateFolder, const Filepath& anEntityTemplateIndex);
 
     void Draw() override;
 
@@ -27,7 +26,7 @@ private:
     bool myShowSaveWorldConfirmation {false};
     UID myEntityToDelete {UID::Empty};
 
-    WorldModel* const myWorldModel;
+    World* const myWorld;
     const Filepath myEntityTemplateFolder;
     Array<Filepath> myEntityTemplates;
 };

@@ -1,13 +1,13 @@
 #include "OpenGLPG_Base.h"
 
-#include "WorldModel.h"
+#include "World.h"
 
 #include "Assert.h"
 #include "Serializer.h"
 
 #include <utility>
 
-WorldModel::WorldModel(const ConstructionParams& someParams)
+World::World(const ConstructionParams& someParams)
     : myClientLoader {someParams.myClientLoader}
 {
     if (someParams.aLevelName != "")
@@ -23,7 +23,7 @@ WorldModel::WorldModel(const ConstructionParams& someParams)
     }
 }
 
-void WorldModel::Init()
+void World::Init()
 {
     SpawnQueuedEntities();
 
@@ -39,12 +39,12 @@ void WorldModel::Init()
     //
 }
 
-void WorldModel::Shutdown()
+void World::Shutdown()
 {
     myCameraManager.DeactivateCamera({myGameplayCamera});
 }
 
-void WorldModel::Update(const UpdateParams& someParams)
+void World::Update(const UpdateParams& someParams)
 {
     for (auto& entity : myEntityQueue)
     {
@@ -60,7 +60,7 @@ void WorldModel::Update(const UpdateParams& someParams)
     myCameraManager.Update({someParams.myGameInputData, someParams.myDeltaTime});
 }
 
-void WorldModel::SaveWorld(const std::string& aLevelName)
+void World::SaveWorld(const std::string& aLevelName)
 {
     ASSERT(!aLevelName.empty(), "Invalid name for asset!");
     SerializerSaver saver {myClientLoader.myWorldFolder + aLevelName};
@@ -80,12 +80,12 @@ void WorldModel::SaveWorld(const std::string& aLevelName)
     }
 }
 
-bool WorldModel::IsAvailable() const
+bool World::IsAvailable() const
 {
     return true;
 }
 
-UID WorldModel::RequestEntitySpawn(const Filepath& aTemplateFilepath)
+UID World::RequestEntitySpawn(const Filepath& aTemplateFilepath)
 {
     ASSERT(aTemplateFilepath.HasExtension("template"), "Wrong file extension");
     Entity newEntity;
@@ -97,7 +97,7 @@ UID WorldModel::RequestEntitySpawn(const Filepath& aTemplateFilepath)
     return newEntity.myUID;
 }
 
-void WorldModel::RequestEntityUnspawn(const UID& anEntityUID)
+void World::RequestEntityUnspawn(const UID& anEntityUID)
 {
     if (auto entity = myEntities.find(anEntityUID); entity != myEntities.end())
     {
@@ -106,24 +106,24 @@ void WorldModel::RequestEntityUnspawn(const UID& anEntityUID)
     }
 }
 
-const CameraData& WorldModel::GetActiveCameraData() const
+const CameraData& World::GetActiveCameraData() const
 {
     return myCameraManager.GetActiveCameraData();
 }
 
-const Entity& WorldModel::GetEntity(const UID& anEntityUID) const
+const Entity& World::GetEntity(const UID& anEntityUID) const
 {
     ASSERT(myEntities.contains(anEntityUID), "Invalid Entity UID");
     return myEntities.at(anEntityUID);
 }
 
-Entity& WorldModel::GetEntity(const UID& anEntityUID)
+Entity& World::GetEntity(const UID& anEntityUID)
 {
     ASSERT(myEntities.contains(anEntityUID), "Invalid Entity UID");
     return myEntities.at(anEntityUID);
 }
 
-void WorldModel::SpawnQueuedEntities()
+void World::SpawnQueuedEntities()
 {
     for (auto& entity : myEntityQueue)
     {

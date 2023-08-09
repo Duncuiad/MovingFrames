@@ -3,12 +3,12 @@
 #include "Component.h"
 
 #include "Entity.h"
-#include "WorldModel.h"
+#include "World.h"
 
-void Component::EnterWorld(const UID& anEntityUID, WorldModel* aWorldModel)
+void Component::EnterWorld(const UID& anEntityUID, World* aWorld)
 {
     myEntity = anEntityUID;
-    myWorld = aWorldModel;
+    myWorld = aWorld;
 
     OnEnterWorld();
 }

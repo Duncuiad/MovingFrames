@@ -8,7 +8,7 @@
 #include "MathDefines.h"
 #include "MathUtils.h"
 #include "TransformCmp.h"
-#include "WorldModel.h"
+#include "World.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -24,7 +24,7 @@ void Renderer::Render(const RenderParams& someParams)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (someParams.myWorldModel)
+    if (someParams.myWorld)
     {
         Mat4 viewportAdjustment {glm::identity<glm::mat4>()};
         int viewportData[4];
@@ -36,14 +36,14 @@ void Renderer::Render(const RenderParams& someParams)
         }
 
         // @todo: refactor model-view-projection matrix calculations
-        const CameraData& activeCameraData {someParams.myWorldModel->GetActiveCameraData()};
+        const CameraData& activeCameraData {someParams.myWorld->GetActiveCameraData()};
         const Mat4 view {glm::affineInverse(activeCameraData.myCameraTransform)};
         const Mat4 projection {viewportAdjustment * Utils::Projection(activeCameraData.myFOV,
                                                                       activeCameraData.myAspectRatio,
                                                                       activeCameraData.myNear, activeCameraData.myFar)};
         const Mat4 worldToClip {viewportAdjustment * Utils::WorldToClip(activeCameraData)};
 
-        for (const auto& [uid, entity] : someParams.myWorldModel->GetEntities())
+        for (const auto& [uid, entity] : someParams.myWorld->GetEntities())
         {
             Transform entityTransform {entity.GetComponent<TransformCmp>()->GetTransform()};
             entity.GetComponent<GraphCmp>()->Draw(

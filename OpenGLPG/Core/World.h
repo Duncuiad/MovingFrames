@@ -7,7 +7,7 @@
 #include "Filepath.h"
 #include "UID.h"
 
-class WorldModel
+class World
 {
 public:
     struct ConstructionParams
@@ -21,7 +21,7 @@ public:
         float myDeltaTime;
     };
 
-    WorldModel(const ConstructionParams& someParams);
+    World(const ConstructionParams& someParams);
     void Init();
     void Shutdown();
     void Update(const UpdateParams& someParams);

@@ -4,14 +4,14 @@
 #include "MathDefines.h"
 #include "ShaderLoader.h"
 
-class WorldModel;
+class World;
 
 class Renderer
 {
 public:
     struct RenderParams
     {
-        const WorldModel* myWorldModel {nullptr};
+        const World* myWorld {nullptr};
         Vec2 myViewportTL;
         Vec2 myViewportBR;
     };

@@ -2,7 +2,7 @@ myComponents
 {
 	myCount
 	{
-		2
+		3
 	}
 
 	0
@@ -55,6 +55,11 @@ myComponents
 
 		}
 
+	}
+
+	2
+	{
+		Editor_TransformCmp
 	}
 
 }

@@ -54,7 +54,7 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorldModel.h">
+    <ClInclude Include="World.h">
       <Filter>World</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
@@ -234,9 +234,15 @@
     <ClInclude Include="EditorCmp.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Editor_TransformCmp.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformEditorWidget.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WorldModel.cpp">
+    <ClCompile Include="World.cpp">
       <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
@@ -403,6 +409,12 @@
     </ClCompile>
     <ClCompile Include="FrameSplineEditor.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor_TransformCmp.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformEditorWidget.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

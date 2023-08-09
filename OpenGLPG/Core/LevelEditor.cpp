@@ -4,7 +4,7 @@
 
 LevelEditor::LevelEditor(const ConstructionParams& someParams)
     : Base {someParams}
-    , myWidget {&myWorldModel, someParams.myLoader.myTemplateFolder, "main.templateindex"}
+    , myWidget {&myWorld, someParams.myLoader.myTemplateFolder, "main.templateindex"}
 {}
 
 void LevelEditor::Update(const UpdateParams& someParams)

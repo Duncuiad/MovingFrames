@@ -7,7 +7,7 @@
 #include <memory>
 
 class Entity;
-class WorldModel;
+class World;
 
 class Component : public SerializableDynamic
 {
@@ -19,7 +19,7 @@ public:
         const ClientLoader& myClientLoader;
     };
 
-    void EnterWorld(const UID& anEntityUID, WorldModel* aWorldModel);
+    void EnterWorld(const UID& anEntityUID, World* aWorld);
     void ExitWorld();
 
     virtual void OnLoad(const LoadParams& someParams) {}
@@ -32,7 +32,7 @@ protected:
     Entity& GetEntity() const;
 
     UID myEntity;
-    WorldModel* myWorld;
+    World* myWorld;
 };
 
 inline SerializableDynamic* Unwrap(const Component::Ptr& aPtr)

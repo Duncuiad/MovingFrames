@@ -7,7 +7,7 @@
 
 #include <unordered_map>
 
-class WorldModel;
+class World;
 
 class Entity : public Serializable
 {
@@ -26,7 +26,7 @@ public:
     Entity& operator=(Entity&& anEntity) noexcept = default;
 
     void Load(const LoadParams& someParams);
-    void Spawn(WorldModel* aWorldModel);
+    void Spawn(World* aWorld);
     void Update();
     void Unspawn();
     void Unload();
@@ -48,7 +48,7 @@ private:
     UID myUID;
     ArrayDynamic<Component::Ptr> myComponents;
 
-    friend class WorldModel;
+    friend class World;
     friend struct std::pair<const UID, Entity>;
 };
 

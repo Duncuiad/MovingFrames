@@ -6,11 +6,11 @@
 #include "EditorCmp.h"
 #include "ImGuiWidgets.h"
 #include "Serializer.h"
-#include "WorldModel.h"
+#include "World.h"
 
-LevelEditorWidget::LevelEditorWidget(WorldModel* aWorldModel, const Filepath& anEntityTemplateFolder,
+LevelEditorWidget::LevelEditorWidget(World* aWorld, const Filepath& anEntityTemplateFolder,
                                      const Filepath& anEntityTemplateIndex)
-    : myWorldModel {aWorldModel}
+    : myWorld {aWorld}
     , myEntityTemplateFolder {anEntityTemplateFolder}
 {
     ASSERT(anEntityTemplateIndex.HasExtension("templateindex"), "Wrong file extension");
@@ -42,7 +42,7 @@ void LevelEditorWidget::DrawSaveWorld()
     {
         std::remove(mySaveWorldName.begin(), mySaveWorldName.end(), '.');
         mySaveWorldName += ".world";
-        myWorldModel->SaveWorld(mySaveWorldName);
+        myWorld->SaveWorld(mySaveWorldName);
         myShowSaveWorldConfirmation = true;
         ImGui::OpenPopup("##SaveWorldConfirmation");
     }
@@ -86,7 +86,7 @@ void LevelEditorWidget::DrawAddEntity()
         }
         if (selectedTemplate != Filepath {})
         {
-            myWorldModel->RequestEntitySpawn(myEntityTemplateFolder + selectedTemplate);
+            myWorld->RequestEntitySpawn(myEntityTemplateFolder + selectedTemplate);
             ImGui::CloseCurrentPopup();
         }
 
@@ -103,7 +103,7 @@ void LevelEditorWidget::DrawAddEntity()
 void LevelEditorWidget::DrawEntities()
 {
     ImGui::Text("Entities:");
-    for (const auto& [uid, entity] : myWorldModel->GetEntities())
+    for (const auto& [uid, entity] : myWorld->GetEntities())
     {
         const std::string entityUID {uid.GetString()};
         if (ImGui::TreeNode(("LevelEditorEntities_" + entityUID).data(), entityUID.data()))
@@ -115,6 +115,8 @@ void LevelEditorWidget::DrawEntities()
                 // @todo: Here I'm using the Serializable class ID as a shorthand for the class name. It would be a lot
                 // less smelly to create a dedicated one
                 const std::string cmpName {cmp->GetSubtypeId()};
+                ImGui::PushID(cmpName.data());
+
                 if (ImGui::Button("Edit"))
                 {
                     cmp->myIsDisplayingWidget = true;
@@ -137,6 +139,8 @@ void LevelEditorWidget::DrawEntities()
                         cmp->OnEndDisplayWidget();
                     }
                 }
+
+                ImGui::PopID();
             }
             ImGui::TreePop();
         }
@@ -173,7 +177,7 @@ void LevelEditorWidget::DrawDeleteEntityPopup()
         ImGui::Text("Deleting Entity \'%s\'", myEntityToDelete.GetString().c_str());
         if (ImGui::Button("Confirm"))
         {
-            myWorldModel->RequestEntityUnspawn(myEntityToDelete);
+            myWorld->RequestEntityUnspawn(myEntityToDelete);
 
             myEntityToDelete = UID::Empty;
             ImGui::CloseCurrentPopup();

@@ -5,7 +5,7 @@
 #include "GameInputData.h"
 #include "MathDefines.h"
 #include "Renderer.h"
-#include "WorldModel.h"
+#include "World.h"
 
 struct GLFWwindow;
 
@@ -32,7 +32,7 @@ public:
 
 protected:
     Renderer myRenderManager;
-    WorldModel myWorldModel;
+    World myWorld;
 
 private:
 #if DEBUG_IMGUI

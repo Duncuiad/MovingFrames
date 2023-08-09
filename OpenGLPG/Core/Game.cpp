@@ -5,25 +5,25 @@
 #include "Assert.h"
 
 Game::Game(const ConstructionParams& someparams)
-    : myWorldModel {{someparams.myLoader, "baselevel"}}
+    : myWorld {{someparams.myLoader, "baselevel"}}
 {}
 
 void Game::Init()
 {
-    myWorldModel.Init();
+    myWorld.Init();
 }
 
 void Game::Shutdown()
 {
-    myWorldModel.Shutdown();
+    myWorld.Shutdown();
     myRenderManager.Shutdown();
 }
 
 void Game::Update(const UpdateParams& someParams)
 {
-    myWorldModel.Update({myInputData, someParams.myDeltaTime});
+    myWorld.Update({myInputData, someParams.myDeltaTime});
 
-    const WorldModel* worldToRender {myWorldModel.IsAvailable() ? &myWorldModel : nullptr};
+    const World* worldToRender {myWorld.IsAvailable() ? &myWorld : nullptr};
     myRenderManager.Render({worldToRender});
 
     DebugGameInput();

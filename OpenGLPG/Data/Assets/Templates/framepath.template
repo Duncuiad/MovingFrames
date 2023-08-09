@@ -2,7 +2,7 @@ myComponents
 {
 	myCount
 	{
-		4
+		5
 	}
 
 	0
@@ -154,6 +154,11 @@ myComponents
 	3
 	{
 		Editor_FrameSplineCmp
+	}
+
+	4
+	{
+		Editor_TransformCmp
 	}
 
 }

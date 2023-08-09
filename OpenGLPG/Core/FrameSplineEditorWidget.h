@@ -6,7 +6,7 @@
 class FrameSplineEditorWidget : public EditorWidget, public FrameSplineEditor
 {
 public:
-    virtual void Draw() override;
+    void Draw() override;
 
     int mySampleCount {30};
     float myKeyScale {0.1f};
