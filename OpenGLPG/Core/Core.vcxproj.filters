@@ -441,30 +441,6 @@
     <None Include="Serializer.inl">
       <Filter>Engine\Serialization</Filter>
     </None>
-    <None Include="..\Data\Assets\Shaders\tripod.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\Data\Assets\Shaders\tripod.geom">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\Data\Assets\Shaders\tripod.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\Data\Assets\Shaders\tripod.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\Data\Assets\Shaders\point.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\Data\Assets\Shaders\point.geom">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\Data\Assets\Shaders\point.shader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\Data\Assets\Shaders\point.vert">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="..\Data\Assets\Shaders\spline.frag">
       <Filter>Shaders</Filter>
     </None>
@@ -481,6 +457,21 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="..\Data\Assets\Shaders\path.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\helix.geom">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\helix.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\sheet.geom">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\sheet.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Data\Assets\Shaders\sheet.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

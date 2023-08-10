@@ -1,6 +1,6 @@
 myCount
 {
-	2
+	5
 }
 
 0
@@ -17,6 +17,33 @@ myCount
 	myPath
 	{
 		circle.world
+	}
+
+}
+
+2
+{
+	myPath
+	{
+		shaders.world
+	}
+
+}
+
+3
+{
+	myPath
+	{
+		squiggle.world
+	}
+
+}
+
+4
+{
+	myPath
+	{
+		sheet.world
 	}
 
 }

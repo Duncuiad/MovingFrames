@@ -3,6 +3,7 @@
 #include "LevelEditorWidget.h"
 
 #include "Assert.h"
+#include "Defines.h"
 #include "EditorCmp.h"
 #include "ImGuiWidgets.h"
 #include "Serializer.h"
@@ -31,6 +32,7 @@ void LevelEditorWidget::Draw()
     DrawAddEntity();
     DrawEntities();
     DrawDeleteEntityPopup();
+    DrawDuplicateEntityPopup();
 
     ImGui::End();
 }
@@ -109,6 +111,7 @@ void LevelEditorWidget::DrawEntities()
         if (ImGui::TreeNode(("LevelEditorEntities_" + entityUID).data(), entityUID.data()))
         {
             DrawDeleteEntityButton(uid);
+            DrawDuplicateEntityButton(uid);
 
             for (EditorComponent* cmp : entity.GetEditableComponents<EditorComponent>())
             {
@@ -147,6 +150,7 @@ void LevelEditorWidget::DrawEntities()
         else
         {
             DrawDeleteEntityButton(uid);
+            DrawDuplicateEntityButton(uid);
         }
     }
 }
@@ -158,6 +162,23 @@ void LevelEditorWidget::DrawDeleteEntityButton(const UID& anEntityUID)
     if (ImGui::Button("Delete"))
     {
         myEntityToDelete = anEntityUID;
+    }
+}
+
+void LevelEditorWidget::DrawDuplicateEntityButton(const UID& anEntityUID)
+{
+    constexpr const char* tempEntityFilename {"duplicate.template"};
+    ImGui::SameLine();
+
+    if (ImGui::Button("Duplicate"))
+    {
+        const Filepath tempPath {Filepath {GLOBALPATH_TEMPFOLDER} + tempEntityFilename};
+        myEntityToDuplicate = anEntityUID;
+        {
+            SerializerSaver saver {tempPath};
+            myWorld->GetEntity(myEntityToDuplicate).Serialize(saver);
+        }
+        myNewEntityDuplicate = myWorld->RequestEntitySpawn(tempPath);
     }
 }
 
@@ -186,6 +207,31 @@ void LevelEditorWidget::DrawDeleteEntityPopup()
         if (ImGui::Button("Cancel"))
         {
             myEntityToDelete = UID::Empty;
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+}
+
+void LevelEditorWidget::DrawDuplicateEntityPopup()
+{
+    if (myEntityToDuplicate == UID::Empty)
+    {
+        return;
+    }
+
+    ImGui::OpenPopup("##DuplicateEntity");
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+    if (ImGui::BeginPopupModal("##DuplicateEntity"))
+    {
+        ImGui::Text("Duplicated entity \'%s\' as new entity \'%s\'", myEntityToDuplicate.GetString().c_str(),
+                    myNewEntityDuplicate.GetString().c_str());
+        if (ImGui::Button("OK"))
+        {
+            myEntityToDuplicate = UID::Empty;
+            myNewEntityDuplicate = UID::Empty;
             ImGui::CloseCurrentPopup();
         }
         ImGui::EndPopup();

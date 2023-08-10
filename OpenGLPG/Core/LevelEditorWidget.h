@@ -20,11 +20,15 @@ private:
     void DrawAddEntity();
     void DrawEntities();
     void DrawDeleteEntityButton(const UID& anEntityUID);
+    void DrawDuplicateEntityButton(const UID& anEntityUID);
     void DrawDeleteEntityPopup();
+    void DrawDuplicateEntityPopup();
 
     std::string mySaveWorldName {""};
     bool myShowSaveWorldConfirmation {false};
     UID myEntityToDelete {UID::Empty};
+    UID myEntityToDuplicate {UID::Empty};
+    UID myNewEntityDuplicate {UID::Empty};
 
     World* const myWorld;
     const Filepath myEntityTemplateFolder;

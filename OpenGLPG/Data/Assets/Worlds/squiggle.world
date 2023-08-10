@@ -1,0 +1,207 @@
+myCount
+{
+	1
+}
+
+0
+{
+	myComponents
+	{
+		myCount
+		{
+			5
+		}
+
+		0
+		{
+			TransformCmp
+			myTransform
+			{
+				X
+				{
+					0.607256					0.039874					0.793505					0.000000
+				}
+
+				Y
+				{
+					-0.262220					0.952835					0.152792					0.000000
+				}
+
+				Z
+				{
+					-0.749987					-0.300857					0.589071					0.000000
+				}
+
+				W
+				{
+					0.200001					0.000074					-6.501000					1.000000
+				}
+
+			}
+
+		}
+
+		1
+		{
+			FrameSplineCmp
+			mySpline
+			{
+				myType
+				{
+					0
+				}
+
+				myKeyFrames
+				{
+					myCount
+					{
+						3
+					}
+
+					0
+					{
+						myTiming
+						{
+							0.000000
+						}
+
+						myFrame
+						{
+							myPoseReal
+							{
+								0.904734								0.000000								0.000000								-0.425978
+							}
+
+							myPoseDual
+							{
+								-0.212989								0.000000								0.000000								-0.452367
+							}
+
+							myTwistReal
+							{
+								0.000000								0.000000								0.000000								0.000000
+							}
+
+							myTwistDual
+							{
+								0.000000								0.000000								0.000000								0.000000
+							}
+
+						}
+
+					}
+
+					1
+					{
+						myTiming
+						{
+							0.500000
+						}
+
+						myFrame
+						{
+							myPoseReal
+							{
+								-0.953671								-0.138235								-0.090559								-0.251399
+							}
+
+							myPoseDual
+							{
+								0.000000								0.000000								0.000000								0.000000
+							}
+
+							myTwistReal
+							{
+								0.000000								0.000000								0.000000								0.000000
+							}
+
+							myTwistDual
+							{
+								0.000000								0.200915								-0.118137								3.680053
+							}
+
+						}
+
+					}
+
+					2
+					{
+						myTiming
+						{
+							1.000000
+						}
+
+						myFrame
+						{
+							myPoseReal
+							{
+								0.872657								0.000000								0.000000								-0.488333
+							}
+
+							myPoseDual
+							{
+								0.244166								0.000000								0.000000								0.436329
+							}
+
+							myTwistReal
+							{
+								0.000000								0.000000								0.000000								0.000000
+							}
+
+							myTwistDual
+							{
+								0.000000								0.000000								0.000000								0.000000
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+		2
+		{
+			FrameSplineGraphCmp
+			myShader
+			{
+				myPath
+				{
+					helix.shader
+				}
+
+			}
+
+			myControlKeyShader
+			{
+				myPath
+				{
+					spline.shader
+				}
+
+			}
+
+			myStyle
+			{
+				0
+			}
+
+		}
+
+		3
+		{
+			Editor_FrameSplineCmp
+		}
+
+		4
+		{
+			Editor_TransformCmp
+		}
+
+	}
+
+}
+
