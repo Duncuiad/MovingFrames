@@ -54,7 +54,9 @@ void Editor_FrameSplineCmp::OnChanged() const
         Array<FrameSplineGraphCmp::Key> graphKeys;
         for (int i = 0; i < myWidget.mySampleCount; ++i)
         {
-            const MovingFrame frame {spline.Interpolate(i * sampleDistance)};
+            const float interpolationT {i * sampleDistance};
+            MovingFrame frame {spline.Interpolate(interpolationT)};
+            frame.SetTwist(spline.ComputeTwistNumerically(interpolationT));
             Local::AddKey(frame, graphKeys);
         }
         // @improv: move the array

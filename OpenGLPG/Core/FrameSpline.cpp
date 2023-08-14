@@ -4,6 +4,7 @@
 
 #include "Assert.h"
 #include "InterpolationUtils.h"
+#include "MathUtils.h"
 #include "Serializer.h"
 
 #include <algorithm>
@@ -72,6 +73,32 @@ MovingFrame& FrameSpline::AddKeyFrame(float aTiming)
     return newFrame->myFrame;
 }
 
+DualQuat FrameSpline::ComputeTwistNumerically(float aTiming) const
+{
+    constexpr float delta {0.01f};
+    const float x0 {glm::max(aTiming - delta, 0.f)};
+    const float x1 {glm::min(aTiming + delta, 1.f)};
+    ASSERT(x0 < x1, "Invalid delta in calculation");
+
+    if (myKeyFrames.Count() == 0)
+    {
+        return DualQuat {};
+    }
+    if (x0 == 0.f)
+    {
+        return myKeyFrames.GetFirst().myFrame.GetTwist();
+    }
+    if (x1 == 1.f)
+    {
+        return myKeyFrames.GetLast().myFrame.GetTwist();
+    }
+
+    const DualQuat y0 {Interpolate(x0).GetPose()};
+    const DualQuat y1 {Interpolate(x1).GetPose()};
+    const DualQuat offset {-2.f * Log(glm::inverse(y1) * y0)};
+    return Pure(offset) / (x1 - x0);
+}
+
 void FrameSpline::Serialize(Serializer& aSerializer)
 {
     {
@@ -80,6 +107,15 @@ void FrameSpline::Serialize(Serializer& aSerializer)
         myType = static_cast<Interpolator>(type);
     }
     aSerializer.Process("myKeyFrames", myKeyFrames);
+}
+
+bool FrameSpline::IsTwistInterpolationNumerical() const
+{
+    switch (myType)
+    {
+    default:
+        return true;
+    }
 }
 
 MovingFrame FrameSpline::InterpolateLinearSmoothstep(const InterpolateInternalParams& someParams) const

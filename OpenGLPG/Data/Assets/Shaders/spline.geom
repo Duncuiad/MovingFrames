@@ -47,7 +47,7 @@ void main()
     gs_out.myColor = IsControlKey ? vec4(0.0, 0.0, 1.0, 1.0) : baseColor;
     GenerateTripodLine(2); // Z axis
 
-    gs_out.myColor = vec4(0.0, 0.4, 0.8, 1.0);
+    gs_out.myColor = vec4(0.0, 0.8, 0.8, 1.0);
     GenerateVector(gs_in[0].myVelocity);
     gs_out.myColor = vec4(0.8, 0.4, 0.0, 1.0);
     GenerateVector(gs_in[0].myAngular);

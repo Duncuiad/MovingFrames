@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Array.h"
+#include "MathDefines.h"
 #include "MovingFrame.h"
 #include "Serializable.h"
 
@@ -23,6 +24,7 @@ public:
     const Array<KeyFrame>& GetKeyFrames() const;
     MovingFrame Interpolate(float aTiming) const;
     MovingFrame& AddKeyFrame(float aTiming);
+    DualQuat ComputeTwistNumerically(float aTiming) const;
 
     void Serialize(Serializer& aSerializer) override;
 
@@ -37,6 +39,7 @@ private:
 
     friend class FrameSplineEditor;
 
+    bool IsTwistInterpolationNumerical() const;
     MovingFrame InterpolateLinearSmoothstep(const InterpolateInternalParams& someParams) const;
     MovingFrame InterpolateCubicBezier(const InterpolateInternalParams& someParams) const;
 

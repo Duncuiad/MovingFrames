@@ -42,7 +42,11 @@ void FrameSplineEditor::InsertKeyFrameAtIndex(int anIndex) const
     const auto& keys {mySpline->myKeyFrames};
     ASSERT(0 < anIndex && anIndex < keys.Count(), "Can't insert new keyframe");
     const float newTiming {(keys[anIndex - 1].myTiming + keys[anIndex].myTiming) * 0.5f};
-    const MovingFrame halfwayFrame {mySpline->Interpolate(newTiming)};
+    MovingFrame halfwayFrame {mySpline->Interpolate(newTiming)};
+    if (mySpline->IsTwistInterpolationNumerical())
+    {
+        halfwayFrame.SetTwist(mySpline->ComputeTwistNumerically(newTiming));
+    }
     MovingFrame& newFrame {mySpline->AddKeyFrame(newTiming)};
     newFrame = halfwayFrame;
 }
