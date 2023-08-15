@@ -11,6 +11,7 @@ public:
 protected:
     void AddKeyFrameAtBeginning() const;
     void AddKeyFrameAtEnd() const;
+    void InsertKeyFrameAtTiming(float aTiming) const;
     void InsertKeyFrameAtIndex(int anIndex) const;
     void SwapKeyFramesAtIndex(int anIndex) const;
     Array<FrameSpline::KeyFrame>& GetKeyFrames() const;

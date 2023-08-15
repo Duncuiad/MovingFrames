@@ -36,19 +36,25 @@ void FrameSplineEditor::AddKeyFrameAtEnd() const
     }
 }
 
+void FrameSplineEditor::InsertKeyFrameAtTiming(float aTiming) const
+{
+    ASSERT(mySpline != nullptr, "Failed attaching spline to widget");
+    MovingFrame interpolatedFrame {mySpline->Interpolate(aTiming)};
+    if (mySpline->IsTwistInterpolationNumerical())
+    {
+        interpolatedFrame.SetTwist(mySpline->ComputeTwistNumerically(aTiming));
+    }
+    MovingFrame& newFrame {mySpline->AddKeyFrame(aTiming)};
+    newFrame = interpolatedFrame;
+}
+
 void FrameSplineEditor::InsertKeyFrameAtIndex(int anIndex) const
 {
     ASSERT(mySpline != nullptr, "Failed attaching spline to widget");
     const auto& keys {mySpline->myKeyFrames};
     ASSERT(0 < anIndex && anIndex < keys.Count(), "Can't insert new keyframe");
     const float newTiming {(keys[anIndex - 1].myTiming + keys[anIndex].myTiming) * 0.5f};
-    MovingFrame halfwayFrame {mySpline->Interpolate(newTiming)};
-    if (mySpline->IsTwistInterpolationNumerical())
-    {
-        halfwayFrame.SetTwist(mySpline->ComputeTwistNumerically(newTiming));
-    }
-    MovingFrame& newFrame {mySpline->AddKeyFrame(newTiming)};
-    newFrame = halfwayFrame;
+    InsertKeyFrameAtTiming(newTiming);
 }
 
 void FrameSplineEditor::SwapKeyFramesAtIndex(int anIndex) const

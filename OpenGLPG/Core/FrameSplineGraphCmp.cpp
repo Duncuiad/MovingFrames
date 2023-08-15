@@ -24,13 +24,14 @@ void FrameSplineGraphCmp::OnLoad(const LoadParams& someParams)
 {
     Base::OnLoad(someParams);
     myControlKeyShader = someParams.myClientLoader.GetShaderLoader().GetShader(myControlKeyShaderAsset);
-    SetKeyScale(0.1f);
-    SetTangentScale(1.0f);
 }
 
 void FrameSplineGraphCmp::Draw(const DrawParams& someParams) const
 {
     myShader->Use();
+    myShader->SetUniformFloat("KeyScale", myDisplayData.myKeyScale);
+    myShader->SetUniformFloat("TangentScale", myDisplayData.myTangentScale);
+
     myShader->SetUniformInt("IsControlKey", 0);
     myShader->SetUniformMat4("Model", someParams.myModelMatrix);
     myShader->SetUniformMat4("View", someParams.myViewMatrix);
@@ -73,6 +74,19 @@ void FrameSplineGraphCmp::Serialize(Serializer& aSerializer)
         aSerializer.Process("myStyle", style);
         myStyle = static_cast<DisplayStyle>(style);
     }
+
+    aSerializer.Process("myKeyScale", myDisplayData.myKeyScale);
+    aSerializer.Process("myTangentScale", myDisplayData.myTangentScale);
+}
+
+float FrameSplineGraphCmp::GetKeyScale() const
+{
+    return myDisplayData.myKeyScale;
+}
+
+float FrameSplineGraphCmp::GetTangentScale() const
+{
+    return myDisplayData.myTangentScale;
 }
 
 void FrameSplineGraphCmp::SetDisplayStyle(DisplayStyle aStyle)
@@ -82,14 +96,12 @@ void FrameSplineGraphCmp::SetDisplayStyle(DisplayStyle aStyle)
 
 void FrameSplineGraphCmp::SetKeyScale(float aScale)
 {
-    myShader->Use();
-    myShader->SetUniformFloat("KeyScale", aScale);
+    myDisplayData.myKeyScale = aScale;
 }
 
 void FrameSplineGraphCmp::SetTangentScale(float aScale)
 {
-    myShader->Use();
-    myShader->SetUniformFloat("TangentScale", aScale);
+    myDisplayData.myTangentScale = aScale;
 }
 
 void FrameSplineGraphCmp::SetKeys(const Array<Key>& someKeys)

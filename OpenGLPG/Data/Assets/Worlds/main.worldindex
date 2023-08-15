@@ -1,6 +1,6 @@
 myCount
 {
-	5
+	7
 }
 
 0
@@ -44,6 +44,24 @@ myCount
 	myPath
 	{
 		sheet.world
+	}
+
+}
+
+5
+{
+	myPath
+	{
+		circles.world
+	}
+
+}
+
+6
+{
+	myPath
+	{
+		helix.world
 	}
 
 }

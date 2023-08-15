@@ -55,6 +55,7 @@ void FrameSplineEditorWidget::Draw()
 
     changed |= DrawNewKeyAtEnd();
     changed |= DrawDeletePopup();
+    changed |= DrawInsertKeyPopup();
 
     ImGui::PopID();
 
@@ -128,6 +129,13 @@ bool FrameSplineEditorWidget::DrawKeySeparator(int anIndex)
             InsertKeyFrameAtIndex(anIndex);
             changed = true;
         }
+        ImGui::SameLine();
+        if (ImGui::Button("+T"))
+        {
+            myMinNewKeyT = keys[anIndex - 1].myTiming;
+            myMaxNewKeyT = keys[anIndex].myTiming;
+            myNewKeyT = (myMinNewKeyT + myMaxNewKeyT) * 0.5f;
+        }
     }
 
     return changed;
@@ -153,6 +161,17 @@ bool FrameSplineEditorWidget::DrawKeyHeader(int anIndex)
         myKeyToDelete = anIndex;
     }
 
+    return changed;
+}
+
+bool FrameSplineEditorWidget::DrawNewKeyAtEnd()
+{
+    bool changed {false};
+    if (ImGui::Button("New Key"))
+    {
+        AddKeyFrameAtEnd();
+        changed = true;
+    }
     return changed;
 }
 
@@ -193,13 +212,43 @@ bool FrameSplineEditorWidget::DrawDeletePopup()
     return changed;
 }
 
-bool FrameSplineEditorWidget::DrawNewKeyAtEnd()
+bool FrameSplineEditorWidget::DrawInsertKeyPopup()
 {
-    bool changed {false};
-    if (ImGui::Button("New Key"))
+    if (myNewKeyT == -1.f)
     {
-        AddKeyFrameAtEnd();
-        changed = true;
+        return false;
     }
+
+    bool changed {false};
+
+    ImGui::OpenPopup("##InsertKeyFrame");
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+    if (ImGui::BeginPopupModal("##InsertKeyFrame"))
+    {
+        ImGui::Text("Insert new key");
+        ImGui::SliderFloat("##NewKeyT", &myNewKeyT, myMinNewKeyT, myMaxNewKeyT, "T = %.3f");
+        if (ImGui::Button("Insert"))
+        {
+            InsertKeyFrameAtTiming(myNewKeyT);
+            changed = true;
+
+            myNewKeyT = -1.f;
+            myMinNewKeyT = 0.f;
+            myMaxNewKeyT = 0.f;
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel"))
+        {
+            myNewKeyT = -1.f;
+            myMinNewKeyT = 0.f;
+            myMaxNewKeyT = 0.f;
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+
     return changed;
 }

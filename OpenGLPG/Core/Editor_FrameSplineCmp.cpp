@@ -29,6 +29,9 @@ void Editor_FrameSplineCmp::OnEnterWorld()
 {
     myWidget.AttachSplineObject(&GetFrameSplineCmp().mySpline);
     myWidget.ConnectOnChangedCallback(std::bind(&Editor_FrameSplineCmp::OnChanged, this));
+    const FrameSplineGraphCmp& graphCmp {GetFrameSplineGraphCmp()};
+    myWidget.myKeyScale = graphCmp.GetKeyScale();
+    myWidget.myTangentScale = graphCmp.GetTangentScale();
     OnChanged();
 }
 

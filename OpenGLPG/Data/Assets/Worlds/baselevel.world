@@ -189,6 +189,16 @@ myCount
 				0
 			}
 
+			myKeyScale
+			{
+				0.100000
+			}
+
+			myTangentScale
+			{
+				0.200000
+			}
+
 		}
 
 		3

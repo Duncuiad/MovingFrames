@@ -55,7 +55,7 @@ myCount
 				{
 					myCount
 					{
-						3
+						2
 					}
 
 					0
@@ -92,39 +92,6 @@ myCount
 					}
 
 					1
-					{
-						myTiming
-						{
-							0.500000
-						}
-
-						myFrame
-						{
-							myPoseReal
-							{
-								0.707388								0.000000								-0.706826								0.000000
-							}
-
-							myPoseDual
-							{
-								0.000000								-0.353695								0.000000								0.353413
-							}
-
-							myTwistReal
-							{
-								0.000000								0.000000								-3.140000								0.000000
-							}
-
-							myTwistDual
-							{
-								0.000000								-3.140011								0.000000								-0.002494
-							}
-
-						}
-
-					}
-
-					2
 					{
 						myTiming
 						{
@@ -187,6 +154,16 @@ myCount
 			myStyle
 			{
 				0
+			}
+
+			myKeyScale
+			{
+				0.100000
+			}
+
+			myTangentScale
+			{
+				0.200000
 			}
 
 		}

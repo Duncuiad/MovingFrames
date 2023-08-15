@@ -37,6 +37,9 @@ public:
     void Draw(const DrawParams& someParams) const override;
     void Serialize(Serializer& aSerializer) override;
 
+    float GetKeyScale() const;
+    float GetTangentScale() const;
+
     void SetDisplayStyle(DisplayStyle aStyle);
     void SetKeyScale(float aScale);
     void SetTangentScale(float aScale);
@@ -52,6 +55,11 @@ private:
         GLUID myVBO {0};
         GLUID myEBO {0};
     };
+    struct DisplayData
+    {
+        float myKeyScale {0.1f};
+        float myTangentScale {1.f};
+    };
     static void GenerateBuffers(KeyFrameBuffers& someBuffersOut);
     static void UpdateBuffers(const Array<Key>& someKeys, KeyFrameBuffers& someBuffersOut);
     static void DeleteBuffers(KeyFrameBuffers& someBuffersOut);
@@ -62,6 +70,7 @@ private:
     Array<Key> myKeys;
     Array<Key> myControlKeys;
     DisplayStyle myStyle {DisplayStyle::Segments};
+    DisplayData myDisplayData;
 
     KeyFrameBuffers myKeyBuffers;
     KeyFrameBuffers myControlKeyBuffers;

@@ -33,7 +33,7 @@ void GenerateVector(vec3 vector)
 {
     gl_Position = Projection * gl_in[0].gl_Position;
     EmitVertex();
-    gl_Position = Projection * (gl_in[0].gl_Position + vec4(vector, 0.0) * (IsControlKey ? 1.0 : TangentScale));
+    gl_Position = Projection * (gl_in[0].gl_Position + vec4(vector, 0.0) * TangentScale);
     EmitVertex();
     EndPrimitive();
 }

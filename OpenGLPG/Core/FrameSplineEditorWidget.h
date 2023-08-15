@@ -17,9 +17,14 @@ private:
     bool DrawKeyFrame(int anIndex);
     bool DrawKeySeparator(int anIndex);
     bool DrawKeyHeader(int anIndex);
-    bool DrawDeletePopup();
     bool DrawNewKeyAtEnd();
+
+    bool DrawDeletePopup();
+    bool DrawInsertKeyPopup();
 
     int myKeyToDelete {-1};
     bool myIsEditModeExtrinsic {true};
+    float myMinNewKeyT;
+    float myMaxNewKeyT;
+    float myNewKeyT {-1.f};
 };
