@@ -75,7 +75,7 @@ MovingFrame& FrameSpline::AddKeyFrame(float aTiming)
 
 DualQuat FrameSpline::ComputeTwistNumerically(float aTiming) const
 {
-    constexpr float delta {0.01f};
+    constexpr float delta {0.05f};
     const float x0 {glm::max(aTiming - delta, 0.f)};
     const float x1 {glm::min(aTiming + delta, 1.f)};
     ASSERT(x0 < x1, "Invalid delta in calculation");
