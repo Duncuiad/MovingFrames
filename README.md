@@ -4,19 +4,19 @@
 
 ## Overview
 
-The repo is a proof of concept for simple splines of poses (positions and orientations together) implemented using dual quaternions. The core concept is to take the geodesics of the space of unit dual quaternions and use them like they were the straight lines of euclidean space. It turns out that those geodesics are easier to compute than it sounds!
+The repo is a proof of concept of simple splines of poses (positions and orientations together) implemented using dual quaternions. The core idea is to take the geodesics of the space of unit dual quaternions and use them like they were the straight lines of euclidean space. It turns out that those geodesics are easier to compute than it sounds!
 
 ![](Screenshots/Curve02.png)
 
-It turns out that spending some time in creating a micro engine goes a long way in making debugging easier, data creation more straightforward and overall making progress faster. That's how repo ended up with some (very) barebones features like (object-oriented) entities made up of components, world/entity handling, a level editor interface, camera and serialization. I'll surely use them again in future projects.
+It also turns out that spending some time creating a micro engine (instead of just focusing on the main feature) goes a long way towards making debugging easier, making data creation more straightforward and overall making progress faster. That's how the repo ended up with some (very) barebones features like (object-oriented) entities made up of components, world/entity handling, a level editor interface, camera and serialization. I'll surely be using them again in future projects.
 
 Here is an example of the interface I used to setup the following pictures. The tripods represent the editable key frames that are then interpolated by the spline algorithms. Each key frame is described by two dual quaternions: one for the pose (orientation + position) and one for the twist (linear and angular velocities).
 
 ![](Screenshots/Curve01.png)
 
-The code relies on GLFW for window handling, GLAD (OpenGL 4.5) for graphics, GLM for maths, Assimp for model loading and ImGUI for the graphical interface.
+The code relies on GLFW for window handling, GLAD (OpenGL 4.5) for graphics, GLM for maths, Assimp for model loading and Dear ImGui for the graphical interface.
 
-The splines can be used to obtain lots of different effects by making use of geometry shaders:
+The splines can take on many different guises, making use of geometry shaders:
 
 ![](Screenshots/Curve08.png)
 ![](Screenshots/Curve04.png)
@@ -43,7 +43,7 @@ $$
 <details>
 <summary>$\boxed{\text{Detail}}:\text{What does the formula \textit{mean}?}$</summary>
   Given elements $A$ and $B$ in the group, let's construct a curve from $A$ to $B$, parameterized by $t \in \left[0,1\right]$.
-  First, take the group elemet that transforms $A$ into $B$. That is: <br />
+  First, take the group element that transforms $A$ into $B$. That is: <br />
   $\textcolor{orange}{BA^{-1}}$ <br />
   Then find the tangent vector which, when followed for $1$ second, brings us from the identity to the element $BA^{-1}$: <br />
   $\textcolor{orange}{\log \left( \textcolor{white}{BA^{-1}} \right)}$ <br />
@@ -65,7 +65,7 @@ The exponential map usually needs to be computed via a costly power series. Luck
 
 There are currently two implemented spline interpolation strategies. They both grant $\mathcal{C}^1$ regularity at the keyframes.
 
-  * '__Linear Smoothstep__': the source and target key frames are made to move with constant twist via the exponential map. The moving frames are then interpolated using a Sclerp, where $t$ is reparameterized via a smoothstep function. The $\mathcal{C}^1$ is granted by the derivative of the reparameterization being nullified at the extremes.
+  * '__Linear Smoothstep__': the source and target key frames are made to move with constant twist via the exponential map. The moving frames are then interpolated using a Sclerp, where $t$ is reparameterized via a smoothstep function. The $\mathcal{C}^1$-ness is granted by the derivative of the reparameterization being nullified at the extremes.
   * '__Cubic Bézier__': the [De Casteljau algorithm (Wikipedia)](https://en.wikipedia.org/wiki/De_Casteljau%27s_algorithm) is applied to the moving frames, using dual quaternion geodesics in place of line segments. This ends up being a sort of cubic Bézier curve variant.
 
 The first strategy is definitely a cheaper way of obtaining $\mathcal{C}^1$ continuity. Despite this, the Bézier-like curve has two important properties: it can be used to obtain geodesics (helixes, circular arcs[^5], lines) parameterized with constant speed, and it also can be *subdivided*. This means that inserting a key frame in a spline arc, with the exact same twist as it already had, doesn't affect the interpolated curve. It's a great thing to have when editing curves.
