@@ -1,5 +1,9 @@
 # Moving Frames
 
+$$
+% If you see this text, then your browser isn't rendering LATEX, which is used for some symbols in this document. Try with a different browser!
+$$
+
 > <u>Note</u>: this repository is a *fork* of an earlier repository I made on a server I share with some friends. Even so, I am the sole contributor of that repository
 
 ## Overview
