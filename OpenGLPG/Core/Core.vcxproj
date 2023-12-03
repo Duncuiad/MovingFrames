@@ -171,7 +171,6 @@
     <ClInclude Include="FrameSpline.h" />
     <ClInclude Include="TileFace.h" />
     <ClInclude Include="TileHalfEdge.h" />
-    <ClInclude Include="TileInflation.h" />
     <ClInclude Include="TileMesh.h" />
     <ClInclude Include="TileVertex.h" />
     <ClInclude Include="ImGuiWidgets.h" />

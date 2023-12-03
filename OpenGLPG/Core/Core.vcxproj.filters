@@ -258,9 +258,6 @@
     <ClInclude Include="TileMesh.h">
       <Filter>Tiles</Filter>
     </ClInclude>
-    <ClInclude Include="TileInflation.h">
-      <Filter>Tiles</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
