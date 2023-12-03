@@ -49,6 +49,9 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{5622fc0a-d762-4c99-80e5-847d9af1b399}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tiles">
+      <UniqueIdentifier>{81e88d5a-d548-4acd-808e-13f2ee4c07ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -243,6 +246,21 @@
     <ClInclude Include="WorldLoader.h">
       <Filter>World</Filter>
     </ClInclude>
+    <ClInclude Include="TileVertex.h">
+      <Filter>Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="TileHalfEdge.h">
+      <Filter>Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="TileFace.h">
+      <Filter>Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMesh.h">
+      <Filter>Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="TileInflation.h">
+      <Filter>Tiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -421,6 +439,18 @@
     </ClCompile>
     <ClCompile Include="WorldLoader.cpp">
       <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMesh.cpp">
+      <Filter>Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="TileVertex.cpp">
+      <Filter>Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="TileHalfEdge.cpp">
+      <Filter>Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="TileFace.cpp">
+      <Filter>Tiles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -169,6 +169,11 @@
     <ClInclude Include="GraphCmp.h" />
     <ClInclude Include="Dual.h" />
     <ClInclude Include="FrameSpline.h" />
+    <ClInclude Include="TileFace.h" />
+    <ClInclude Include="TileHalfEdge.h" />
+    <ClInclude Include="TileInflation.h" />
+    <ClInclude Include="TileMesh.h" />
+    <ClInclude Include="TileVertex.h" />
     <ClInclude Include="ImGuiWidgets.h" />
     <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="LevelEditorWidget.h" />
@@ -252,6 +257,10 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="Test.cpp" />
+    <ClCompile Include="TileFace.cpp" />
+    <ClCompile Include="TileHalfEdge.cpp" />
+    <ClCompile Include="TileMesh.cpp" />
+    <ClCompile Include="TileVertex.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TransformCmp.cpp" />
     <ClCompile Include="TransformEditorWidget.cpp" />
