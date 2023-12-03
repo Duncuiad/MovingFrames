@@ -13,7 +13,7 @@ struct TileVertex : public Serializable
     int myIndex {-1};
     int myHeight {-1};
 
-    Vec2 myPosition;
+    Vec2 myPosition {0.f, 0.f};
 
     // Array<Array<int>> myEdgeFans;
 };

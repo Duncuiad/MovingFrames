@@ -2,6 +2,7 @@
 
 #include "TileMesh.h"
 
+#include "Assert.h"
 #include "MathDefines.h"
 
 TileMesh::TileMesh(TileType aType)
@@ -50,30 +51,152 @@ TileMesh::TileMesh(TileType aType)
     }
 }
 
-void TileMesh::SubdivideFace(int aFaceIdx) {}
-
-void TileMesh::SubdivideHalfEdge(int aHalfEdgeIdx)
+void TileMesh::CreateFace(TileFace& aParentFace, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2,
+                          int aHalfEdge3 /*= -1*/)
 {
-    TileHalfEdge& halfEdge {myHalfEdges[aHalfEdgeIdx]};
+    TileHalfEdge& edge0 {myHalfEdges[aHalfEdge0]};
+    TileHalfEdge& edge1 {myHalfEdges[aHalfEdge1]};
+    TileHalfEdge& edge2 {myHalfEdges[aHalfEdge2]};
 
-    myHalfEdges.EmplaceBack(myHalfEdges.Count(), halfEdge.myHeight + 1,
-                            halfEdge.myIsReversed != halfEdge.myIsAlternating,
-                            halfEdge.myIsReversed == halfEdge.myIsAlternating, halfEdge.myVertex, -1, -1, -1);
+    ASSERT(edge0.myHeight == edge1.myHeight && edge1.myHeight == edge2.myHeight && edge2.myHeight == edge0.myHeight,
+           "Faces are made of edges at the same height");
+
+    const int faceIdx {myFaces.Count()};
+    const TileType type {edge0.myIsAlternating ? TileType::TriangleA : TileType::TriangleB};
+    myFaces.EmplaceBack(faceIdx, edge0.myHeight, type, -1);
+    edge0.myFace = faceIdx;
+    edge1.myFace = faceIdx;
+    edge2.myFace = faceIdx;
+    edge0.myNext = edge1.myIndex;
+    edge1.myNext = edge2.myIndex;
+    edge2.myNext = edge0.myIndex;
+
+    if (aHalfEdge3 != -1)
+    {
+        TileHalfEdge& edge3 {myHalfEdges[aHalfEdge3]};
+        edge3.myFace = faceIdx;
+        edge2.myNext = edge3.myIndex;
+        edge3.myNext = edge0.myIndex;
+        TileType squareType {edge3.myIsReversed ? edge0.myIsAlternating ? TileType::SquareA : TileType::SquareB
+                                                : TileType::SquareC};
+        myFaces[faceIdx].myType = squareType;
+    }
+    myFaces[faceIdx].myEdge = FindFirstEdge(edge0.myIndex);
+    myFaces[faceIdx].myParent = aParentFace.myIndex;
+    aParentFace.myChildren.PushBack(faceIdx);
+}
+
+const TileHalfEdge& TileMesh::CreateFullEdge(const TileVertex& aBegin, const TileVertex& anEnd, bool anIsAlternating)
+{
+    const int height = glm::max(aBegin.myHeight, anEnd.myHeight);
+    const int newIndex0 {myHalfEdges.Count()};
+    const int newIndex1 {newIndex0 + 1};
+    myHalfEdges.EmplaceBack(newIndex0, height, false, anIsAlternating, aBegin.myIndex, -1, newIndex1, -1);
+    myHalfEdges.EmplaceBack(newIndex1, height, true, anIsAlternating, anEnd.myIndex, -1, newIndex0, -1);
+
+    return myHalfEdges[newIndex0];
+}
+
+void TileMesh::CreateInflationVertex(const TileVertex& aBegin, const TileVertex& anEnd)
+{
+    ASSERT(aBegin.myHeight == anEnd.myHeight, "Inflating an Edge between Vertices at different heights");
+    const Vec2& fromPosition {aBegin.myPosition};
+    const Vec2& toPosition {anEnd.myPosition};
+
+    constexpr float sinOfPiOverTwelve {0.25881904510252f};
+    const Vec2 orthogonalComponent {toPosition.y - fromPosition.y, fromPosition.x - toPosition.x};
+    const Vec2 newVertexPosition {(fromPosition + toPosition - sinOfPiOverTwelve * orthogonalComponent) * 0.5f};
+    myVertices.EmplaceBack(myVertices.Count(), aBegin.myHeight + 1, newVertexPosition);
+}
+
+void TileMesh::SubdivideFace(TileFace& aFace)
+{
+    if (aFace.myType == TileType::TriangleA || aFace.myType == TileType::TriangleB)
+    {
+        SubdivideTriangle(aFace);
+    }
+    else
+    {
+        SubdivideSquare(aFace);
+    }
+}
+
+void TileMesh::SubdivideTriangle(TileFace& aTriangle)
+{
+    TileHalfEdge& edge0 {myHalfEdges[aTriangle.myEdge]};
+    TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
+    TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
+
+    SubdivideHalfEdge(edge0);
+    SubdivideHalfEdge(edge1);
+    SubdivideHalfEdge(edge2);
+
+    const TileVertex& vertex0 {myVertices[myHalfEdges[edge0.myRightChild].myVertex]};
+    const TileVertex& vertex1 {myVertices[myHalfEdges[edge1.myRightChild].myVertex]};
+    const TileVertex& vertex2 {myVertices[myHalfEdges[edge2.myRightChild].myVertex]};
+
+    const TileHalfEdge& edgeA {CreateFullEdge(vertex0, vertex1, aTriangle.myType == TileType::TriangleA)};
+    const TileHalfEdge& edgeB {CreateFullEdge(vertex2, vertex0, aTriangle.myType == TileType::TriangleB)};
+
+    CreateFace(aTriangle, edge0.myRightChild, edge1.myLeftChild, edgeA.myOpposite);
+    CreateFace(aTriangle, edge0.myLeftChild, edgeB.myOpposite, edge2.myRightChild);
+    CreateFace(aTriangle, edgeA.myIndex, edge1.myRightChild, edge2.myLeftChild, edgeB.myIndex);
+}
+
+void TileMesh::SubdivideSquare(TileFace& aSquare)
+{
+    TileHalfEdge& edge0 {myHalfEdges[aSquare.myEdge]};
+    TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
+    TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
+    TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
+
+    SubdivideHalfEdge(edge0);
+    SubdivideHalfEdge(edge1);
+    SubdivideHalfEdge(edge2);
+    SubdivideHalfEdge(edge3);
+
+    const TileVertex& vertex0 {myVertices[myHalfEdges[edge0.myRightChild].myVertex]};
+    const TileVertex& vertex1 {myVertices[myHalfEdges[edge1.myRightChild].myVertex]};
+    const TileVertex& vertex2 {myVertices[myHalfEdges[edge2.myRightChild].myVertex]};
+    const TileVertex& vertex3 {myVertices[myHalfEdges[edge3.myRightChild].myVertex]};
+
+    if (aSquare.myType == TileType::SquareC)
+    {
+        const TileHalfEdge& edgeA {CreateFullEdge(vertex0, vertex1, true)};
+        const TileHalfEdge& edgeB {CreateFullEdge(vertex1, vertex2, false)};
+        const TileHalfEdge& edgeC {CreateFullEdge(vertex2, vertex3, true)};
+        const TileHalfEdge& edgeD {CreateFullEdge(vertex3, vertex0, false)};
+
+        CreateFace(aSquare, edge0.myRightChild, edge1.myLeftChild, edgeA.myOpposite);
+        CreateFace(aSquare, edge1.myRightChild, edge2.myLeftChild, edgeB.myOpposite);
+        CreateFace(aSquare, edge2.myRightChild, edge3.myLeftChild, edgeC.myOpposite);
+        CreateFace(aSquare, edge3.myRightChild, edge0.myLeftChild, edgeD.myOpposite);
+        CreateFace(aSquare, edgeA.myIndex, edgeB.myIndex, edgeC.myIndex, edgeD.myIndex);
+    }
+    else
+    {}
+}
+
+void TileMesh::SubdivideHalfEdge(TileHalfEdge& aHalfEdge)
+{
+    myHalfEdges.EmplaceBack(myHalfEdges.Count(), aHalfEdge.myHeight + 1,
+                            aHalfEdge.myIsReversed != aHalfEdge.myIsAlternating,
+                            aHalfEdge.myIsReversed == aHalfEdge.myIsAlternating, aHalfEdge.myVertex, -1, -1, -1);
     TileHalfEdge& leftChild {myHalfEdges.GetLast()};
-    halfEdge.myLeftChild = leftChild.myIndex;
-    leftChild.myParent = halfEdge.myIndex;
+    aHalfEdge.myLeftChild = leftChild.myIndex;
+    leftChild.myParent = aHalfEdge.myIndex;
 
-    myHalfEdges.EmplaceBack(myHalfEdges.Count(), halfEdge.myHeight + 1,
-                            halfEdge.myIsReversed != halfEdge.myIsAlternating,
-                            halfEdge.myIsReversed != halfEdge.myIsAlternating, -1, -1, -1, -1);
+    myHalfEdges.EmplaceBack(myHalfEdges.Count(), aHalfEdge.myHeight + 1,
+                            aHalfEdge.myIsReversed != aHalfEdge.myIsAlternating,
+                            aHalfEdge.myIsReversed != aHalfEdge.myIsAlternating, -1, -1, -1, -1);
     TileHalfEdge& rightChild {myHalfEdges.GetLast()};
-    halfEdge.myRightChild = rightChild.myIndex;
-    rightChild.myParent = halfEdge.myIndex;
+    aHalfEdge.myRightChild = rightChild.myIndex;
+    rightChild.myParent = aHalfEdge.myIndex;
 
     int& vertexIdx {rightChild.myVertex};
-    if (halfEdge.myOpposite != -1)
+    if (aHalfEdge.myOpposite != -1)
     {
-        const TileHalfEdge& oppositeHEdge {myHalfEdges[halfEdge.myOpposite]};
+        const TileHalfEdge& oppositeHEdge {myHalfEdges[aHalfEdge.myOpposite]};
         if (oppositeHEdge.myLeftChild != -1)
         {
             TileHalfEdge& oppositeLeftChild {myHalfEdges[oppositeHEdge.myLeftChild]};
@@ -87,16 +210,46 @@ void TileMesh::SubdivideHalfEdge(int aHalfEdgeIdx)
     }
     if (vertexIdx == -1)
     {
-        const TileHalfEdge& nextHEdge {myHalfEdges[halfEdge.myNext]};
-        const Vec2& fromPosition {myVertices[halfEdge.myVertex].myPosition};
-        const Vec2& toPosition {myVertices[nextHEdge.myVertex].myPosition};
-
-        constexpr float sinOfPiOverTwelve {0.25881904510252f};
-        const float sign {halfEdge.myIsReversed ? 1.f : -1.f};
-        const Vec2 orthogonalComponent {toPosition.y - fromPosition.y, fromPosition.x - toPosition.x};
-        const Vec2 newVertexPosition {(fromPosition + toPosition + sign * sinOfPiOverTwelve * orthogonalComponent) *
-                                      0.5f};
+        const TileHalfEdge& nextHEdge {myHalfEdges[aHalfEdge.myNext]};
         vertexIdx = myVertices.Count();
-        myVertices.EmplaceBack(vertexIdx, halfEdge.myHeight + 1, newVertexPosition);
+        if (aHalfEdge.myIsReversed)
+        {
+            CreateInflationVertex(myVertices[nextHEdge.myVertex], myVertices[aHalfEdge.myVertex]);
+        }
+        else
+        {
+            CreateInflationVertex(myVertices[aHalfEdge.myVertex], myVertices[nextHEdge.myVertex]);
+        }
     }
+}
+
+int TileMesh::FindFirstEdge(int aBeginFromHalfEdgeIdx) const
+{
+    const TileFace& face {myFaces[myHalfEdges[aBeginFromHalfEdgeIdx].myFace]};
+    const TileType type {face.myType};
+
+    int firstEdgeIdx {aBeginFromHalfEdgeIdx};
+    if (type == TileType::SquareC)
+    {
+        if (!myHalfEdges[firstEdgeIdx].myIsAlternating)
+        {
+            firstEdgeIdx = myHalfEdges[firstEdgeIdx].myNext;
+        }
+    }
+    else if (type == TileType::SquareA || type == TileType::SquareB)
+    {
+        while (myHalfEdges[firstEdgeIdx].myIsReversed || myHalfEdges[myHalfEdges[firstEdgeIdx].myNext].myIsReversed)
+        {
+            firstEdgeIdx = myHalfEdges[firstEdgeIdx].myNext;
+        }
+    }
+    else
+    {
+        while (myHalfEdges[firstEdgeIdx].myIsReversed)
+        {
+            firstEdgeIdx = myHalfEdges[firstEdgeIdx].myNext;
+        }
+    }
+
+    return firstEdgeIdx;
 }

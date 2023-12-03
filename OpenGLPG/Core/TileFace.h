@@ -20,8 +20,8 @@ struct TileFace : public Serializable
     int myIndex {-1};
     int myHeight {-1};
 
-    TileType myType;
-    int myEdge;
+    TileType myType {TileType::SquareA};
+    int myEdge {-1};
 
     int myParent {-1};
     Array<int> myChildren;
