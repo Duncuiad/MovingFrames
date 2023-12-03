@@ -13,7 +13,7 @@ class TileMesh
 private:
     void CreateFace(TileFace& aParentFace, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 = -1);
     const TileHalfEdge& CreateFullEdge(const TileVertex& aBegin, const TileVertex& anEnd, bool anIsAlternating);
-    void CreateInflationVertex(const TileVertex& aBegin, const TileVertex& anEnd);
+    const TileVertex& CreateInflationVertex(const TileVertex& aBegin, const TileVertex& anEnd);
     void SubdivideFace(TileFace& aFace);
     void SubdivideTriangle(TileFace& aTriangle);
     void SubdivideSquare(TileFace& aSquare);

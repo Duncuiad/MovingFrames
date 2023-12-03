@@ -97,7 +97,7 @@ const TileHalfEdge& TileMesh::CreateFullEdge(const TileVertex& aBegin, const Til
     return myHalfEdges[newIndex0];
 }
 
-void TileMesh::CreateInflationVertex(const TileVertex& aBegin, const TileVertex& anEnd)
+const TileVertex& TileMesh::CreateInflationVertex(const TileVertex& aBegin, const TileVertex& anEnd)
 {
     ASSERT(aBegin.myHeight == anEnd.myHeight, "Inflating an Edge between Vertices at different heights");
     const Vec2& fromPosition {aBegin.myPosition};
@@ -107,6 +107,7 @@ void TileMesh::CreateInflationVertex(const TileVertex& aBegin, const TileVertex&
     const Vec2 orthogonalComponent {toPosition.y - fromPosition.y, fromPosition.x - toPosition.x};
     const Vec2 newVertexPosition {(fromPosition + toPosition - sinOfPiOverTwelve * orthogonalComponent) * 0.5f};
     myVertices.EmplaceBack(myVertices.Count(), aBegin.myHeight + 1, newVertexPosition);
+    return myVertices.GetLast();
 }
 
 void TileMesh::SubdivideFace(TileFace& aFace)
@@ -174,7 +175,37 @@ void TileMesh::SubdivideSquare(TileFace& aSquare)
         CreateFace(aSquare, edgeA.myIndex, edgeB.myIndex, edgeC.myIndex, edgeD.myIndex);
     }
     else
-    {}
+    {
+        const TileVertex& begin {myVertices[edge0.myVertex]};
+        const TileVertex& end {myVertices[edge2.myVertex]};
+        const TileVertex& vertex4 {CreateInflationVertex(begin, end)};
+        const TileVertex& vertex5 {myVertices[edge3.myVertex]};
+
+        const bool isTypeA {aSquare.myType == TileType::SquareA};
+        const TileHalfEdge& edgeA {CreateFullEdge(vertex0, vertex1, isTypeA)};
+        const TileHalfEdge& edgeB {CreateFullEdge(vertex4, vertex1, isTypeA)};
+        const TileHalfEdge& edgeC {CreateFullEdge(vertex0, vertex4, isTypeA)};
+        const TileHalfEdge& edgeD {CreateFullEdge(vertex2, vertex4, !isTypeA)};
+        const TileHalfEdge& edgeF {CreateFullEdge(vertex4, vertex3, !isTypeA)};
+
+        CreateFace(aSquare, edge0.myRightChild, edge1.myLeftChild, edgeA.myOpposite);
+        CreateFace(aSquare, edgeA.myIndex, edgeB.myOpposite, edgeC.myOpposite);
+        CreateFace(aSquare, edgeB.myIndex, edge1.myRightChild, edge2.myLeftChild, edgeD.myIndex);
+        CreateFace(aSquare, edgeC.myIndex, edgeF.myIndex, edge3.myRightChild, edge0.myLeftChild);
+
+        if (isTypeA)
+        {
+            const TileHalfEdge& edgeE {CreateFullEdge(vertex4, vertex5, false)};
+            CreateFace(aSquare, edge2.myRightChild, edgeE.myOpposite, edgeD.myOpposite);
+            CreateFace(aSquare, edgeE.myIndex, edge3.myLeftChild, edgeF.myOpposite);
+        }
+        else
+        {
+            const TileHalfEdge& edgeE {CreateFullEdge(vertex5, vertex4, true)};
+            CreateFace(aSquare, edgeE.myIndex, edgeD.myOpposite, edge2.myRightChild);
+            CreateFace(aSquare, edge3.myLeftChild, edgeF.myOpposite, edgeE.myOpposite);
+        }
+    }
 }
 
 void TileMesh::SubdivideHalfEdge(TileHalfEdge& aHalfEdge)
