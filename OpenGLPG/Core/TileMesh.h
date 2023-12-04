@@ -1,14 +1,26 @@
 #pragma once
 
 #include "Array.h"
+#include "MathDefines.h"
+#include "Serializable.h"
 #include "TileFace.h"
 #include "TileHalfEdge.h"
 #include "TileVertex.h"
 
-class TileMesh
+#include <utility>
+
+class TileMesh : public Serializable
 {
+public:
     TileMesh() = default;
     TileMesh(TileType aType);
+
+    void Serialize(Serializer& aSerializer) override;
+
+    void Reset(TileType aType);
+    void SubdivideAllFaces();
+
+    std::pair<Array<Vec2>, Array<unsigned int>> GetMesh(int aHeight) const;
 
 private:
     void CreateFace(TileFace& aParentFace, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 = -1);

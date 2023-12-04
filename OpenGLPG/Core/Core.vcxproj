@@ -149,8 +149,11 @@
     <ClInclude Include="ClientCallbacks.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="DynamicMesh.h" />
+    <ClInclude Include="DynamicMeshGraphCmp.h" />
     <ClInclude Include="EditorCmp.h" />
     <ClInclude Include="EditorWidget.h" />
+    <ClInclude Include="Editor_TileMeshCmp.h" />
     <ClInclude Include="Editor_TransformCmp.h" />
     <ClInclude Include="FrameSplineCmp.h" />
     <ClInclude Include="DebugImGui.h" />
@@ -172,6 +175,8 @@
     <ClInclude Include="TileFace.h" />
     <ClInclude Include="TileHalfEdge.h" />
     <ClInclude Include="TileMesh.h" />
+    <ClInclude Include="TileMeshCmp.h" />
+    <ClInclude Include="TileMeshEditorWidget.h" />
     <ClInclude Include="TileVertex.h" />
     <ClInclude Include="ImGuiWidgets.h" />
     <ClInclude Include="LevelEditor.h" />
@@ -213,7 +218,10 @@
     <ClCompile Include="ClientCallbacks.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="DynamicMesh.cpp" />
+    <ClCompile Include="DynamicMeshGraphCmp.cpp" />
     <ClCompile Include="EditorWidget.cpp" />
+    <ClCompile Include="Editor_TileMeshCmp.cpp" />
     <ClCompile Include="Editor_TransformCmp.cpp" />
     <ClCompile Include="FrameSplineCmp.cpp" />
     <ClCompile Include="DebugUtils.cpp" />
@@ -259,6 +267,8 @@
     <ClCompile Include="TileFace.cpp" />
     <ClCompile Include="TileHalfEdge.cpp" />
     <ClCompile Include="TileMesh.cpp" />
+    <ClCompile Include="TileMeshCmp.cpp" />
+    <ClCompile Include="TileMeshEditorWidget.cpp" />
     <ClCompile Include="TileVertex.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TransformCmp.cpp" />

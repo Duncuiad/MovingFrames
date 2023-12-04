@@ -52,6 +52,12 @@
     <Filter Include="Tiles">
       <UniqueIdentifier>{81e88d5a-d548-4acd-808e-13f2ee4c07ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tiles\Components">
+      <UniqueIdentifier>{83b084a3-fb44-4085-88e8-e41c9593f9c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tiles\Editor">
+      <UniqueIdentifier>{5c299789-bcea-4582-93e0-05be095fab0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -258,6 +264,21 @@
     <ClInclude Include="TileMesh.h">
       <Filter>Tiles</Filter>
     </ClInclude>
+    <ClInclude Include="DynamicMeshGraphCmp.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicMesh.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMeshEditorWidget.h">
+      <Filter>Tiles\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor_TileMeshCmp.h">
+      <Filter>Tiles\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMeshCmp.h">
+      <Filter>Tiles\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -448,6 +469,21 @@
     </ClCompile>
     <ClCompile Include="TileFace.cpp">
       <Filter>Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicMeshGraphCmp.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicMesh.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMeshEditorWidget.cpp">
+      <Filter>Tiles\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor_TileMeshCmp.cpp">
+      <Filter>Tiles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMeshCmp.cpp">
+      <Filter>Tiles\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

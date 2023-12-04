@@ -27,7 +27,9 @@ public:
     void DeleteBuffers();
     void Draw() const;
 
-private:
+protected:
+    Mesh() = default;
+
     Vertex::List myVertices;
     Vertex::IndexList myIndices;
 

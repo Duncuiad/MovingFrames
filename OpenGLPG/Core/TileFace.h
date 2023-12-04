@@ -17,6 +17,9 @@ struct TileFace : public Serializable
     TileFace(int anIndex, int aHeight, TileType aType, int anEdge);
     virtual void Serialize(Serializer& aSerializer) override;
 
+    bool IsTriangle() const;
+    bool IsSquare() const;
+
     int myIndex {-1};
     int myHeight {-1};
 

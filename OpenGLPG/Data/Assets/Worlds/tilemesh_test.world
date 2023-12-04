@@ -1,0 +1,320 @@
+myCount
+{
+	1
+}
+
+0
+{
+	myComponents
+	{
+		myCount
+		{
+			5
+		}
+
+		0
+		{
+			TransformCmp
+			myTransform
+			{
+				X
+				{
+					1.000000					0.000000					0.000000					0.000000
+				}
+
+				Y
+				{
+					0.000000					1.000000					0.000000					0.000000
+				}
+
+				Z
+				{
+					0.000000					0.000000					1.000000					0.000000
+				}
+
+				W
+				{
+					0.000000					0.000000					0.000000					1.000000
+				}
+
+			}
+
+		}
+
+		1
+		{
+			TileMeshCmp
+			myTileMesh
+			{
+				myVertices
+				{
+					myCount
+					{
+						3
+					}
+
+					0
+					{
+						myIndex
+						{
+							0
+						}
+
+						myHeight
+						{
+							0
+						}
+
+						myPosition
+						{
+							0.000000							0.000000
+						}
+
+					}
+
+					1
+					{
+						myIndex
+						{
+							1
+						}
+
+						myHeight
+						{
+							0
+						}
+
+						myPosition
+						{
+							1.000000							0.000000
+						}
+
+					}
+
+					2
+					{
+						myIndex
+						{
+							2
+						}
+
+						myHeight
+						{
+							0
+						}
+
+						myPosition
+						{
+							0.500000							0.866025
+						}
+
+					}
+
+				}
+
+				myHalfEdges
+				{
+					myCount
+					{
+						3
+					}
+
+					0
+					{
+						myIndex
+						{
+							0
+						}
+
+						myHeight
+						{
+							0
+						}
+
+						myIsReversed
+						{
+							0
+						}
+
+						myIsAlternating
+						{
+							1
+						}
+
+						myVertex
+						{
+							0
+						}
+
+						myNext
+						{
+							1
+						}
+
+						myOpposite
+						{
+							-1
+						}
+
+						myFace
+						{
+							0
+						}
+
+					}
+
+					1
+					{
+						myIndex
+						{
+							1
+						}
+
+						myHeight
+						{
+							0
+						}
+
+						myIsReversed
+						{
+							1
+						}
+
+						myIsAlternating
+						{
+							1
+						}
+
+						myVertex
+						{
+							1
+						}
+
+						myNext
+						{
+							2
+						}
+
+						myOpposite
+						{
+							-1
+						}
+
+						myFace
+						{
+							0
+						}
+
+					}
+
+					2
+					{
+						myIndex
+						{
+							2
+						}
+
+						myHeight
+						{
+							0
+						}
+
+						myIsReversed
+						{
+							1
+						}
+
+						myIsAlternating
+						{
+							1
+						}
+
+						myVertex
+						{
+							2
+						}
+
+						myNext
+						{
+							0
+						}
+
+						myOpposite
+						{
+							-1
+						}
+
+						myFace
+						{
+							0
+						}
+
+					}
+
+				}
+
+				myFaces
+				{
+					myCount
+					{
+						1
+					}
+
+					0
+					{
+						myIndex
+						{
+							0
+						}
+
+						myHeight
+						{
+							0
+						}
+
+						myEdge
+						{
+							0
+						}
+
+						myType
+						{
+							0
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+		2
+		{
+			DynamicMeshGraphCmp
+			myShader
+			{
+				myPath
+				{
+					basic.shader
+				}
+
+			}
+
+		}
+
+		3
+		{
+			Editor_TileMeshCmp
+		}
+
+		4
+		{
+			Editor_TransformCmp
+		}
+
+	}
+
+}
+

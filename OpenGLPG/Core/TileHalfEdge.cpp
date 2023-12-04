@@ -2,6 +2,8 @@
 
 #include "TileHalfEdge.h"
 
+#include "Serializer.h"
+
 TileHalfEdge::TileHalfEdge(int anIndex, int aHeight, int anIsReversed, int anIsAlternating, int aVertex, int aNext,
                            int anOpposite, int aFace)
     : myIndex {anIndex}
@@ -14,4 +16,14 @@ TileHalfEdge::TileHalfEdge(int anIndex, int aHeight, int anIsReversed, int anIsA
     , myFace {aFace}
 {}
 
-void TileHalfEdge::Serialize(Serializer& aSerializer) {}
+void TileHalfEdge::Serialize(Serializer& aSerializer)
+{
+    aSerializer.Process("myIndex", myIndex);
+    aSerializer.Process("myHeight", myHeight);
+    aSerializer.Process("myIsReversed", myIsReversed);
+    aSerializer.Process("myIsAlternating", myIsAlternating);
+    aSerializer.Process("myVertex", myVertex);
+    aSerializer.Process("myNext", myNext);
+    aSerializer.Process("myOpposite", myOpposite);
+    aSerializer.Process("myFace", myFace);
+}

@@ -7,6 +7,22 @@
 
 TileMesh::TileMesh(TileType aType)
 {
+    Reset(aType);
+}
+
+void TileMesh::Serialize(Serializer& aSerializer)
+{
+    aSerializer.Process("myVertices", myVertices);
+    aSerializer.Process("myHalfEdges", myHalfEdges);
+    aSerializer.Process("myFaces", myFaces);
+}
+
+void TileMesh::Reset(TileType aType)
+{
+    myVertices.RemoveAll();
+    myHalfEdges.RemoveAll();
+    myFaces.RemoveAll();
+
     myFaces.EmplaceBack(0, 0, aType, 0);
 
     myVertices.EmplaceBack(0, 0, Vec2 {0.f, 0.f});
@@ -49,6 +65,53 @@ TileMesh::TileMesh(TileType aType)
         myHalfEdges[2].myIsReversed = false;
         myHalfEdges[3].myIsReversed = false;
     }
+}
+
+void TileMesh::SubdivideAllFaces()
+{
+    const int originalFaceCount {myFaces.Count()};
+    for (int i = 0; i < originalFaceCount; ++i)
+    {
+        SubdivideFace(myFaces[i]);
+    }
+}
+
+std::pair<Array<Vec2>, Array<unsigned int>> TileMesh::GetMesh(int aHeight) const
+{
+    Array<Vec2> vertices;
+    Array<unsigned int> indices;
+
+    std::unordered_map<int, int> vertexInverseMapping;
+
+    for (const TileVertex& vertex : myVertices)
+    {
+        if (vertex.myHeight <= aHeight)
+        {
+            vertexInverseMapping[vertex.myIndex] = vertices.Count();
+            vertices.PushBack(vertex.myPosition);
+        }
+    }
+
+    for (const TileFace& face : myFaces)
+    {
+        const TileHalfEdge& edge0 {myHalfEdges[face.myEdge]};
+        const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
+        const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
+
+        indices.PushBack(vertexInverseMapping[edge0.myVertex]);
+        indices.PushBack(vertexInverseMapping[edge1.myVertex]);
+        indices.PushBack(vertexInverseMapping[edge2.myVertex]);
+
+        if (face.IsSquare())
+        {
+            const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
+            indices.PushBack(vertexInverseMapping[edge2.myVertex]);
+            indices.PushBack(vertexInverseMapping[edge3.myVertex]);
+            indices.PushBack(vertexInverseMapping[edge0.myVertex]);
+        }
+    }
+
+    return std::make_pair(std::move(vertices), std::move(indices));
 }
 
 void TileMesh::CreateFace(TileFace& aParentFace, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2,

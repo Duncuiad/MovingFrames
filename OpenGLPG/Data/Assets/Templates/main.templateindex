@@ -1,6 +1,6 @@
 myCount
 {
-	3
+	4
 }
 
 0
@@ -26,6 +26,15 @@ myCount
 	myPath
 	{
 		framepath.template
+	}
+	
+}
+
+3
+{
+	myPath
+	{
+		tilemesh.template
 	}
 	
 }

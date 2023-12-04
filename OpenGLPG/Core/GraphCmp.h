@@ -21,6 +21,7 @@ public:
     GraphCmp() = default;
     GraphCmp(const Filepath& aShaderAsset);
     void OnLoad(const LoadParams& someParams) override;
+    void PrepareDraw(const DrawParams& someParams) const;
 
     virtual void Draw(const DrawParams& someParams) const = 0;
 
