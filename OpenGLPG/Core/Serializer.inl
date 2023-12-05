@@ -27,6 +27,12 @@ inline void SerializerT<Policy>::Process(const char* aVariableName, Serializable
 }
 
 template <typename Policy>
+inline void SerializerT<Policy>::Process(const char* aVariableName, bool& aVariable)
+{
+    Policy::Process(aVariableName, aVariable, *this);
+}
+
+template <typename Policy>
 inline void SerializerT<Policy>::Process(const char* aVariableName, int& aVariable)
 {
     Policy::Process(aVariableName, aVariable, *this);
@@ -150,6 +156,18 @@ inline void Serialize(SerializerT<LoadPolicy>& aSerializer, SerializableDynamic*
            "The provided subtype {} hasn't been registered. Have you forgotten calling REGISTER_SUBTYPE?", subtypeId);
     aPtr = SerializationFactory::GetBuilders()[subtypeId]();
     aPtr->Serialize(aSerializer);
+}
+
+template <>
+inline void Serialize(SerializerT<SavePolicy>& aSerializer, bool& aVariable)
+{
+    aSerializer.myFile << SavePolicy::Indent(aVariable ? "1" : "0", aSerializer) << std::endl;
+}
+
+template <>
+inline void Serialize(SerializerT<LoadPolicy>& aSerializer, bool& aVariable)
+{
+    aSerializer.myFile >> aVariable;
 }
 
 template <>

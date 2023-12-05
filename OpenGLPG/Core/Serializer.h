@@ -13,6 +13,7 @@ class Serializer
 public:
     virtual void Process(const char* aVariableName, Serializable& aVariable) = 0;
     virtual void Process(const char* aVariableName, SerializableDynamic*& aPtr) = 0;
+    virtual void Process(const char* aVariableName, bool& aVariable) = 0;
     virtual void Process(const char* aVariableName, int& aVariable) = 0;
     virtual void Process(const char* aVariableName, unsigned int& aVariable) = 0;
     virtual void Process(const char* aVariableName, float& aVariable) = 0;
@@ -32,6 +33,7 @@ public:
 
     void Process(const char* aVariableName, Serializable& aVariable) override;
     void Process(const char* aVariableName, SerializableDynamic*& aPtr) override;
+    void Process(const char* aVariableName, bool& aVariable) override;
     void Process(const char* aVariableName, int& aVariable) override;
     void Process(const char* aVariableName, unsigned int& aVariable) override;
     void Process(const char* aVariableName, float& aVariable) override;

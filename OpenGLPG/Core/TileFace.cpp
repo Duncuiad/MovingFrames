@@ -22,7 +22,7 @@ void TileFace::Serialize(Serializer& aSerializer)
     myType = static_cast<TileType>(type);
 }
 
-inline bool TileFace::IsTriangle() const
+bool TileFace::IsTriangle() const
 {
     return myType == TileType::TriangleA || myType == TileType::TriangleB;
 }

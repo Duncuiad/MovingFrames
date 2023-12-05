@@ -20,16 +20,17 @@ public:
     void Reset(TileType aType);
     void SubdivideAllFaces();
 
+    int GetMaxHeight() const;
     std::pair<Array<Vec2>, Array<unsigned int>> GetMesh(int aHeight) const;
 
 private:
-    void CreateFace(TileFace& aParentFace, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 = -1);
-    const TileHalfEdge& CreateFullEdge(const TileVertex& aBegin, const TileVertex& anEnd, bool anIsAlternating);
+    void CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 = -1);
+    const TileHalfEdge& CreateFullEdge(int aBeginIdx, int anEndIdx, bool anIsAlternating);
     const TileVertex& CreateInflationVertex(const TileVertex& aBegin, const TileVertex& anEnd);
-    void SubdivideFace(TileFace& aFace);
-    void SubdivideTriangle(TileFace& aTriangle);
-    void SubdivideSquare(TileFace& aSquare);
-    void SubdivideHalfEdge(TileHalfEdge& aHalfEdge);
+    void SubdivideFace(int aFaceIdx);
+    void SubdivideTriangle(int aTriangleIdx);
+    void SubdivideSquare(int aSquareIdx);
+    void SubdivideHalfEdge(int aHalfEdgeIdx);
 
     int FindFirstEdge(int aBeginFromHalfEdgeIdx) const;
 

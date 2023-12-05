@@ -5,15 +5,15 @@
 struct TileHalfEdge : public Serializable
 {
     TileHalfEdge() = default;
-    TileHalfEdge(int anIndex, int aHeight, int anIsReversed, int anIsAlternating, int aVertex, int aNext,
+    TileHalfEdge(int anIndex, int aHeight, bool anIsReversed, bool anIsAlternating, int aVertex, int aNext,
                  int anOpposite, int aFace);
     virtual void Serialize(Serializer& aSerializer) override;
 
     int myIndex {-1};
     int myHeight {-1};
 
-    int myIsReversed {false};
-    int myIsAlternating {false};
+    bool myIsReversed {false};
+    bool myIsAlternating {false};
 
     int myVertex {-1};
     int myNext {-1};
