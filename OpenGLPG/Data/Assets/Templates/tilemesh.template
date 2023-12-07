@@ -46,7 +46,7 @@ myComponents
 		{
 			myPath
 			{
-				basic.shader
+				tilemesh.shader
 			}
 
 		}

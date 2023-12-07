@@ -70,7 +70,7 @@ myCount
 {
 	myPath
 	{
-		tilemesh_test.world
+		tilemesh.world
 	}
 
 }

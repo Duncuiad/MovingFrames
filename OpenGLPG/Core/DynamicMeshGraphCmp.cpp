@@ -31,6 +31,11 @@ void DynamicMeshGraphCmp::Serialize(Serializer& aSerializer)
     aSerializer.Process("myShader", myShaderAsset);
 }
 
+void DynamicMeshGraphCmp::SetIsWireframe(bool anIsWireframe)
+{
+    myMesh.SetIsWireframe(anIsWireframe);
+}
+
 void DynamicMeshGraphCmp::SetMesh(const Vertex::List& someVertices, const Vertex::IndexList& someIndices)
 {
     myMesh.UpdateMesh(someVertices, someIndices);

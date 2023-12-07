@@ -8,6 +8,7 @@
 void TileMeshEditorWidget::AttachTileMeshObject(TileMesh& aTileMesh)
 {
     myTileMesh = &aTileMesh;
+    myHeightToDisplay = myTileMesh->GetMaxHeight();
 }
 
 void TileMeshEditorWidget::Draw()

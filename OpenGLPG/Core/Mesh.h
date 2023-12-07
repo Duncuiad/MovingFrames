@@ -24,6 +24,7 @@ public:
 
     Mesh(const Vertex::List& someVertices, const Vertex::IndexList& someIndices);
 
+    void SetIsWireframe(bool anIsWireframe) { myIsWireframe = anIsWireframe; }
     void DeleteBuffers();
     void Draw() const;
 

@@ -129,6 +129,59 @@ std::pair<Array<Vec2>, Array<unsigned int>> TileMesh::GetMesh(int aHeight) const
     return std::make_pair(std::move(vertices), std::move(indices));
 }
 
+Array<Vec2> TileMesh::GetTriangles(int aHeight, int aTriangleTypeMask) const
+{
+    Array<Vec2> vertices;
+
+    for (const TileFace& face : myFaces)
+    {
+        if (face.myHeight != aHeight || !face.IsTriangle() ||
+            (face.myType == TileType::TriangleA && !(aTriangleTypeMask & 1)) ||
+            (face.myType == TileType::TriangleB && !(aTriangleTypeMask & 2)))
+        {
+            continue;
+        }
+
+        const TileHalfEdge& edge0 {myHalfEdges[face.myEdge]};
+        const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
+        const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
+
+        vertices.PushBack(myVertices[edge0.myVertex].myPosition);
+        vertices.PushBack(myVertices[edge1.myVertex].myPosition);
+        vertices.PushBack(myVertices[edge2.myVertex].myPosition);
+    }
+
+    return vertices;
+}
+
+Array<Vec2> TileMesh::GetSquares(int aHeight, int aTriangleTypeMask) const
+{
+    Array<Vec2> vertices;
+
+    for (const TileFace& face : myFaces)
+    {
+        if (face.myHeight != aHeight || !face.IsSquare() ||
+            (face.myType == TileType::SquareA && !(aTriangleTypeMask & 1)) ||
+            (face.myType == TileType::SquareB && !(aTriangleTypeMask & 2)) ||
+            (face.myType == TileType::SquareC && !(aTriangleTypeMask & 4)))
+        {
+            continue;
+        }
+
+        const TileHalfEdge& edge0 {myHalfEdges[face.myEdge]};
+        const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
+        const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
+        const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
+
+        vertices.PushBack(myVertices[edge0.myVertex].myPosition);
+        vertices.PushBack(myVertices[edge1.myVertex].myPosition);
+        vertices.PushBack(myVertices[edge2.myVertex].myPosition);
+        vertices.PushBack(myVertices[edge3.myVertex].myPosition);
+    }
+
+    return vertices;
+}
+
 void TileMesh::CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 /*= -1*/)
 {
     TileHalfEdge& edge0 {myHalfEdges[aHalfEdge0]};
