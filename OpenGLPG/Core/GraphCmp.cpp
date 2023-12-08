@@ -23,3 +23,8 @@ void GraphCmp::PrepareDraw(const DrawParams& someParams) const
     myShader->SetUniformMat4("Projection", someParams.myProjectionMatrix);
     myShader->SetUniformMat4("WorldToClip", someParams.myWorldToClipMatrix);
 }
+
+const Shader& GraphCmp::GetShader() const
+{
+    return *myShader;
+}

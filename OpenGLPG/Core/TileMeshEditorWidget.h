@@ -11,4 +11,5 @@ public:
 
     TileMesh* myTileMesh {nullptr};
     int myHeightToDisplay {0};
+    bool myShowGraphs {false};
 };

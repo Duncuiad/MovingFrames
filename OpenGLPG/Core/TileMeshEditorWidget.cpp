@@ -16,6 +16,8 @@ void TileMeshEditorWidget::Draw()
     ASSERT(myTileMesh != nullptr, "Failed attaching tilemesh object");
     bool changed {false};
 
+    changed |= ImGui::Checkbox("Show Graphs", &myShowGraphs);
+
     bool isResetting {false};
     ImGui::Text("Reset");
     if (ImGui::Button("Triangle A"))

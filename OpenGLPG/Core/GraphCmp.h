@@ -25,6 +25,8 @@ public:
 
     virtual void Draw(const DrawParams& someParams) const = 0;
 
+    const Shader& GetShader() const;
+
 protected:
     Shader::Ptr myShader {nullptr};
     Filepath myShaderAsset;

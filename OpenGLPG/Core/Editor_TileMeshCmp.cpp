@@ -117,7 +117,9 @@ void Editor_TileMeshCmp::OnChanged() const
         AddSquare(uvOffsetC, &squaresC[4 * i], vertices, indices);
     }
 
-    GetDynamicMeshGraphCmp().SetMesh(std::move(vertices), std::move(indices));
+    DynamicMeshGraphCmp& graphCmp {GetDynamicMeshGraphCmp()};
+    graphCmp.SetMesh(std::move(vertices), std::move(indices));
+    graphCmp.GetShader().SetUniformInt("ShowGraphs", static_cast<int>(myWidget.myShowGraphs));
 }
 
 TileMeshCmp& Editor_TileMeshCmp::GetTileMeshCmp() const
