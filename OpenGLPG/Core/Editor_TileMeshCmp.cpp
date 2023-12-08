@@ -27,11 +27,11 @@ void AddTriangle(bool anIsTypeA, const Vec2* aPositionBuffer, Vertex::List& some
     someIndicesOut.push_back(firstVertexIdx + 2u);
 
     Vertex vertex0 {Vec3 {aPositionBuffer[0], 0.f}, Vec3 {0.f, 0.f, 1.f},
-                    anIsTypeA ? Vec2 {0.f, 0.f} : Vec2 {0.5f, 0.5f}};
-    Vertex vertex1 {Vec3 {aPositionBuffer[1], 0.f}, Vec3 {0.f, 0.f, 1.f},
-                    anIsTypeA ? Vec2 {0.5f, 0.f} : Vec2 {0.f, 0.5f}};
-    Vertex vertex2 {Vec3 {aPositionBuffer[2], 0.f}, Vec3 {0.f, 0.f, 1.f},
                     anIsTypeA ? Vec2 {0.5f, 0.5f} : Vec2 {0.f, 0.f}};
+    Vertex vertex1 {Vec3 {aPositionBuffer[1], 0.f}, Vec3 {0.f, 0.f, 1.f},
+                    anIsTypeA ? Vec2 {0.f, 0.5f} : Vec2 {0.5f, 0.f}};
+    Vertex vertex2 {Vec3 {aPositionBuffer[2], 0.f}, Vec3 {0.f, 0.f, 1.f},
+                    anIsTypeA ? Vec2 {0.f, 0.f} : Vec2 {0.5f, 0.5f}};
 
     someVerticesOut.push_back(std::move(vertex0));
     someVerticesOut.push_back(std::move(vertex1));

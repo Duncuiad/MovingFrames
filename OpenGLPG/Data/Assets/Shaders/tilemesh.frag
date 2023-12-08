@@ -32,19 +32,19 @@ void main()
     {
         float selectSquares = 2. * step(0., min(0.5 - UV.x, 0.5 - UV.y)) - 1.;
         float selectTriangles = 2. * step(0., max(UV.x - 0.5, UV.y - 0.5)) - 1.;
-        float selectTypeA = 2. * step(0., UV.y - UV.x) - 1.;
+        float selectTypeA = 2. * step(0., UV.x - UV.y) - 1.;
         float selectDiagonalXY = 2. * step(0., 6. * (UV.y - UV.x) + 1.) - 1.;
         float selectDiagonalYX = 2. * step(0., 6. * (UV.x - UV.y) + 1.) - 1.;
 
         float distAS = max(abs(doubleUVs.x - 0.5), selectSquares);
         float distBS = max(abs(doubleUVs.y - 0.5), selectSquares);
 
-        float distA12 = max(max(0.67 * abs(6. * UV.y - 3. * UV.x), selectDiagonalXY), selectTriangles);
-        float distA21 = max(max(0.67 * abs(3. * UV.y - 6. * UV.x + 1.5), selectDiagonalXY), selectTriangles);
-        float distA11 = max(max(2. * abs(UV.y + UV.x - 0.5), -selectDiagonalXY), selectTypeA);
-        float distB21 = max(max(0.67 * abs(6. * UV.x - 3. * UV.y), selectDiagonalYX), selectTriangles);
-        float distB12 = max(max(0.67 * abs(3. * UV.x - 6. * UV.y + 1.5), selectDiagonalYX), selectTriangles);
-        float distB11 = max(max(2. * abs(UV.x + UV.y - 0.5), -selectDiagonalYX), -selectTypeA);
+        float distA21 = max(max(0.67 * abs(6. * UV.x - 3. * UV.y), selectDiagonalYX), selectTriangles);
+        float distA12 = max(max(0.67 * abs(3. * UV.x - 6. * UV.y + 1.5), selectDiagonalYX), selectTriangles);
+        float distA11 = max(max(2. * abs(UV.y + UV.x - 0.5), -selectDiagonalYX), selectTypeA);
+        float distB12 = max(max(0.67 * abs(6. * UV.y - 3. * UV.x), selectDiagonalXY), selectTriangles);
+        float distB21 = max(max(0.67 * abs(3. * UV.y - 6. * UV.x + 1.5), selectDiagonalXY), selectTriangles);
+        float distB11 = max(max(2. * abs(UV.x + UV.y - 0.5), -selectDiagonalXY), -selectTypeA);
         float lenGrad12 = dot(gradX - gradY * 2., gradX - gradY * 2.);
         float lenGrad21 = dot(gradX * 2. - gradY, gradX * 2. - gradY);
         float lenGrad11 = dot(gradX + gradY, gradX + gradY);
