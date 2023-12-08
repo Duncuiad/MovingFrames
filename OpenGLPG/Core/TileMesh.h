@@ -19,11 +19,12 @@ public:
 
     void Reset(TileType aType);
     void SubdivideAllFaces();
+    void RandomizeVertexColors(float aRatio);
 
     int GetMaxHeight() const;
     std::pair<Array<Vec2>, Array<unsigned int>> GetMesh(int aHeight) const;
-    Array<Vec2> GetTriangles(int aHeight, int aTriangleTypeMask = 3) const;
-    Array<Vec2> GetSquares(int aHeight, int aSquareTypeMask = 3) const;
+    Array<TileVertex::Data> GetTriangles(int aHeight, int aTriangleTypeMask = 3) const;
+    Array<TileVertex::Data> GetSquares(int aHeight, int aSquareTypeMask = 3) const;
 
 private:
     void CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 = -1);

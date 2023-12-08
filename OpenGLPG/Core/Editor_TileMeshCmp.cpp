@@ -11,13 +11,14 @@
 #include "Serializer.h"
 #include "TileMesh.h"
 #include "TileMeshCmp.h"
+#include "TileVertex.h"
 
 #include <functional>
 #include <utility>
 
 namespace
 {
-void AddTriangle(bool anIsTypeA, const Vec2* aPositionBuffer, Vertex::List& someVerticesOut,
+void AddTriangle(bool anIsTypeA, const TileVertex::Data* aDataBuffer, Vertex::List& someVerticesOut,
                  Vertex::IndexList& someIndicesOut)
 {
 
@@ -26,11 +27,11 @@ void AddTriangle(bool anIsTypeA, const Vec2* aPositionBuffer, Vertex::List& some
     someIndicesOut.push_back(firstVertexIdx + 1u);
     someIndicesOut.push_back(firstVertexIdx + 2u);
 
-    Vertex vertex0 {Vec3 {aPositionBuffer[0], 0.f}, Vec3 {0.f, 0.f, 1.f},
+    Vertex vertex0 {Vec3 {aDataBuffer[0].myPosition, 0.f}, Vec3 {aDataBuffer[0].myColor ? 1.f : 0.f, 0.f, 0.f},
                     anIsTypeA ? Vec2 {0.5f, 0.5f} : Vec2 {0.f, 0.f}};
-    Vertex vertex1 {Vec3 {aPositionBuffer[1], 0.f}, Vec3 {0.f, 0.f, 1.f},
+    Vertex vertex1 {Vec3 {aDataBuffer[1].myPosition, 0.f}, Vec3 {0.f, aDataBuffer[1].myColor ? 1.f : 0.f, 0.f},
                     anIsTypeA ? Vec2 {0.f, 0.5f} : Vec2 {0.5f, 0.f}};
-    Vertex vertex2 {Vec3 {aPositionBuffer[2], 0.f}, Vec3 {0.f, 0.f, 1.f},
+    Vertex vertex2 {Vec3 {aDataBuffer[2].myPosition, 0.f}, Vec3 {0.f, 0.f, aDataBuffer[2].myColor ? 1.f : 0.f},
                     anIsTypeA ? Vec2 {0.f, 0.f} : Vec2 {0.5f, 0.5f}};
 
     someVerticesOut.push_back(std::move(vertex0));
@@ -38,7 +39,7 @@ void AddTriangle(bool anIsTypeA, const Vec2* aPositionBuffer, Vertex::List& some
     someVerticesOut.push_back(std::move(vertex2));
 }
 
-void AddSquare(const Vec2& aUVOffset, const Vec2* aPositionBuffer, Vertex::List& someVerticesOut,
+void AddSquare(const Vec2& aUVOffset, const TileVertex::Data* aDataBuffer, Vertex::List& someVerticesOut,
                Vertex::IndexList& someIndicesOut)
 {
     const unsigned int firstVertexIdx {static_cast<unsigned int>(someVerticesOut.size())};
@@ -49,10 +50,14 @@ void AddSquare(const Vec2& aUVOffset, const Vec2* aPositionBuffer, Vertex::List&
     someIndicesOut.push_back(firstVertexIdx + 3u);
     someIndicesOut.push_back(firstVertexIdx);
 
-    Vertex vertex0 {Vec3 {aPositionBuffer[0], 0.f}, Vec3 {0.f, 0.f, 1.f}, aUVOffset + Vec2 {0.f, 0.f}};
-    Vertex vertex1 {Vec3 {aPositionBuffer[1], 0.f}, Vec3 {0.f, 0.f, 1.f}, aUVOffset + Vec2 {0.5f, 0.f}};
-    Vertex vertex2 {Vec3 {aPositionBuffer[2], 0.f}, Vec3 {0.f, 0.f, 1.f}, aUVOffset + Vec2 {0.5, 0.5f}};
-    Vertex vertex3 {Vec3 {aPositionBuffer[3], 0.f}, Vec3 {0.f, 0.f, 1.f}, aUVOffset + Vec2 {0.f, 0.5f}};
+    Vertex vertex0 {Vec3 {aDataBuffer[0].myPosition, 0.f}, Vec3 {aDataBuffer[0].myColor ? 1.f : 0.f, 0.f, 0.f},
+                    aUVOffset + Vec2 {0.f, 0.f}};
+    Vertex vertex1 {Vec3 {aDataBuffer[1].myPosition, 0.f}, Vec3 {0.f, aDataBuffer[1].myColor ? 1.f : 0.f, 0.f},
+                    aUVOffset + Vec2 {0.5f, 0.f}};
+    Vertex vertex2 {Vec3 {aDataBuffer[2].myPosition, 0.f}, Vec3 {0.f, 0.f, aDataBuffer[2].myColor ? 1.f : 0.f},
+                    aUVOffset + Vec2 {0.5, 0.5f}};
+    Vertex vertex3 {Vec3 {aDataBuffer[3].myPosition, 0.f}, Vec3 {0.f, 0.f, aDataBuffer[3].myColor ? -1.f : 0.f},
+                    aUVOffset + Vec2 {0.f, 0.5f}};
 
     someVerticesOut.push_back(std::move(vertex0));
     someVerticesOut.push_back(std::move(vertex1));
@@ -78,11 +83,11 @@ void Editor_TileMeshCmp::OnChanged() const
     Vertex::IndexList indices;
 
     const TileMesh& tileMesh {GetTileMeshCmp().myTileMesh};
-    const Array<Vec2> trianglesA {tileMesh.GetTriangles(myWidget.myHeightToDisplay, 1)};
-    const Array<Vec2> trianglesB {tileMesh.GetTriangles(myWidget.myHeightToDisplay, 2)};
-    const Array<Vec2> squaresA {tileMesh.GetSquares(myWidget.myHeightToDisplay, 1)};
-    const Array<Vec2> squaresB {tileMesh.GetSquares(myWidget.myHeightToDisplay, 2)};
-    const Array<Vec2> squaresC {tileMesh.GetSquares(myWidget.myHeightToDisplay, 4)};
+    const Array<TileVertex::Data> trianglesA {tileMesh.GetTriangles(myWidget.myHeightToDisplay, 1)};
+    const Array<TileVertex::Data> trianglesB {tileMesh.GetTriangles(myWidget.myHeightToDisplay, 2)};
+    const Array<TileVertex::Data> squaresA {tileMesh.GetSquares(myWidget.myHeightToDisplay, 1)};
+    const Array<TileVertex::Data> squaresB {tileMesh.GetSquares(myWidget.myHeightToDisplay, 2)};
+    const Array<TileVertex::Data> squaresC {tileMesh.GetSquares(myWidget.myHeightToDisplay, 4)};
 
     const int triangleVertexCount {trianglesA.Count() + trianglesB.Count()};
     const int squareVertexCount {squaresA.Count() + squaresB.Count() + squaresC.Count()};
@@ -119,7 +124,10 @@ void Editor_TileMeshCmp::OnChanged() const
 
     DynamicMeshGraphCmp& graphCmp {GetDynamicMeshGraphCmp()};
     graphCmp.SetMesh(std::move(vertices), std::move(indices));
+    graphCmp.GetShader().Use();
     graphCmp.GetShader().SetUniformInt("ShowGraphs", static_cast<int>(myWidget.myShowGraphs));
+    graphCmp.GetShader().SetUniformInt("ShowEdges", static_cast<int>(myWidget.myShowEdges));
+    graphCmp.GetShader().SetUniformInt("ShowBlocks", static_cast<int>(myWidget.myShowBlocks));
 }
 
 TileMeshCmp& Editor_TileMeshCmp::GetTileMeshCmp() const

@@ -13,7 +13,13 @@ struct TileVertex : public Serializable
     int myIndex {-1};
     int myHeight {-1};
 
-    Vec2 myPosition {0.f, 0.f};
+    struct Data : public Serializable
+    {
+        virtual void Serialize(Serializer& aSerializer) override;
 
-    // Array<Array<int>> myEdgeFans;
+        Vec2 myPosition {0.f, 0.f};
+        bool myColor {false};
+    };
+
+    Data myData;
 };

@@ -12,4 +12,7 @@ public:
     TileMesh* myTileMesh {nullptr};
     int myHeightToDisplay {0};
     bool myShowGraphs {false};
+    bool myShowEdges {true};
+    bool myShowBlocks {true};
+    float myVertexColorThreshold {0.f};
 };

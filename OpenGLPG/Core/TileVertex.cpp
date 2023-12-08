@@ -7,12 +7,19 @@
 TileVertex::TileVertex(int anIndex, int aHeight, const Vec2& aPosition)
     : myIndex {anIndex}
     , myHeight {aHeight}
-    , myPosition {aPosition}
-{}
+{
+    myData.myPosition = aPosition;
+}
 
 void TileVertex::Serialize(Serializer& aSerializer)
 {
     aSerializer.Process("myIndex", myIndex);
     aSerializer.Process("myHeight", myHeight);
+    aSerializer.Process("myData", myData);
+}
+
+void TileVertex::Data::Serialize(Serializer& aSerializer)
+{
     aSerializer.Process("myPosition", myPosition);
+    aSerializer.Process("myColor", myColor);
 }

@@ -17,6 +17,8 @@ void TileMeshEditorWidget::Draw()
     bool changed {false};
 
     changed |= ImGui::Checkbox("Show Graphs", &myShowGraphs);
+    changed |= ImGui::Checkbox("Show Edges", &myShowEdges);
+    changed |= ImGui::Checkbox("Show Blocks", &myShowBlocks);
 
     bool isResetting {false};
     ImGui::Text("Reset");
@@ -60,6 +62,16 @@ void TileMeshEditorWidget::Draw()
     }
     changed |= ImGui::SliderInt("##Display Height", &myHeightToDisplay, 0, myTileMesh->GetMaxHeight(),
                                 "Display Height = %d", ImGuiSliderFlags_AlwaysClamp);
+    ImGui::Separator();
+
+    ImGui::SliderFloat("##Random Color", &myVertexColorThreshold, 0., 1., "Randomize Vertices = %.3f",
+                       ImGuiSliderFlags_AlwaysClamp);
+    ImGui::SameLine();
+    if (ImGui::Button("Run"))
+    {
+        myTileMesh->RandomizeVertexColors(myVertexColorThreshold);
+        changed = true;
+    }
 
     if (changed)
     {

@@ -13,6 +13,7 @@ void main()
 {
     gl_Position = vec4(aPos, 1.0);
     gl_Position = WorldToClip * Model * gl_Position;
-    vertexColor = vec4(aNormal, 1.);
+    vertexColor = vec4(aNormal, 0.);
+    vertexColor.ba = aNormal.z < 0. ? vec2(0., 1.) : vertexColor.ba;
     uvs = aUV;
 }

@@ -6,6 +6,7 @@
 #include "MathDefines.h"
 
 #include <algorithm>
+#include <random>
 
 TileMesh::TileMesh(TileType aType)
 {
@@ -74,12 +75,31 @@ void TileMesh::SubdivideAllFaces()
     const int originalFaceCount {myFaces.Count()};
     for (int i = 0; i < originalFaceCount; ++i)
     {
-        SubdivideFace(i);
+        if (!myFaces[i].myChildren.Count())
+        {
+            SubdivideFace(i);
+        }
+    }
+}
+
+void TileMesh::RandomizeVertexColors(float aRatio)
+{
+    std::random_device rd;
+    std::mt19937 e2(rd());
+    std::uniform_real_distribution<float> dist {};
+    for (TileVertex& vertex : myVertices)
+    {
+        vertex.myData.myColor = dist(e2) < aRatio;
     }
 }
 
 int TileMesh::GetMaxHeight() const
 {
+    if (!myVertices.Count())
+    {
+        return -1;
+    }
+
     return std::max_element(
                myVertices.begin(), myVertices.end(),
                [](const TileVertex& aLeft, const TileVertex& aRight) { return aLeft.myHeight < aRight.myHeight; })
@@ -98,7 +118,7 @@ std::pair<Array<Vec2>, Array<unsigned int>> TileMesh::GetMesh(int aHeight) const
         if (vertex.myHeight <= aHeight)
         {
             vertexInverseMapping[vertex.myIndex] = vertices.Count();
-            vertices.PushBack(vertex.myPosition);
+            vertices.PushBack(vertex.myData.myPosition);
         }
     }
 
@@ -129,9 +149,9 @@ std::pair<Array<Vec2>, Array<unsigned int>> TileMesh::GetMesh(int aHeight) const
     return std::make_pair(std::move(vertices), std::move(indices));
 }
 
-Array<Vec2> TileMesh::GetTriangles(int aHeight, int aTriangleTypeMask) const
+Array<TileVertex::Data> TileMesh::GetTriangles(int aHeight, int aTriangleTypeMask) const
 {
-    Array<Vec2> vertices;
+    Array<TileVertex::Data> vertices;
 
     for (const TileFace& face : myFaces)
     {
@@ -146,17 +166,17 @@ Array<Vec2> TileMesh::GetTriangles(int aHeight, int aTriangleTypeMask) const
         const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
         const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
 
-        vertices.PushBack(myVertices[edge0.myVertex].myPosition);
-        vertices.PushBack(myVertices[edge1.myVertex].myPosition);
-        vertices.PushBack(myVertices[edge2.myVertex].myPosition);
+        vertices.PushBack(myVertices[edge0.myVertex].myData);
+        vertices.PushBack(myVertices[edge1.myVertex].myData);
+        vertices.PushBack(myVertices[edge2.myVertex].myData);
     }
 
     return vertices;
 }
 
-Array<Vec2> TileMesh::GetSquares(int aHeight, int aTriangleTypeMask) const
+Array<TileVertex::Data> TileMesh::GetSquares(int aHeight, int aTriangleTypeMask) const
 {
-    Array<Vec2> vertices;
+    Array<TileVertex::Data> vertices;
 
     for (const TileFace& face : myFaces)
     {
@@ -173,10 +193,10 @@ Array<Vec2> TileMesh::GetSquares(int aHeight, int aTriangleTypeMask) const
         const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
         const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
 
-        vertices.PushBack(myVertices[edge0.myVertex].myPosition);
-        vertices.PushBack(myVertices[edge1.myVertex].myPosition);
-        vertices.PushBack(myVertices[edge2.myVertex].myPosition);
-        vertices.PushBack(myVertices[edge3.myVertex].myPosition);
+        vertices.PushBack(myVertices[edge0.myVertex].myData);
+        vertices.PushBack(myVertices[edge1.myVertex].myData);
+        vertices.PushBack(myVertices[edge2.myVertex].myData);
+        vertices.PushBack(myVertices[edge3.myVertex].myData);
     }
 
     return vertices;
@@ -230,13 +250,15 @@ const TileHalfEdge& TileMesh::CreateFullEdge(int aBeginIdx, int anEndIdx, bool a
 
 const TileVertex& TileMesh::CreateInflationVertex(const TileVertex& aBegin, const TileVertex& anEnd)
 {
-    const Vec2& fromPosition {aBegin.myPosition};
-    const Vec2& toPosition {anEnd.myPosition};
+    using Vec2Precise = glm::vec<2, double, glm::defaultp>;
+    const Vec2Precise& fromPosition {aBegin.myData.myPosition};
+    const Vec2Precise& toPosition {anEnd.myData.myPosition};
 
-    constexpr float sinOfPiOverTwelve {0.25881904510252f};
-    const Vec2 orthogonalComponent {toPosition.y - fromPosition.y, fromPosition.x - toPosition.x};
-    const Vec2 newVertexPosition {(fromPosition + toPosition - sinOfPiOverTwelve * orthogonalComponent) * 0.5f};
-    myVertices.EmplaceBack(myVertices.Count(), glm::max(aBegin.myHeight, anEnd.myHeight) + 1, newVertexPosition);
+    constexpr double sinOfPiOverTwelve {0.25881904510252};
+    const Vec2Precise orthogonalComponent {toPosition.y - fromPosition.y, fromPosition.x - toPosition.x};
+    const Vec2Precise newVertexPosition {(fromPosition + toPosition - sinOfPiOverTwelve * orthogonalComponent) * 0.5};
+    myVertices.EmplaceBack(myVertices.Count(), glm::max(aBegin.myHeight, anEnd.myHeight) + 1,
+                           static_cast<Vec2>(newVertexPosition));
     return myVertices.GetLast();
 }
 

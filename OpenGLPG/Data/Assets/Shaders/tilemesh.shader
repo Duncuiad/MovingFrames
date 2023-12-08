@@ -1,2 +1,2 @@
-basicuv.vert
+tilemesh.vert
 tilemesh.frag
