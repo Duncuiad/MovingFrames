@@ -38,7 +38,7 @@ vec4 DrawMarchingSquares(vec2 UV, vec4 fragColor, vec4 vertColor)
         float rightVertexColor = doubleUVs.x > doubleUVs.y ? vertColor.y : vertColor.w;
         float centerColorValue = (doubleUVs.x - 0.5) * (doubleUVs.y - 0.5) < 0. && rightVertexColor > 0. ? 1. : 0.;
         vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.,0.,0.,1.) : vec4(0.);
-        fragColor = blockColor * (1. - fragColor.a) + fragColor * fragColor.a;
+        fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
     return fragColor;
 }
@@ -55,7 +55,7 @@ vec4 DrawMarchingTriangles(vec2 UV, vec4 fragColor, vec4 vertColor)
         relevantColorValue = (barycentric.y > barycentric.x && barycentric.y > barycentric.z) ? vertColor.y : relevantColorValue;
         relevantColorValue = (barycentric.z > barycentric.y && barycentric.z > barycentric.x) ? vertColor.z : relevantColorValue;
         vec4 blockColor = relevantColorValue >0. ? vec4(0.,0.,0.,1.) : vec4(0.);
-        fragColor = blockColor * (1. - fragColor.a) + fragColor * fragColor.a;
+        fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
     return fragColor;
 }
@@ -74,9 +74,8 @@ vec4 DrawEdges(vec2 UV, vec4 fragColor, vec2 gradX, vec2 gradY)
     distD2 = distD2 * distD2 / dot(gradX - gradY, gradX - gradY);
     
     float dist2 = min(min(distX2, distY2), distD2);
-    vec4 edgeColor = vec4(smoothstep(0., smoothSize, sqrt(dist2)));
-    edgeColor.a = 1. - edgeColor.a;
-    fragColor = edgeColor * (1. - fragColor.a) + fragColor * fragColor.a;
+    float edgeValue = 1. - smoothstep(0., smoothSize, sqrt(dist2));
+    fragColor = fragColor * (1. - edgeValue) + (vec4(1., 1., 1., 2. * fragColor.a) - fragColor) * edgeValue;
     return fragColor;
 }
 
@@ -110,18 +109,24 @@ vec4 DrawDualGraph(vec2 UV, vec4 fragColor, vec2 gradX, vec2 gradY)
     vec4 graphAColor = vec4(1., 0.7, 0., 1.) * (1. - smoothstep(0., smoothSize, sqrt(distA2)));
     vec4 graphBColor = vec4(0.5, 1., 0., 1.) * (1. - smoothstep(0., smoothSize, sqrt(distB2)));
 
-    fragColor = graphAColor * (1. - fragColor.a) + fragColor * fragColor.a;
-    fragColor = graphBColor * (1. - fragColor.a) + fragColor * fragColor.a;
+    fragColor = fragColor * (1. - graphAColor.a) + graphAColor * graphAColor.a;
+    fragColor = fragColor * (1. - graphBColor.a) + graphBColor * graphBColor.a;
     return fragColor;
 }
 
 void main()
 {
     vec2 UV = uvs;
-    vec4 fragColor = vec4(0.);
+    vec4 fragColor = vec4(1.);
     vec2 gradX = vec2(dFdxFine(UV.x), dFdyFine(UV.x));
     vec2 gradY = vec2(dFdxFine(UV.y), dFdyFine(UV.y));
 
+    if (ShowBlocks > 0)
+    {
+        //fragColor = DrawBlocks(UV, fragColor, vertexColor);
+        fragColor = DrawMarchingSquares(UV, fragColor, vertexColor);
+        fragColor = DrawMarchingTriangles(UV, fragColor, vertexColor);
+    }
     if (ShowEdges > 0)
     {
         fragColor = DrawEdges(UV, fragColor, gradX, gradY);
@@ -130,13 +135,6 @@ void main()
     {
         fragColor = DrawDualGraph(UV, fragColor, gradX, gradY);
     }
-    if (ShowBlocks > 0)
-    {
-        //fragColor = DrawBlocks(UV, fragColor, vertexColor);
-        fragColor = DrawMarchingSquares(UV, fragColor, vertexColor);
-        fragColor = DrawMarchingTriangles(UV, fragColor, vertexColor);
-    }
 
-    fragColor = vec4(1.) * (1. - fragColor.a) + fragColor * fragColor.a;
     FragColor = vec4(fragColor.xyz, 1.);
 }
