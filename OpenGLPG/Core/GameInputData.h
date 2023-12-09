@@ -23,11 +23,38 @@ constexpr const char* theGamepadMoveFrontal {"GamepadMoveFrontal"};
 constexpr const char* theGamepadMoveLateral {"GamepadMoveLateral"};
 constexpr const char* theGamepadMoveVertical {"GamepadMoveVertical"};
 
-const std::initializer_list<const char*> theInputs {
-    theKeyboardLookRight,     theKeyboardLookLeft,    theKeyboardLookUp,      theKeyboardLookDown,
-    theGamepadLookHorizontal, theGamepadLookVertical, theKeyboardMoveForward, theKeyboardMoveBackward,
-    theKeyboardMoveLeft,      theKeyboardMoveRight,   theKeyboardMoveUp,      theKeyboardMoveDown,
-    theGamepadMoveFrontal,    theGamepadMoveLateral,  theGamepadMoveVertical};
+constexpr const char* theMousePosX {"MousePosX"};
+constexpr const char* theMousePosY {"MousePosY"};
+constexpr const char* theMouseClickLeft {"MouseClickLeft"};
+constexpr const char* theMouseClickRight {"MouseClickRight"};
+constexpr const char* theMouseHoldLeft {"MouseHoldLeft"};
+constexpr const char* theMouseHoldRight {"MouseHoldRight"};
+constexpr const char* theMouseReleaseLeft {"MouseReleaseLeft"};
+constexpr const char* theMouseReleaseRight {"MouseReleaseRight"};
+
+const std::initializer_list<const char*> theInputs {theKeyboardLookRight,
+                                                    theKeyboardLookLeft,
+                                                    theKeyboardLookUp,
+                                                    theKeyboardLookDown,
+                                                    theGamepadLookHorizontal,
+                                                    theGamepadLookVertical,
+                                                    theKeyboardMoveForward,
+                                                    theKeyboardMoveBackward,
+                                                    theKeyboardMoveLeft,
+                                                    theKeyboardMoveRight,
+                                                    theKeyboardMoveUp,
+                                                    theKeyboardMoveDown,
+                                                    theGamepadMoveFrontal,
+                                                    theGamepadMoveLateral,
+                                                    theGamepadMoveVertical,
+                                                    theMousePosX,
+                                                    theMousePosY,
+                                                    theMouseClickLeft,
+                                                    theMouseClickRight,
+                                                    theMouseHoldLeft,
+                                                    theMouseHoldRight,
+                                                    theMouseReleaseLeft,
+                                                    theMouseReleaseRight};
 } // namespace GameInput
 
 struct GameInputData

@@ -279,6 +279,9 @@
     <ClInclude Include="TileMeshCmp.h">
       <Filter>Tiles\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ClientInputManager.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -484,6 +487,9 @@
     </ClCompile>
     <ClCompile Include="TileMeshCmp.cpp">
       <Filter>Tiles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientInputManager.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

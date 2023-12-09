@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ClientInputManager.h"
 #include "ClientLoader.h"
 #include "Game.h"
 
@@ -29,8 +30,6 @@ private:
     void ImGuiDebugDrawClient(float anUpdateElapsedTime, float aFrameTime) const;
 
     void ProcessInput(bool& aShouldExitGameOut);
-    void AddKeyboardInput(int aGLFWInput, const char* aGameInputName);
-    void AddGamepadInput(int aGLFWInput, const char* aGameInputName);
 
     void ShowMainMenu();
     bool ShowExitGamePopup();
@@ -41,4 +40,5 @@ private:
     double myLastUpdate {0.f};
     ClientLoader myLoader;
     std::unique_ptr<Game> myGame {nullptr};
+    ClientInputManager myInputManager;
 };

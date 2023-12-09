@@ -7,7 +7,6 @@
 #include "DebugImGui.h"
 #include "Defines.h"
 #include "Game.h"
-#include "GameInputData.h"
 #include "LevelEditor.h"
 #include "Test.h"
 
@@ -22,6 +21,7 @@ constexpr float locMinFrameTime {1.f / 60.f};
 
 Client::Client()
     : myLoader {{GLOBALPATH_ASSETFOLDER}}
+    , myInputManager {myWindow, myGame}
 {
     bool result = true;
     result &= GLFWInit();
@@ -181,41 +181,8 @@ void Client::ImGuiDebugDrawClient(float anUpdateElapsedTime, float aFrameTime) c
 
 void Client::ProcessInput(bool& aShouldExitGameOut)
 {
-    ASSERT(myGame.get() != nullptr, "No Game instance exists");
-    myGame->ResetGameInputData();
-
-    if (glfwGetKey(myWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    {
-        ImGui::OpenPopup("##ExitGame");
-        ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-    }
+    myInputManager.ProcessInput();
     aShouldExitGameOut = ShowExitGamePopup();
-
-    AddKeyboardInput(GLFW_KEY_LEFT, GameInput::theKeyboardLookLeft);
-    AddKeyboardInput(GLFW_KEY_RIGHT, GameInput::theKeyboardLookRight);
-    AddKeyboardInput(GLFW_KEY_UP, GameInput::theKeyboardLookUp);
-    AddKeyboardInput(GLFW_KEY_DOWN, GameInput::theKeyboardLookDown);
-
-    AddKeyboardInput(GLFW_KEY_W, GameInput::theKeyboardMoveForward);
-    AddKeyboardInput(GLFW_KEY_A, GameInput::theKeyboardMoveLeft);
-    AddKeyboardInput(GLFW_KEY_S, GameInput::theKeyboardMoveBackward);
-    AddKeyboardInput(GLFW_KEY_D, GameInput::theKeyboardMoveRight);
-    AddKeyboardInput(GLFW_KEY_Q, GameInput::theKeyboardMoveDown);
-    AddKeyboardInput(GLFW_KEY_E, GameInput::theKeyboardMoveUp);
-}
-
-void Client::AddKeyboardInput(int aGLFWInput, const char* aGameInputName)
-{
-    if (glfwGetKey(myWindow, aGLFWInput) == GLFW_PRESS)
-    {
-        myGame->AddGameInput(aGameInputName, 1.f);
-    }
-}
-
-void Client::AddGamepadInput(int /*aGLFWInput*/, const char* /*aGameInputName*/)
-{
-    // @todo: implement method
 }
 
 void Client::ShowMainMenu()
