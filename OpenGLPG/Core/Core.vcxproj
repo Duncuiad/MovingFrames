@@ -148,6 +148,7 @@
     <ClInclude Include="CameraUtils.h" />
     <ClInclude Include="ClientCallbacks.h" />
     <ClInclude Include="ClientInputManager.h" />
+    <ClInclude Include="ColliderCmp.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="DynamicMesh.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="TileHalfEdge.h" />
     <ClInclude Include="TileMesh.h" />
     <ClInclude Include="TileMeshCmp.h" />
+    <ClInclude Include="TileMeshColliderCmp.h" />
     <ClInclude Include="TileMeshEditorWidget.h" />
     <ClInclude Include="TileVertex.h" />
     <ClInclude Include="ImGuiWidgets.h" />
@@ -218,6 +220,7 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientCallbacks.cpp" />
     <ClCompile Include="ClientInputManager.cpp" />
+    <ClCompile Include="ColliderCmp.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="DynamicMesh.cpp" />
@@ -270,6 +273,7 @@
     <ClCompile Include="TileHalfEdge.cpp" />
     <ClCompile Include="TileMesh.cpp" />
     <ClCompile Include="TileMeshCmp.cpp" />
+    <ClCompile Include="TileMeshColliderCmp.cpp" />
     <ClCompile Include="TileMeshEditorWidget.cpp" />
     <ClCompile Include="TileVertex.cpp" />
     <ClCompile Include="Transform.cpp" />

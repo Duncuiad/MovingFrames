@@ -282,6 +282,12 @@
     <ClInclude Include="ClientInputManager.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="ColliderCmp.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMeshColliderCmp.h">
+      <Filter>Tiles\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -490,6 +496,12 @@
     </ClCompile>
     <ClCompile Include="ClientInputManager.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderCmp.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMeshColliderCmp.cpp">
+      <Filter>Tiles\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
