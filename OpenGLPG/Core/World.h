@@ -3,6 +3,7 @@
 #include "Array.h"
 #include "CameraData.h"
 #include "CameraManager.h"
+#include "CollisionSystem.h"
 #include "Entity.h"
 #include "Filepath.h"
 #include "UID.h"
@@ -31,6 +32,7 @@ public:
     UID RequestEntitySpawn(const Filepath& aTemplateFilepath);
     void RequestEntityUnspawn(const UID& anEntityUID);
 
+    const CollisionSystem& GetCollisionSystem() const { return myCollisionSystem; }
     const CameraData& GetActiveCameraData() const;
     const Entity::Container& GetEntities() const { return myEntities; }
     const Entity& GetEntity(const UID& anEntityUID) const;
@@ -44,6 +46,7 @@ private:
     Entity::Container myEntities;
     Array<Entity> myEntityQueue;
 
+    CollisionSystem myCollisionSystem;
     CameraManager myCameraManager;
     UID myGameplayCamera {UID::Empty};
     const ClientLoader& myClientLoader;

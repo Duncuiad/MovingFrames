@@ -9,6 +9,7 @@
 
 World::World(const ConstructionParams& someParams)
     : myClientLoader {someParams.myClientLoader}
+    , myCollisionSystem {{myEntities}}
 {
     myClientLoader.GetWorldLoader().LoadWorld(someParams.aLevelName, this);
 

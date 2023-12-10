@@ -8,6 +8,14 @@
 #include <algorithm>
 #include <random>
 
+namespace
+{
+float Deviation(const Vec2& aVector, const Vec2& anOtherVector)
+{
+    return aVector.x * anOtherVector.y - aVector.y * anOtherVector.x;
+}
+} // namespace
+
 TileMesh::TileMesh(TileType aType)
 {
     Reset(aType);
@@ -93,6 +101,15 @@ void TileMesh::RandomizeVertexColors(float aRatio)
     }
 }
 
+TileVertex::Data* TileMesh::GetVertexData(int aVertexIdx)
+{
+    if (0 <= aVertexIdx && aVertexIdx < myVertices.Count())
+    {
+        return &myVertices[aVertexIdx].myData;
+    }
+    return nullptr;
+}
+
 int TileMesh::GetMaxHeight() const
 {
     if (!myVertices.Count())
@@ -104,6 +121,65 @@ int TileMesh::GetMaxHeight() const
                myVertices.begin(), myVertices.end(),
                [](const TileVertex& aLeft, const TileVertex& aRight) { return aLeft.myHeight < aRight.myHeight; })
         ->myHeight;
+}
+
+bool TileMesh::Contains(const TileFace& aFace, const Vec2& aPosition) const
+{
+    bool isInside {true};
+    const TileHalfEdge& edge0 {myHalfEdges[aFace.myEdge]};
+    const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
+    const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
+    const Vec2& vertex0 {myVertices[edge0.myVertex].myData.myPosition};
+    const Vec2& vertex1 {myVertices[edge1.myVertex].myData.myPosition};
+    const Vec2& vertex2 {myVertices[edge2.myVertex].myData.myPosition};
+    isInside &= Deviation(vertex1 - vertex0, aPosition - vertex0) > 0.f;
+    isInside &= Deviation(vertex2 - vertex1, aPosition - vertex1) > 0.f;
+    if (aFace.IsTriangle())
+    {
+        isInside &= Deviation(vertex0 - vertex2, aPosition - vertex2) > 0.f;
+    }
+    else
+    {
+        const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
+        const Vec2& vertex3 {myVertices[edge3.myVertex].myData.myPosition};
+        isInside &= Deviation(vertex3 - vertex2, aPosition - vertex2) > 0.f;
+        isInside &= Deviation(vertex0 - vertex3, aPosition - vertex3) > 0.f;
+    }
+    return isInside;
+}
+
+int TileMesh::GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) const
+{
+    const TileHalfEdge& edge0 {myHalfEdges[aFace.myEdge]};
+    const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
+    const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
+    const Vec2& vertex0 {myVertices[edge0.myVertex].myData.myPosition};
+    const Vec2& vertex1 {myVertices[edge1.myVertex].myData.myPosition};
+    const Vec2& vertex2 {myVertices[edge2.myVertex].myData.myPosition};
+
+    int vertexIdx = edge0.myVertex;
+    float minDistance {glm::distance(vertex0, aPosition)};
+    if (const float distance = glm::distance(vertex1, aPosition); distance < minDistance)
+    {
+        minDistance = distance;
+        vertexIdx = edge1.myVertex;
+    }
+    if (const float distance = glm::distance(vertex2, aPosition); distance < minDistance)
+    {
+        minDistance = distance;
+        vertexIdx = edge2.myVertex;
+    }
+    if (aFace.IsSquare())
+    {
+        const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
+        const Vec2& vertex3 {myVertices[edge3.myVertex].myData.myPosition};
+        if (const float distance = glm::distance(vertex3, aPosition); distance < minDistance)
+        {
+            minDistance = distance;
+            vertexIdx = edge3.myVertex;
+        }
+    }
+    return vertexIdx;
 }
 
 std::pair<Array<Vec2>, Array<unsigned int>> TileMesh::GetMesh(int aHeight) const
@@ -147,6 +223,29 @@ std::pair<Array<Vec2>, Array<unsigned int>> TileMesh::GetMesh(int aHeight) const
     }
 
     return std::make_pair(std::move(vertices), std::move(indices));
+}
+
+std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition) const
+{
+    int maxHeight {-1};
+    int faceIdx {-1};
+    int vertexIdx {-1};
+    // @todo: make the lookup hierarchical
+    for (const TileFace& face : myFaces)
+    {
+        if (Contains(face, aPosition))
+        {
+            if (face.myHeight > maxHeight)
+            {
+                faceIdx = face.myIndex;
+            }
+        }
+    }
+    if (faceIdx != -1)
+    {
+        vertexIdx = GetClosestVertex(myFaces[faceIdx], aPosition);
+    }
+    return {vertexIdx, faceIdx};
 }
 
 Array<TileVertex::Data> TileMesh::GetTriangles(int aHeight, int aTriangleTypeMask) const

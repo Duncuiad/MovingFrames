@@ -58,6 +58,9 @@
     <Filter Include="Tiles\Editor">
       <UniqueIdentifier>{5c299789-bcea-4582-93e0-05be095fab0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{45b03813-d477-40ce-9c5a-0f60cc108551}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -288,6 +291,9 @@
     <ClInclude Include="TileMeshColliderCmp.h">
       <Filter>Tiles\Components</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionSystem.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -502,6 +508,9 @@
     </ClCompile>
     <ClCompile Include="TileMeshColliderCmp.cpp">
       <Filter>Tiles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionSystem.cpp">
+      <Filter>Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

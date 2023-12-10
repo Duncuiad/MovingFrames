@@ -79,7 +79,17 @@ void Client::Update()
             }
             else
             {
-                myGame->Update({deltaTime});
+                Game::UpdateParams params {deltaTime};
+                int width {0};
+                int height {0};
+                int posX {0};
+                int posY {0};
+                glfwGetWindowSize(myWindow, &width, &height);
+                glfwGetWindowPos(myWindow, &posX, &posY);
+                params.myViewportTL = Vec2 {static_cast<float>(posX), static_cast<float>(posY)};
+                params.myViewportBR =
+                    params.myViewportTL + Vec2 {static_cast<float>(width), static_cast<float>(height)};
+                myGame->Update(params);
             }
         }
         else

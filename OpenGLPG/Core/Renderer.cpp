@@ -36,14 +36,14 @@ void Renderer::Render(const RenderParams& someParams)
         // @todo: refactor model-view-projection matrix calculations
         const CameraData& activeCameraData {someParams.myWorld->GetActiveCameraData()};
         const Mat4 view {glm::affineInverse(activeCameraData.myCameraTransform)};
-        const Mat4 projection {viewportAdjustment * Utils::Projection(activeCameraData.myFOV,
+        const Mat4 projection {viewportAdjustment * Utils::Projection(activeCameraData.myFOVy,
                                                                       activeCameraData.myAspectRatio,
                                                                       activeCameraData.myNear, activeCameraData.myFar)};
         const Mat4 worldToClip {viewportAdjustment * Utils::WorldToClip(activeCameraData)};
 
         for (const auto& [uid, entity] : someParams.myWorld->GetEntities())
         {
-            Transform entityTransform {entity.GetComponent<TransformCmp>()->GetTransform()};
+            const Transform& entityTransform {entity.GetComponent<TransformCmp>()->GetTransform()};
             entity.GetComponent<GraphCmp>()->Draw(
                 {entityTransform, view, view * entityTransform, projection, worldToClip});
         }

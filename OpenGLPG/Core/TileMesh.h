@@ -20,9 +20,13 @@ public:
     void Reset(TileType aType);
     void SubdivideAllFaces();
     void RandomizeVertexColors(float aRatio);
+    TileVertex::Data* GetVertexData(int aVertexIdx);
 
     int GetMaxHeight() const;
+    bool Contains(const TileFace& aFace, const Vec2& aPosition) const;
+    int GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) const;
     std::pair<Array<Vec2>, Array<unsigned int>> GetMesh(int aHeight) const;
+    std::pair<int, int> GetVertexAndFace(const Vec2& aPosition) const;
     Array<TileVertex::Data> GetTriangles(int aHeight, int aTriangleTypeMask = 3) const;
     Array<TileVertex::Data> GetSquares(int aHeight, int aSquareTypeMask = 3) const;
 

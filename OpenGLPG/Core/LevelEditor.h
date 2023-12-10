@@ -12,5 +12,7 @@ public:
     void Update(const UpdateParams& someParams) override;
 
 private:
+    void HandleInput(const UpdateParams& someParams);
+
     LevelEditorWidget myWidget;
 };

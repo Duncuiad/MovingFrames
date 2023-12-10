@@ -36,12 +36,12 @@ protected:
     Renderer myRenderManager;
     World myWorld;
 
+    GameInputData myInputData;
+
 private:
 #if DEBUG_IMGUI
     void DebugGameInput() const;
 #else
     void DebugGameInput() const {};
 #endif
-
-    GameInputData myInputData;
 };

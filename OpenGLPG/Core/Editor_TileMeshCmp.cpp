@@ -11,6 +11,7 @@
 #include "Serializer.h"
 #include "TileMesh.h"
 #include "TileMeshCmp.h"
+#include "TileMeshColliderCmp.h"
 #include "TileVertex.h"
 
 #include <functional>
@@ -77,6 +78,19 @@ void Editor_TileMeshCmp::OnEnterWorld()
     GetDynamicMeshGraphCmp().SetIsWireframe(false);
 }
 
+void Editor_TileMeshCmp::Update()
+{
+    const TileMeshColliderCmp& collider {GetTileMeshColliderCmp()};
+    if (collider.myData.myWasHit)
+    {
+        TileVertex::Data* data {GetTileMeshCmp().myTileMesh.GetVertexData(collider.myData.myHitVertex)};
+        ASSERT(data != nullptr, "Invalid vertex index");
+        data->myColor = !data->myColor;
+        OnChanged();
+        collider.Reset();
+    }
+}
+
 void Editor_TileMeshCmp::OnChanged() const
 {
     Vertex::List vertices;
@@ -140,6 +154,13 @@ TileMeshCmp& Editor_TileMeshCmp::GetTileMeshCmp() const
 DynamicMeshGraphCmp& Editor_TileMeshCmp::GetDynamicMeshGraphCmp() const
 {
     DynamicMeshGraphCmp* cmp {GetEntity().GetEditableComponent<DynamicMeshGraphCmp>()};
+    ASSERT(cmp != nullptr, "Couldn't find required component");
+    return *cmp;
+}
+
+const TileMeshColliderCmp& Editor_TileMeshCmp::GetTileMeshColliderCmp() const
+{
+    const TileMeshColliderCmp* cmp {GetEntity().GetComponent<TileMeshColliderCmp>()};
     ASSERT(cmp != nullptr, "Couldn't find required component");
     return *cmp;
 }

@@ -5,6 +5,7 @@
 
 class TileMeshCmp;
 class DynamicMeshGraphCmp;
+class TileMeshColliderCmp;
 
 class Editor_TileMeshCmp : public EditorCmp<TileMeshEditorWidget>
 {
@@ -13,9 +14,11 @@ class Editor_TileMeshCmp : public EditorCmp<TileMeshEditorWidget>
 public:
     void Serialize(Serializer& /*aSerializer*/) override {}
     void OnEnterWorld() override;
+    void Update() override;
     void OnChanged() const;
 
 private:
     TileMeshCmp& GetTileMeshCmp() const;
     DynamicMeshGraphCmp& GetDynamicMeshGraphCmp() const;
+    const TileMeshColliderCmp& GetTileMeshColliderCmp() const;
 };

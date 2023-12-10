@@ -8,7 +8,8 @@
 class ColliderCmp : public Component
 {
 public:
-    virtual bool RayCastHit(const Vec3& aRayStart, const Vec3& aRayDirection) const = 0;
+    virtual float RayCastHit(const Vec3& aRayStart, const Vec3& aRayDirection) const = 0;
+    virtual void ProcessHit() const = 0;
     virtual void Reset() const {};
     bool RayVsBoundingSphere(const Vec3& aRayStart, const Vec3& aRayDirection) const;
 
@@ -29,8 +30,8 @@ private:
 template <typename CollisionData>
 class ColliderCmpT : public ColliderCmp
 {
+public:
     void Reset() const override { myData = CollisionData {}; }
 
-protected:
     mutable CollisionData myData;
 };

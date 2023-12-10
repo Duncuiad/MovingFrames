@@ -12,17 +12,17 @@
 namespace Utils
 {
 
-glm::mat4 Projection(float aFOV, float anAspectRatio, float aNearPlane, float aFarPlane)
+glm::mat4 Projection(float aFOVy, float anAspectRatio, float aNearPlane, float aFarPlane)
 {
-    ASSERT(0.f < aFOV && aFOV < glm::pi<float>(), "Invalid FOV for projection matrix: {}", aFOV);
+    ASSERT(0.f < aFOVy && aFOVy < glm::pi<float>(), "Invalid FOV for projection matrix: {}", aFOVy);
     ASSERT(aNearPlane < aFarPlane, "Invalid plames for projection matrix. Near: {}, Far: {}", aNearPlane, aFarPlane);
-    return glm::perspective(aFOV / anAspectRatio, anAspectRatio, aNearPlane, aFarPlane);
+    return glm::perspective(aFOVy, anAspectRatio, aNearPlane, aFarPlane);
 }
 
 glm::mat4 WorldToClip(const CameraData& aCameraData)
 {
     const glm::mat4 projection {
-        Projection(aCameraData.myFOV, aCameraData.myAspectRatio, aCameraData.myNear, aCameraData.myFar)};
+        Projection(aCameraData.myFOVy, aCameraData.myAspectRatio, aCameraData.myNear, aCameraData.myFar)};
 
     // @note: I can't believe there is no specialization of glm::inverse for rigid motions
     return projection * glm::affineInverse(aCameraData.myCameraTransform);

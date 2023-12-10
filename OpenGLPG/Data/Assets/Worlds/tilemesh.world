@@ -9,7 +9,7 @@ myCount
 	{
 		myCount
 		{
-			5
+			6
 		}
 
 		0
@@ -21814,13 +21814,28 @@ myCount
 			}
 
 		}
-
+		
 		3
+		{
+			TileMeshColliderCmp
+			myBoundingSphereRadius
+			{
+				0.8
+			}
+			
+			myBoundingSphereCenter
+			{
+				0.500000					0.500000					0.000000
+			}
+			
+		}
+		
+		4
 		{
 			Editor_TileMeshCmp
 		}
 
-		4
+		5
 		{
 			Editor_TransformCmp
 		}

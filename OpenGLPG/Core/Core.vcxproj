@@ -149,6 +149,7 @@
     <ClInclude Include="ClientCallbacks.h" />
     <ClInclude Include="ClientInputManager.h" />
     <ClInclude Include="ColliderCmp.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="DynamicMesh.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="ClientCallbacks.cpp" />
     <ClCompile Include="ClientInputManager.cpp" />
     <ClCompile Include="ColliderCmp.cpp" />
+    <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="DynamicMesh.cpp" />
