@@ -56,7 +56,7 @@ void AddSquare(const Vec2& aUVOffset, const TileVertex::Data* aDataBuffer, Verte
                     aUVOffset + Vec2 {0.5f, 0.f}};
     Vertex vertex2 {Vec3 {aDataBuffer[2].myPosition, 0.f}, Vec3 {0.f, 0.f, aDataBuffer[2].myColor ? 1.f : 0.f},
                     aUVOffset + Vec2 {0.5, 0.5f}};
-    Vertex vertex3 {Vec3 {aDataBuffer[3].myPosition, 0.f}, Vec3 {0.f, 0.f, aDataBuffer[3].myColor ? -1.f : 0.f},
+    Vertex vertex3 {Vec3 {aDataBuffer[3].myPosition, 0.f}, Vec3 {0.f, aDataBuffer[3].myColor ? 1.f : 0.f, 0.f},
                     aUVOffset + Vec2 {0.f, 0.5f}};
 
     someVerticesOut.push_back(std::move(vertex0));

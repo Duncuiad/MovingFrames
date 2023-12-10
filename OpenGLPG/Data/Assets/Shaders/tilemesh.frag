@@ -1,7 +1,7 @@
 #version 450 core
 out vec4 FragColor;
 
-in vec4 vertexColor;
+in vec3 vertexColor;
 in vec2 uvs;
 
 uniform int ShowGraphs;
@@ -10,9 +10,9 @@ uniform int ShowBlocks;
 
 float smoothSize = 3.;
 
-vec4 DrawBlocks(vec2 UV, vec4 fragColor, vec4 vertColor)
+vec4 DrawBlocks(vec2 UV, vec4 fragColor, vec3 vertColor)
 {
-    float vertexColorValue = max(max(max(vertColor.x, vertColor.y), vertColor.z), vertColor.w);
+    float vertexColorValue = max(max(vertColor.x, vertColor.y), vertColor.z);
     float centerColorValue = 0.;
     if (max(UV.x - 0.5, UV.y - 0.5) < 0.)
     {
@@ -21,29 +21,27 @@ vec4 DrawBlocks(vec2 UV, vec4 fragColor, vec4 vertColor)
     else
     {
         vec2 doubleUVs = mod(UV * 2., 1.);
-        float rightVertexColor = doubleUVs.x > doubleUVs.y ? vertColor.y : vertColor.w;
-        centerColorValue = (doubleUVs.x - 0.5) * (doubleUVs.y - 0.5) < 0. && rightVertexColor > 0. ? 1. : 0.;
+        centerColorValue = (doubleUVs.x - 0.5) * (doubleUVs.y - 0.5) < 0. && vertColor.y > 0. ? 1. : 0.;
     }
     vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.,0.,0.,1.) : vec4(0.);
-    fragColor = blockColor * (1. - fragColor.a) + fragColor * fragColor.a;
+    fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     return fragColor;
 }
 
-vec4 DrawMarchingSquares(vec2 UV, vec4 fragColor, vec4 vertColor)
+vec4 DrawMarchingSquares(vec2 UV, vec4 fragColor, vec3 vertColor)
 {
     if (max(UV.x - 0.5, UV.y - 0.5) > 0.)
     {
         vec2 doubleUVs = mod(UV * 2., 1.);
-        float vertexColorValue = max(max(max(vertColor.x, vertColor.y), vertColor.z), vertColor.w);
-        float rightVertexColor = doubleUVs.x > doubleUVs.y ? vertColor.y : vertColor.w;
-        float centerColorValue = (doubleUVs.x - 0.5) * (doubleUVs.y - 0.5) < 0. && rightVertexColor > 0. ? 1. : 0.;
+        float vertexColorValue = max(max(vertColor.x, vertColor.y), vertColor.z);
+        float centerColorValue = (doubleUVs.x - 0.5) * (doubleUVs.y - 0.5) < 0. && vertColor.y > 0. ? 1. : 0.;
         vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.,0.,0.,1.) : vec4(0.);
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
     return fragColor;
 }
 
-vec4 DrawMarchingTriangles(vec2 UV, vec4 fragColor, vec4 vertColor)
+vec4 DrawMarchingTriangles(vec2 UV, vec4 fragColor, vec3 vertColor)
 {
     if (max(UV.x - 0.5, UV.y - 0.5) < 0.)
     {

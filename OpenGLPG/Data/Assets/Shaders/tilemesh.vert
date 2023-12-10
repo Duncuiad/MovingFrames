@@ -3,7 +3,7 @@ layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aUV;
 
-out vec4 vertexColor;
+out vec3 vertexColor;
 out vec2 uvs;
 
 uniform mat4 Model;
@@ -13,7 +13,6 @@ void main()
 {
     gl_Position = vec4(aPos, 1.0);
     gl_Position = WorldToClip * Model * gl_Position;
-    vertexColor = vec4(aNormal, 0.);
-    vertexColor.ba = aNormal.z < 0. ? vec2(0., 1.) : vertexColor.ba;
+    vertexColor = aNormal;
     uvs = aUV;
 }
