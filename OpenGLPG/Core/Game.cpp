@@ -24,7 +24,7 @@ void Game::Update(const UpdateParams& someParams)
     myWorld.Update({myInputData, someParams.myDeltaTime});
 
     const World* worldToRender {myWorld.IsAvailable() ? &myWorld : nullptr};
-    myRenderManager.Render({worldToRender});
+    myRenderManager.Render({worldToRender, someParams.myViewportTL, someParams.myViewportBR});
 
     DebugGameInput();
 }

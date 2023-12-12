@@ -24,17 +24,11 @@ void Renderer::Render(const RenderParams& someParams)
 {
     if (someParams.myWorld)
     {
-        Mat4 viewportAdjustment {glm::identity<glm::mat4>()};
-        int viewportData[4];
-        glGetIntegerv(GL_VIEWPORT, viewportData);
-        if (viewportData[2] > 0)
-        {
-            viewportAdjustment[0][0] =
-                (static_cast<float>(viewportData[3]) * 16.f) / (static_cast<float>(viewportData[2]) * 9.f);
-        }
-
-        // @todo: refactor model-view-projection matrix calculations
+        const Vec2 viewPortSize {someParams.myViewportBR - someParams.myViewportTL};
         const CameraData& activeCameraData {someParams.myWorld->GetActiveCameraData()};
+        Mat4 viewportAdjustment {glm::identity<glm::mat4>()};
+        viewportAdjustment[0][0] = viewPortSize.y / viewPortSize.x * activeCameraData.myAspectRatio;
+
         const Mat4 view {glm::affineInverse(activeCameraData.myCameraTransform)};
         const Mat4 projection {viewportAdjustment * Utils::Projection(activeCameraData.myFOVy,
                                                                       activeCameraData.myAspectRatio,

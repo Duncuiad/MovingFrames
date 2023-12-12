@@ -12,8 +12,8 @@ public:
     struct RenderParams
     {
         const World* myWorld {nullptr};
-        Vec2 myViewportTL;
-        Vec2 myViewportBR;
+        const Vec2& myViewportTL;
+        const Vec2& myViewportBR;
     };
 
     Renderer();
