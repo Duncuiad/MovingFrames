@@ -353,9 +353,9 @@ const TileVertex& TileMesh::CreateInflationVertex(const TileVertex& aBegin, cons
     const Vec2Precise& fromPosition {aBegin.myData.myPosition};
     const Vec2Precise& toPosition {anEnd.myData.myPosition};
 
-    constexpr double sinOfPiOverTwelve {0.25881904510252};
+    constexpr double tanOfPiOverTwelve {0.2679491924311227};
     const Vec2Precise orthogonalComponent {toPosition.y - fromPosition.y, fromPosition.x - toPosition.x};
-    const Vec2Precise newVertexPosition {(fromPosition + toPosition - sinOfPiOverTwelve * orthogonalComponent) * 0.5};
+    const Vec2Precise newVertexPosition {(fromPosition + toPosition - tanOfPiOverTwelve * orthogonalComponent) * 0.5};
     myVertices.EmplaceBack(myVertices.Count(), glm::max(aBegin.myHeight, anEnd.myHeight) + 1,
                            static_cast<Vec2>(newVertexPosition));
     return myVertices.GetLast();
