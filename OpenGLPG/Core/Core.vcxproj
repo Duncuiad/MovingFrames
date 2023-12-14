@@ -152,6 +152,7 @@
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="Dodec.h" />
     <ClInclude Include="DynamicMesh.h" />
     <ClInclude Include="DynamicMeshGraphCmp.h" />
     <ClInclude Include="EditorCmp.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Dodec.cpp" />
     <ClCompile Include="DynamicMesh.cpp" />
     <ClCompile Include="DynamicMeshGraphCmp.cpp" />
     <ClCompile Include="EditorWidget.cpp" />

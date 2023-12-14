@@ -1,13 +1,16 @@
 #pragma once
 
 #include "Array.h"
+#include "Dodec.h"
 #include "MathDefines.h"
 #include "Serializable.h"
 #include "TileFace.h"
 #include "TileHalfEdge.h"
 #include "TileVertex.h"
 
+#include <functional>
 #include <utility>
+#include <vector>
 
 class TileMesh : public Serializable
 {
@@ -21,14 +24,15 @@ public:
     void SubdivideAllFaces();
     void RandomizeVertexColors(float aRatio);
     TileVertex::Data* GetVertexData(int aVertexIdx);
+    const Dodec& GetCoordinates(int aVertexIdx);
 
     int GetMaxHeight() const;
     bool Contains(const TileFace& aFace, const Vec2& aPosition) const;
     int GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) const;
     std::pair<Array<Vec2>, Array<unsigned int>> GetMesh(int aHeight) const;
     std::pair<int, int> GetVertexAndFace(const Vec2& aPosition) const;
-    Array<TileVertex::Data> GetTriangles(int aHeight, int aTriangleTypeMask = 3) const;
-    Array<TileVertex::Data> GetSquares(int aHeight, int aSquareTypeMask = 3) const;
+    std::vector<std::reference_wrapper<const TileVertex>> GetTriangles(int aHeight, int aTriangleTypeMask = 3) const;
+    std::vector<std::reference_wrapper<const TileVertex>> GetSquares(int aHeight, int aSquareTypeMask = 7) const;
 
 private:
     void CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 = -1);

@@ -294,6 +294,9 @@
     <ClInclude Include="CollisionSystem.h">
       <Filter>Collision</Filter>
     </ClInclude>
+    <ClInclude Include="Dodec.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -511,6 +514,9 @@
     </ClCompile>
     <ClCompile Include="CollisionSystem.cpp">
       <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Dodec.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

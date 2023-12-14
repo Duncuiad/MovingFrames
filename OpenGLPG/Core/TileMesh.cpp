@@ -36,12 +36,11 @@ void TileMesh::Reset(TileType aType)
 
     myFaces.EmplaceBack(0, 0, aType, 0);
 
-    myVertices.EmplaceBack(0, 0, Vec2 {0.f, 0.f});
-    myVertices.EmplaceBack(1, 0, Vec2 {1.f, 0.f});
+    myVertices.EmplaceBack(0, 0, Dodec {0, 0, 0, 0});
+    myVertices.EmplaceBack(1, 0, Dodec {1, 0, 0, 0});
     if (aType == TileType::TriangleA || aType == TileType::TriangleB)
     {
-        constexpr float sqrt3over2 {0.86602540378f};
-        myVertices.EmplaceBack(2, 0, Vec2 {0.5f, sqrt3over2});
+        myVertices.EmplaceBack(2, 0, Dodec {1, 1, -1, 0});
 
         myHalfEdges.EmplaceBack(0, 0, false, true, 0, 1, -1, 0);
         myHalfEdges.EmplaceBack(1, 0, true, true, 1, 2, -1, 0);
@@ -49,8 +48,8 @@ void TileMesh::Reset(TileType aType)
     }
     else
     {
-        myVertices.EmplaceBack(2, 0, Vec2 {1.f, 1.f});
-        myVertices.EmplaceBack(3, 0, Vec2 {0.f, 1.f});
+        myVertices.EmplaceBack(2, 0, Dodec {1, 1, 0, 0});
+        myVertices.EmplaceBack(3, 0, Dodec {0, 1, 0, 0});
 
         myHalfEdges.EmplaceBack(0, 0, false, true, 0, 1, -1, 0);
         myHalfEdges.EmplaceBack(1, 0, false, false, 1, 2, -1, 0);
@@ -110,6 +109,11 @@ TileVertex::Data* TileMesh::GetVertexData(int aVertexIdx)
     return nullptr;
 }
 
+const Dodec& TileMesh::GetCoordinates(int aVertexIdx)
+{
+    return myVertices[aVertexIdx].myCoordinates;
+}
+
 int TileMesh::GetMaxHeight() const
 {
     if (!myVertices.Count())
@@ -129,9 +133,9 @@ bool TileMesh::Contains(const TileFace& aFace, const Vec2& aPosition) const
     const TileHalfEdge& edge0 {myHalfEdges[aFace.myEdge]};
     const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
     const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
-    const Vec2& vertex0 {myVertices[edge0.myVertex].myData.myPosition};
-    const Vec2& vertex1 {myVertices[edge1.myVertex].myData.myPosition};
-    const Vec2& vertex2 {myVertices[edge2.myVertex].myData.myPosition};
+    const Vec2& vertex0 {myVertices[edge0.myVertex].GetPosition()};
+    const Vec2& vertex1 {myVertices[edge1.myVertex].GetPosition()};
+    const Vec2& vertex2 {myVertices[edge2.myVertex].GetPosition()};
     isInside &= Deviation(vertex1 - vertex0, aPosition - vertex0) > 0.f;
     isInside &= Deviation(vertex2 - vertex1, aPosition - vertex1) > 0.f;
     if (aFace.IsTriangle())
@@ -141,7 +145,7 @@ bool TileMesh::Contains(const TileFace& aFace, const Vec2& aPosition) const
     else
     {
         const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
-        const Vec2& vertex3 {myVertices[edge3.myVertex].myData.myPosition};
+        const Vec2& vertex3 {myVertices[edge3.myVertex].GetPosition()};
         isInside &= Deviation(vertex3 - vertex2, aPosition - vertex2) > 0.f;
         isInside &= Deviation(vertex0 - vertex3, aPosition - vertex3) > 0.f;
     }
@@ -153,9 +157,9 @@ int TileMesh::GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) con
     const TileHalfEdge& edge0 {myHalfEdges[aFace.myEdge]};
     const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
     const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
-    const Vec2& vertex0 {myVertices[edge0.myVertex].myData.myPosition};
-    const Vec2& vertex1 {myVertices[edge1.myVertex].myData.myPosition};
-    const Vec2& vertex2 {myVertices[edge2.myVertex].myData.myPosition};
+    const Vec2& vertex0 {myVertices[edge0.myVertex].GetPosition()};
+    const Vec2& vertex1 {myVertices[edge1.myVertex].GetPosition()};
+    const Vec2& vertex2 {myVertices[edge2.myVertex].GetPosition()};
 
     int vertexIdx = edge0.myVertex;
     float minDistance {glm::distance(vertex0, aPosition)};
@@ -172,7 +176,7 @@ int TileMesh::GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) con
     if (aFace.IsSquare())
     {
         const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
-        const Vec2& vertex3 {myVertices[edge3.myVertex].myData.myPosition};
+        const Vec2& vertex3 {myVertices[edge3.myVertex].GetPosition()};
         if (const float distance = glm::distance(vertex3, aPosition); distance < minDistance)
         {
             minDistance = distance;
@@ -194,7 +198,7 @@ std::pair<Array<Vec2>, Array<unsigned int>> TileMesh::GetMesh(int aHeight) const
         if (vertex.myHeight <= aHeight)
         {
             vertexInverseMapping[vertex.myIndex] = vertices.Count();
-            vertices.PushBack(vertex.myData.myPosition);
+            vertices.PushBack(vertex.GetPosition());
         }
     }
 
@@ -248,9 +252,9 @@ std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition) const
     return {vertexIdx, faceIdx};
 }
 
-Array<TileVertex::Data> TileMesh::GetTriangles(int aHeight, int aTriangleTypeMask) const
+std::vector<std::reference_wrapper<const TileVertex>> TileMesh::GetTriangles(int aHeight, int aTriangleTypeMask) const
 {
-    Array<TileVertex::Data> vertices;
+    std::vector<std::reference_wrapper<const TileVertex>> vertices;
 
     for (const TileFace& face : myFaces)
     {
@@ -265,17 +269,17 @@ Array<TileVertex::Data> TileMesh::GetTriangles(int aHeight, int aTriangleTypeMas
         const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
         const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
 
-        vertices.PushBack(myVertices[edge0.myVertex].myData);
-        vertices.PushBack(myVertices[edge1.myVertex].myData);
-        vertices.PushBack(myVertices[edge2.myVertex].myData);
+        vertices.push_back(myVertices[edge0.myVertex]);
+        vertices.push_back(myVertices[edge1.myVertex]);
+        vertices.push_back(myVertices[edge2.myVertex]);
     }
 
     return vertices;
 }
 
-Array<TileVertex::Data> TileMesh::GetSquares(int aHeight, int aTriangleTypeMask) const
+std::vector<std::reference_wrapper<const TileVertex>> TileMesh::GetSquares(int aHeight, int aTriangleTypeMask) const
 {
-    Array<TileVertex::Data> vertices;
+    std::vector<std::reference_wrapper<const TileVertex>> vertices;
 
     for (const TileFace& face : myFaces)
     {
@@ -292,10 +296,10 @@ Array<TileVertex::Data> TileMesh::GetSquares(int aHeight, int aTriangleTypeMask)
         const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
         const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
 
-        vertices.PushBack(myVertices[edge0.myVertex].myData);
-        vertices.PushBack(myVertices[edge1.myVertex].myData);
-        vertices.PushBack(myVertices[edge2.myVertex].myData);
-        vertices.PushBack(myVertices[edge3.myVertex].myData);
+        vertices.push_back(myVertices[edge0.myVertex]);
+        vertices.push_back(myVertices[edge1.myVertex]);
+        vertices.push_back(myVertices[edge2.myVertex]);
+        vertices.push_back(myVertices[edge3.myVertex]);
     }
 
     return vertices;
@@ -349,16 +353,10 @@ const TileHalfEdge& TileMesh::CreateFullEdge(int aBeginIdx, int anEndIdx, bool a
 
 const TileVertex& TileMesh::CreateInflationVertex(const TileVertex& aBegin, const TileVertex& anEnd)
 {
-    using Vec2Precise = glm::vec<2, double, glm::defaultp>;
-    const Vec2Precise& fromPosition {aBegin.myData.myPosition};
-    const Vec2Precise& toPosition {anEnd.myData.myPosition};
-
-    constexpr double tanOfPiOverTwelve {0.2679491924311227};
-    const Vec2Precise orthogonalComponent {toPosition.y - fromPosition.y, fromPosition.x - toPosition.x};
-    const Vec2Precise newVertexPosition {(fromPosition + toPosition - tanOfPiOverTwelve * orthogonalComponent) * 0.5};
-    myVertices.EmplaceBack(myVertices.Count(), glm::max(aBegin.myHeight, anEnd.myHeight) + 1,
-                           static_cast<Vec2>(newVertexPosition));
-    return myVertices.GetLast();
+    const Dodec coordinates {aBegin.myCoordinates + (anEnd.myCoordinates - aBegin.myCoordinates) * Dodec::N()};
+    myVertices.EmplaceBack(myVertices.Count(), glm::max(aBegin.myHeight, anEnd.myHeight) + 1, coordinates);
+    TileVertex& vertex {myVertices.GetLast()};
+    return vertex;
 }
 
 void TileMesh::SubdivideFace(int aFaceIdx)

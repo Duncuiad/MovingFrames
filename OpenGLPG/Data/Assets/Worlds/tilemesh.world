@@ -65,13 +65,13 @@ myCount
 							0
 						}
 
+						myCoordinates
+						{
+							0							0							0							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.000000								0.000000
-							}
-
 							myColor
 							{
 								0
@@ -93,13 +93,13 @@ myCount
 							0
 						}
 
+						myCoordinates
+						{
+							1							0							0							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								1.000000								0.000000
-							}
-
 							myColor
 							{
 								0
@@ -121,13 +121,13 @@ myCount
 							0
 						}
 
+						myCoordinates
+						{
+							1							1							0							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								1.000000								1.000000
-							}
-
 							myColor
 							{
 								0
@@ -149,13 +149,13 @@ myCount
 							0
 						}
 
+						myCoordinates
+						{
+							0							1							0							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.000000								1.000000
-							}
-
 							myColor
 							{
 								0
@@ -177,13 +177,13 @@ myCount
 							1
 						}
 
+						myCoordinates
+						{
+							0							0							1							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.500000								0.129410
-							}
-
 							myColor
 							{
 								0
@@ -205,13 +205,13 @@ myCount
 							1
 						}
 
+						myCoordinates
+						{
+							1							0							0							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.870590								0.500000
-							}
-
 							myColor
 							{
 								0
@@ -233,13 +233,13 @@ myCount
 							1
 						}
 
+						myCoordinates
+						{
+							0							1							1							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.500000								1.129410
-							}
-
 							myColor
 							{
 								0
@@ -261,13 +261,13 @@ myCount
 							1
 						}
 
+						myCoordinates
+						{
+							0							0							0							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								-0.129410								0.500000
-							}
-
 							myColor
 							{
 								0
@@ -289,13 +289,13 @@ myCount
 							1
 						}
 
+						myCoordinates
+						{
+							0							0							1							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.370590								0.629410
-							}
-
 							myColor
 							{
 								0
@@ -317,13 +317,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							2							0							-2							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.870590								0.233253
-							}
-
 							myColor
 							{
 								0
@@ -345,13 +345,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							1							1							-1							-1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.637337								0.362663
-							}
-
 							myColor
 							{
 								0
@@ -373,13 +373,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							1							-1							0							2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.733253								-0.000000
-							}
-
 							myColor
 							{
 								0
@@ -401,13 +401,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							0							1							1							-1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.637337								0.629410
-							}
-
 							myColor
 							{
 								0
@@ -429,13 +429,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							1							0							-1							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.370590								0.362663
-							}
-
 							myColor
 							{
 								0
@@ -457,13 +457,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							0							0							2							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.870590								0.766747
-							}
-
 							myColor
 							{
 								0
@@ -485,13 +485,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							1							0							0							2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.733253								1.000000
-							}
-
 							myColor
 							{
 								0
@@ -513,13 +513,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							1							1							-1							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.500000								0.862663
-							}
-
 							myColor
 							{
 								0
@@ -541,13 +541,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							0							1							0							-1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.137337								0.500000
-							}
-
 							myColor
 							{
 								0
@@ -569,13 +569,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							1							0							-2							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								-0.129410								0.233253
-							}
-
 							myColor
 							{
 								0
@@ -597,13 +597,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							0							1							0							-2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.266747								-0.000000
-							}
-
 							myColor
 							{
 								0
@@ -625,13 +625,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							1							1							-2							-1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.137337								0.233253
-							}
-
 							myColor
 							{
 								0
@@ -653,13 +653,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							0							2							0							-2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.266747								1.000000
-							}
-
 							myColor
 							{
 								0
@@ -681,13 +681,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							-1							1							2							-1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.137337								0.766747
-							}
-
 							myColor
 							{
 								0
@@ -709,13 +709,13 @@ myCount
 							2
 						}
 
+						myCoordinates
+						{
+							-1							0							2							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								-0.129410								0.766747
-							}
-
 							myColor
 							{
 								0
@@ -737,13 +737,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							1							3							-2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.771737								0.401146
-							}
-
 							myColor
 							{
 								0
@@ -765,13 +765,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							-1							2							2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.737217								0.267773
-							}
-
 							myColor
 							{
 								0
@@ -793,13 +793,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							1							2							-1							-3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.905110								0.366627
-							}
-
 							myColor
 							{
 								0
@@ -821,13 +821,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							-1							4							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.866627								0.034520
-							}
-
 							myColor
 							{
 								0
@@ -849,13 +849,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							1							-2							1							4
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.965480								0.133373
-							}
-
 							myColor
 							{
 								0
@@ -877,13 +877,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							1							1							-2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.771737								0.134399
-							}
-
 							myColor
 							{
 								0
@@ -905,13 +905,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							-1							-2							3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.598854								0.228263
-							}
-
 							myColor
 							{
 								0
@@ -933,13 +933,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							1							-3							-1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.633373								0.094890
-							}
-
 							myColor
 							{
 								0
@@ -961,13 +961,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							-1							4							2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.737217								0.534520
-							}
-
 							myColor
 							{
 								0
@@ -989,13 +989,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							1							-1							0							3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.602818								0.496036
-							}
-
 							myColor
 							{
 								0
@@ -1017,13 +1017,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							-2							2							4
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.465480								0.262783
-							}
-
 							myColor
 							{
 								0
@@ -1045,13 +1045,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							0							3							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.503964								0.397182
-							}
-
 							myColor
 							{
 								0
@@ -1073,13 +1073,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							1							-3							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.503964								0.594890
-							}
-
 							myColor
 							{
 								0
@@ -1101,13 +1101,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							2							0							-3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.405110								0.496036
-							}
-
 							myColor
 							{
 								0
@@ -1129,13 +1129,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							1							-2							1							5
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.836071								0.633373
-							}
-
 							myColor
 							{
 								0
@@ -1157,13 +1157,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							0							-2							2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.736191								0.728263
-							}
-
 							myColor
 							{
 								0
@@ -1185,13 +1185,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							2							3							-3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.905110								0.900120
-							}
-
 							myColor
 							{
 								0
@@ -1213,13 +1213,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							0							4							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.866627								1.034520
-							}
-
 							myColor
 							{
 								0
@@ -1241,13 +1241,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							1							2							-1							-2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.771737								0.865601
-							}
-
 							myColor
 							{
 								0
@@ -1269,13 +1269,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							3							0							-4
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.534520								0.996036
-							}
-
 							myColor
 							{
 								0
@@ -1297,13 +1297,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							1							3							-1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.634399								0.901146
-							}
-
 							myColor
 							{
 								0
@@ -1325,13 +1325,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							2							-3							-1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.633373								1.094890
-							}
-
 							myColor
 							{
 								0
@@ -1353,13 +1353,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							-1							-2							4
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.465480								0.729289
-							}
-
 							myColor
 							{
 								0
@@ -1381,13 +1381,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							-1							2							3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.598854								0.763809
-							}
-
 							myColor
 							{
 								0
@@ -1409,13 +1409,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-2							1							4							-2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.270711								0.534520
-							}
-
 							myColor
 							{
 								0
@@ -1437,13 +1437,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							-1							3							2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.236191								0.401146
-							}
-
 							myColor
 							{
 								0
@@ -1465,13 +1465,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							1							-1							-1							3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.102818								0.366627
-							}
-
 							myColor
 							{
 								0
@@ -1493,13 +1493,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							1							2							-2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.270711								0.267773
-							}
-
 							myColor
 							{
 								0
@@ -1521,13 +1521,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							1							-4							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.003964								0.465480
-							}
-
 							myColor
 							{
 								0
@@ -1549,13 +1549,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							2							-1							-3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								-0.094890								0.366627
-							}
-
 							myColor
 							{
 								0
@@ -1577,13 +1577,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							0							2							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.003964								0.267773
-							}
-
 							myColor
 							{
 								0
@@ -1605,13 +1605,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							-1							1							2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.232227								0.133373
-							}
-
 							myColor
 							{
 								0
@@ -1633,13 +1633,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-2							1							4							-3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.400120								0.034520
-							}
-
 							myColor
 							{
 								0
@@ -1661,13 +1661,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-2							-1							5							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.365601								0.167893
-							}
-
 							myColor
 							{
 								0
@@ -1689,13 +1689,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							-2							1							4
+						}
+
 						myData
 						{
-							myPosition
-							{
-								-0.034520								0.133373
-							}
-
 							myColor
 							{
 								0
@@ -1717,13 +1717,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							-1							-3							3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.098854								0.098854
-							}
-
 							myColor
 							{
 								0
@@ -1745,13 +1745,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							1							-4							-1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.133373								-0.034520
-							}
-
 							myColor
 							{
 								0
@@ -1773,13 +1773,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							2							-4							-1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.133373								0.965480
-							}
-
 							myColor
 							{
 								0
@@ -1801,13 +1801,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							3							-1							-4
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.038483								0.865601
-							}
-
 							myColor
 							{
 								0
@@ -1829,13 +1829,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							1							0							-1							2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.232227								0.866627
-							}
-
 							myColor
 							{
 								0
@@ -1857,13 +1857,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-2							2							4							-3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.400120								1.034520
-							}
-
 							myColor
 							{
 								0
@@ -1885,13 +1885,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-1							0							3							1
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.365601								0.901146
-							}
-
 							myColor
 							{
 								0
@@ -1913,13 +1913,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-2							-1							5							2
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.236191								0.667893
-							}
-
 							myColor
 							{
 								0
@@ -1941,13 +1941,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							-2							2							5
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.331081								0.767773
-							}
-
 							myColor
 							{
 								0
@@ -1969,13 +1969,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							-2							2							3							-3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								-0.094890								0.900120
-							}
-
 							myColor
 							{
 								0
@@ -1997,13 +1997,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							1							1							-2							0
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.003964								0.732227
-							}
-
 							myColor
 							{
 								0
@@ -2025,13 +2025,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							-1							1							3
+						}
+
 						myData
 						{
-							myPosition
-							{
-								0.102818								0.633373
-							}
-
 							myColor
 							{
 								0
@@ -2053,13 +2053,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							0							-2							1							5
+						}
+
 						myData
 						{
-							myPosition
-							{
-								-0.163929								0.633373
-							}
-
 							myColor
 							{
 								0
@@ -2081,13 +2081,13 @@ myCount
 							3
 						}
 
+						myCoordinates
+						{
+							2							-1							-3							4
+						}
+
 						myData
 						{
-							myPosition
-							{
-								-0.030556								0.598854
-							}
-
 							myColor
 							{
 								0
@@ -21814,22 +21814,22 @@ myCount
 			}
 
 		}
-		
+
 		3
 		{
 			TileMeshColliderCmp
 			myBoundingSphereRadius
 			{
-				0.8
+				0.800000
 			}
-			
+
 			myBoundingSphereCenter
 			{
-				0.500000					0.500000					0.000000
+				0.500000				0.500000				0.000000
 			}
-			
+
 		}
-		
+
 		4
 		{
 			Editor_TileMeshCmp

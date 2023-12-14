@@ -74,6 +74,12 @@ inline void SerializerT<Policy>::Process(const char* aVariableName, Quat& aVaria
 }
 
 template <typename Policy>
+inline void SerializerT<Policy>::Process(const char* aVariableName, Dodec& aVariable)
+{
+    Policy::Process(aVariableName, aVariable, *this);
+}
+
+template <typename Policy>
 inline void SerializerT<Policy>::Process(const char* aVariableName, std::string& aVariable)
 {
     Policy::Process(aVariableName, aVariable, *this);
@@ -261,6 +267,24 @@ template <>
 inline void Serialize(SerializerT<LoadPolicy>& aSerializer, Quat& aVariable)
 {
     aSerializer.myFile >> aVariable.w >> aVariable.x >> aVariable.y >> aVariable.z;
+}
+
+template <>
+inline void Serialize(SerializerT<SavePolicy>& aSerializer, Dodec& aVariable)
+{
+    const auto [o, i, n, in] = aVariable.GetCoords();
+    aSerializer.myFile << SavePolicy::Indent(std::to_string(o), aSerializer)
+                       << SavePolicy::Indent(std::to_string(i), aSerializer)
+                       << SavePolicy::Indent(std::to_string(n), aSerializer)
+                       << SavePolicy::Indent(std::to_string(in), aSerializer) << std::endl;
+}
+
+template <>
+inline void Serialize(SerializerT<LoadPolicy>& aSerializer, Dodec& aVariable)
+{
+    int o, i, n, in;
+    aSerializer.myFile >> o >> i >> n >> in;
+    aVariable = {o, i, n, in};
 }
 
 template <>
