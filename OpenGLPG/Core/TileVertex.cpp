@@ -22,7 +22,7 @@ const Vec2& TileVertex::GetPosition() const
 {
     if (!myCachedPosition)
     {
-        myCachedPosition = myCoordinates.GetPos();
+        myCachedPosition = myCoordinates.Pos();
     }
     return *myCachedPosition;
 }

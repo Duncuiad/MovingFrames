@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Dodec.h"
 #include "EditorWidget.h"
 #include "TileMesh.h"
 
@@ -12,6 +13,7 @@ public:
     TileMesh* myTileMesh {nullptr};
     int myHeightToDisplay {0};
     int myClickAction {0};
+    int myDodecDisplayStyle {1};
     int mySelectedVertex {-1};
     bool myShowGraphs {false};
     bool myShowEdges {true};
@@ -21,4 +23,5 @@ public:
 private:
     void DrawEditing();
     bool DrawReset();
+    void DrawCoordinates(const Dodec& aDodec);
 };

@@ -2,6 +2,8 @@
 
 #include "Dodec.h"
 
+#include "Assert.h"
+
 Dodec::Dodec()
     : Dodec {0, 0, 0, 0}
 {}
@@ -39,7 +41,20 @@ Dodec Dodec::operator*(int aScalar) const
     return {myO * aScalar, myI * aScalar, myN * aScalar, myIN * aScalar};
 }
 
-Vec2 Dodec::GetPos() const
+Dodec Dodec::Conj() const
+{
+    return {myO + myN, -myI - myIN, -myN, myIN};
+}
+
+float Dodec::Norm2() const
+{
+    const Dodec norm2 {*this * this->Conj()};
+    const Vec2 pos {norm2.Pos()};
+    ASSERT(pos.y == 0.f, "The calculated norm is wrong");
+    return pos.x;
+}
+
+Vec2 Dodec::Pos() const
 {
     const double o {static_cast<double>(myO)};
     const double i {static_cast<double>(myI)};
@@ -49,27 +64,48 @@ Vec2 Dodec::GetPos() const
     return {static_cast<float>(o + n * 0.5 - h * in), static_cast<float>(i + in * 0.5 + h * n)};
 }
 
-std::tuple<int, int, int, int> Dodec::GetCoords() const
+std::tuple<int, int, int, int> Dodec::GetCoordsININ() const
 {
     return {myO, myI, myN, myIN};
 }
 
+std::tuple<int, int, int, int> Dodec::GetCoordsIZIZ() const
+{
+    return {myO + myN - myIN, myI + myN + myIN, -myN, -myIN};
+}
+
 Dodec Dodec::O()
 {
+    // Returns the real unit in the complex field
     return {1, 0, 0, 0};
 }
 
 Dodec Dodec::I()
 {
+    // Returns the imaginary unit in the complex field
     return {0, 1, 0, 0};
 }
 
 Dodec Dodec::N()
 {
+    // Returns sqrt(2-sqrt(3)) * exp(pi/12)
     return {0, 0, 1, 0};
 }
 
-Dodec Dodec::IN()
+Dodec Dodec::M()
 {
-    return {0, 0, 0, 1};
+    // Returns sqrt(2+sqrt(3)) * exp(5*pi/12)
+    return {1, 2, -1, 0};
+}
+
+Dodec Dodec::Z()
+{
+    // Returns exp(pi/3)
+    return {1, 1, -1, 0};
+}
+
+Dodec Dodec::P()
+{
+    // Returns exp(pi/6)
+    return {1, 0, 0, 1};
 }

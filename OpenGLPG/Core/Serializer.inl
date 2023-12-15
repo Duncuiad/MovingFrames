@@ -272,7 +272,7 @@ inline void Serialize(SerializerT<LoadPolicy>& aSerializer, Quat& aVariable)
 template <>
 inline void Serialize(SerializerT<SavePolicy>& aSerializer, Dodec& aVariable)
 {
-    const auto [o, i, n, in] = aVariable.GetCoords();
+    const auto [o, i, n, in] = aVariable.GetCoordsININ();
     aSerializer.myFile << SavePolicy::Indent(std::to_string(o), aSerializer)
                        << SavePolicy::Indent(std::to_string(i), aSerializer)
                        << SavePolicy::Indent(std::to_string(n), aSerializer)

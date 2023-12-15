@@ -20,13 +20,18 @@ public:
 
     bool operator==(const Dodec& anOther) const = default;
 
-    Vec2 GetPos() const;
-    std::tuple<int, int, int, int> GetCoords() const;
+    Dodec Conj() const;
+    float Norm2() const;
+    Vec2 Pos() const;
+    std::tuple<int, int, int, int> GetCoordsININ() const;
+    std::tuple<int, int, int, int> GetCoordsIZIZ() const;
 
     static Dodec O();
     static Dodec I();
     static Dodec N();
-    static Dodec IN();
+    static Dodec M();
+    static Dodec Z();
+    static Dodec P();
 
 private:
     int myO;
