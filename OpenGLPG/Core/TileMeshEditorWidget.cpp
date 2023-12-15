@@ -57,24 +57,22 @@ void TileMeshEditorWidget::DrawEditing()
     {
         const TileVertex::Data* vertexData {myTileMesh->GetVertexData(mySelectedVertex)};
         const Dodec& coords {myTileMesh->GetCoordinates(mySelectedVertex)};
-        const Vec2 pos {coords.Pos()};
         ASSERT(vertexData != nullptr, "Invalid vertex");
 
         ImGui::Separator();
         ImGui::Text("Selected Vertex");
-        ImGui::BeginChild("SelectedVertex", ImVec2(0, 100), true, ImGuiWindowFlags_AlwaysAutoResize);
-
+        ImGui::BeginChild("SelectedVertex", ImVec2(0, 90), true, ImGuiWindowFlags_AlwaysAutoResize);
         DrawCoordinates(coords);
-
-        ImGui::Text("Position: %9.5f %9.5f", pos.x, pos.y);
         ImGui::Text("Color: %s", vertexData->myColor ? "B" : "W");
         ImGui::EndChild();
         ImGui::Separator();
     }
     if (ImGui::TreeNode("Editing"))
     {
-        ImGui::RadioButton("Info", &myClickAction, 0);
-        ImGui::RadioButton("Vertex Color", &myClickAction, 1);
+        Widgets::RadioButton("Inspect", &myClickAction, ClickAction::Inspect);
+        Widgets::RadioButton("Vertex Color", &myClickAction, ClickAction::VertexColor);
+        Widgets::RadioButton("Vertex Black", &myClickAction, ClickAction::VertexBlack);
+        Widgets::RadioButton("Vertex White", &myClickAction, ClickAction::VertexWhite);
         ImGui::Separator();
         ImGui::TreePop();
     }
@@ -125,28 +123,29 @@ void TileMeshEditorWidget::DrawCoordinates(const Dodec& aDodec)
 {
     const Dodec norm2 {aDodec * aDodec.Conj()};
 
-    ImGui::RadioButton("R[i]", &myDodecDisplayStyle, 0);
+    Widgets::RadioButton("R[i]", &myDodecDisplayStyle, DodecDisplayStyle::RealI);
     ImGui::SameLine();
-    ImGui::RadioButton("Z[i,n]", &myDodecDisplayStyle, 1);
+    Widgets::RadioButton("Z[i,n]", &myDodecDisplayStyle, DodecDisplayStyle::IntegerIN);
     ImGui::SameLine();
-    ImGui::RadioButton("Z[i,z]", &myDodecDisplayStyle, 2);
+    Widgets::RadioButton("Z[i,z]", &myDodecDisplayStyle, DodecDisplayStyle::IntegerIZ);
+
     switch (myDodecDisplayStyle)
     {
-    case 0: {
+    case DodecDisplayStyle::RealI: {
         const Vec2 pos {aDodec.Pos()};
         const Vec2 npos {norm2.Pos()};
         ImGui::Text("Dodec: %9.5f%s + %9.5f%s", pos.x, "", pos.y, "i");
         ImGui::Text("Norm2: %9.5f%s + %9.5f%s", npos.x, "", npos.y, "i");
         break;
     }
-    case 1: {
+    case DodecDisplayStyle::IntegerIN: {
         const auto [x, y, z, w] {aDodec.GetCoordsININ()};
         const auto [nx, ny, nz, nw] {norm2.GetCoordsININ()};
         ImGui::Text("Dodec: %d%s + %d%s + %d%s + %d%s", x, "", y, "i", z, "n", w, "in");
         ImGui::Text("Norm2: %d%s + %d%s + %d%s + %d%s", nx, "", ny, "i", nz, "n", nw, "in");
         break;
     }
-    case 2: {
+    case DodecDisplayStyle::IntegerIZ: {
         const auto [x, y, z, w] {aDodec.GetCoordsIZIZ()};
         const auto [nx, ny, nz, nw] {norm2.GetCoordsIZIZ()};
         ImGui::Text("Dodec: %d%s + %d%s + %d%s + %d%s", x, "", y, "i", z, "z", w, "iz");

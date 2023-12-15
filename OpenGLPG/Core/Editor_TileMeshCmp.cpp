@@ -84,6 +84,8 @@ void Editor_TileMeshCmp::OnEnterWorld()
 
 void Editor_TileMeshCmp::Update()
 {
+    using ClickAction = TileMeshEditorWidget::ClickAction;
+
     const TileMeshColliderCmp& collider {GetTileMeshColliderCmp()};
     if (collider.myData.myWasHit)
     {
@@ -91,12 +93,20 @@ void Editor_TileMeshCmp::Update()
         ASSERT(data != nullptr, "Invalid vertex index");
         switch (myWidget.myClickAction)
         {
-        case 0: {
+        case ClickAction::Inspect: {
             myWidget.mySelectedVertex = collider.myData.myHitVertex;
             break;
         }
-        case 1: {
+        case ClickAction::VertexColor: {
             data->myColor = !data->myColor;
+            break;
+        }
+        case ClickAction::VertexBlack: {
+            data->myColor = true;
+            break;
+        }
+        case ClickAction::VertexWhite: {
+            data->myColor = false;
             break;
         }
         default:
