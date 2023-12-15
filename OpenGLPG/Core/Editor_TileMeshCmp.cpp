@@ -85,32 +85,60 @@ void Editor_TileMeshCmp::OnEnterWorld()
 void Editor_TileMeshCmp::Update()
 {
     using ClickAction = TileMeshEditorWidget::ClickAction;
+    using ActionMode = TileMeshEditorWidget::ActionMode;
 
     const TileMeshColliderCmp& collider {GetTileMeshColliderCmp()};
     if (collider.myData.myWasHit)
     {
-        TileVertex::Data* data {GetTileMeshCmp().myTileMesh.GetVertexData(collider.myData.myHitVertex)};
-        ASSERT(data != nullptr, "Invalid vertex index");
-        switch (myWidget.myClickAction)
+        TileVertex::Data* vertexData {GetTileMeshCmp().myTileMesh.GetVertexData(collider.myData.myHitVertex)};
+        TileFace::Data* faceData {GetTileMeshCmp().myTileMesh.GetFaceData(collider.myData.myHitFace)};
+        ASSERT(vertexData != nullptr, "Invalid vertex index");
+        ASSERT(faceData != nullptr, "Invalid face index");
+
+        int* selectedResource {nullptr};
+        bool* color {nullptr};
+        switch (myWidget.myActionMode)
         {
-        case ClickAction::Inspect: {
-            myWidget.mySelectedVertex = collider.myData.myHitVertex;
+        case ActionMode::Vertices: {
+            selectedResource = &myWidget.mySelectedVertex;
+            color = &vertexData->myColor;
             break;
         }
-        case ClickAction::VertexColor: {
-            data->myColor = !data->myColor;
-            break;
-        }
-        case ClickAction::VertexBlack: {
-            data->myColor = true;
-            break;
-        }
-        case ClickAction::VertexWhite: {
-            data->myColor = false;
+        case ActionMode::Faces: {
+            selectedResource = &myWidget.mySelectedFace;
+            color = &faceData->myColor;
             break;
         }
         default:
             break;
+        }
+
+        if (selectedResource != nullptr && color != nullptr)
+        {
+            *selectedResource =
+                myWidget.myActionMode == ActionMode::Vertices ? collider.myData.myHitVertex : collider.myData.myHitFace;
+
+            switch (myWidget.myClickAction)
+            {
+            case ClickAction::Inspect: {
+                break;
+            }
+            case ClickAction::FlipColor: {
+                *color = !(*color);
+                break;
+            }
+            case ClickAction::PaintBlack: {
+                *color = true;
+                break;
+            }
+            case ClickAction::PaintWhite: {
+                *color = false;
+                break;
+            }
+            default: {
+                break;
+            }
+            }
         }
         OnChanged();
         collider.Reset();

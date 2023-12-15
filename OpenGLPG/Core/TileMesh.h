@@ -24,6 +24,7 @@ public:
     void SubdivideAllFaces();
     void RandomizeVertexColors(float aRatio);
     TileVertex::Data* GetVertexData(int aVertexIdx);
+    TileFace::Data* GetFaceData(int aFaceIdx);
     const Dodec& GetCoordinates(int aVertexIdx);
 
     int GetMaxHeight() const;

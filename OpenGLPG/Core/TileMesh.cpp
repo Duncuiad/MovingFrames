@@ -109,6 +109,15 @@ TileVertex::Data* TileMesh::GetVertexData(int aVertexIdx)
     return nullptr;
 }
 
+TileFace::Data* TileMesh::GetFaceData(int aFaceIdx)
+{
+    if (0 <= aFaceIdx && aFaceIdx < myFaces.Count())
+    {
+        return &myFaces[aFaceIdx].myData;
+    }
+    return nullptr;
+}
+
 const Dodec& TileMesh::GetCoordinates(int aVertexIdx)
 {
     return myVertices[aVertexIdx].myCoordinates;

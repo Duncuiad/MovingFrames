@@ -18,9 +18,7 @@ void TileMeshEditorWidget::Draw()
     ASSERT(myTileMesh != nullptr, "Failed attaching tilemesh object");
     bool changed {false};
 
-    changed |= ImGui::Checkbox("Show Graphs", &myShowGraphs);
-    changed |= ImGui::Checkbox("Show Edges", &myShowEdges);
-    changed |= ImGui::Checkbox("Show Blocks", &myShowBlocks);
+    changed |= DrawShowdata();
 
     DrawEditing();
 
@@ -51,9 +49,25 @@ void TileMeshEditorWidget::Draw()
     }
 }
 
+bool TileMeshEditorWidget::DrawShowdata()
+{
+    bool changed {false};
+
+    ImGui::Text("Show");
+    changed |= ImGui::Checkbox("Graphs", &myShowGraphs);
+    changed |= ImGui::Checkbox("Edges", &myShowEdges);
+    changed |= Widgets::RadioButton("None", &myShowBlocks, ShowBlocks::None);
+    ImGui::SameLine();
+    changed |= Widgets::RadioButton("Vertices", &myShowBlocks, ShowBlocks::Vertices);
+    ImGui::SameLine();
+    changed |= Widgets::RadioButton("Faces", &myShowBlocks, ShowBlocks::Faces);
+
+    return changed;
+}
+
 void TileMeshEditorWidget::DrawEditing()
 {
-    if (mySelectedVertex != -1)
+    if (mySelectedVertex != -1 && myActionMode == ActionMode::Vertices)
     {
         const TileVertex::Data* vertexData {myTileMesh->GetVertexData(mySelectedVertex)};
         const Dodec& coords {myTileMesh->GetCoordinates(mySelectedVertex)};
@@ -67,12 +81,32 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::EndChild();
         ImGui::Separator();
     }
+    else if (mySelectedFace != -1 && myActionMode == ActionMode::Faces)
+    {
+        const TileFace::Data* faceData {myTileMesh->GetFaceData(mySelectedFace)};
+        ASSERT(faceData != nullptr, "Invalid face");
+
+        ImGui::Separator();
+        ImGui::Text("Selected Face");
+        ImGui::BeginChild("SelectedFace", ImVec2(0, 30), true, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::Text("Color: %s", faceData->myColor ? "B" : "W");
+        ImGui::EndChild();
+        ImGui::Separator();
+    }
+
     if (ImGui::TreeNode("Editing"))
     {
+        ImGui::Text("Mode");
+        Widgets::RadioButton("Vertices", &myActionMode, ActionMode::Vertices);
+        ImGui::SameLine();
+        Widgets::RadioButton("Faces", &myActionMode, ActionMode::Faces);
+
+        ImGui::Separator();
+        ImGui::Text("Action");
         Widgets::RadioButton("Inspect", &myClickAction, ClickAction::Inspect);
-        Widgets::RadioButton("Vertex Color", &myClickAction, ClickAction::VertexColor);
-        Widgets::RadioButton("Vertex Black", &myClickAction, ClickAction::VertexBlack);
-        Widgets::RadioButton("Vertex White", &myClickAction, ClickAction::VertexWhite);
+        Widgets::RadioButton("Color", &myClickAction, ClickAction::FlipColor);
+        Widgets::RadioButton("Black", &myClickAction, ClickAction::PaintBlack);
+        Widgets::RadioButton("White", &myClickAction, ClickAction::PaintWhite);
         ImGui::Separator();
         ImGui::TreePop();
     }

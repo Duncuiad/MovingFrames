@@ -28,4 +28,11 @@ struct TileFace : public Serializable
 
     int myParent {-1};
     Array<int> myChildren;
+
+    struct Data
+    {
+        bool myColor {false};
+    };
+
+    Data myData;
 };

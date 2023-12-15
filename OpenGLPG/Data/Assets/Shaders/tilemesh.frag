@@ -119,7 +119,7 @@ void main()
     vec2 gradX = vec2(dFdxFine(UV.x), dFdyFine(UV.x));
     vec2 gradY = vec2(dFdxFine(UV.y), dFdyFine(UV.y));
 
-    if (ShowBlocks > 0)
+    if (ShowBlocks == 1)
     {
         //fragColor = DrawBlocks(UV, fragColor, vertexColor);
         fragColor = DrawMarchingSquares(UV, fragColor, vertexColor);
