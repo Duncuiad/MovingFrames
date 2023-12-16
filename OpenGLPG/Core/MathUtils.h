@@ -22,7 +22,9 @@ DualQuat Log(const DualQuat& aDualQuaternion);
 
 namespace Utils
 {
+glm::mat4 Ortho(float anOrthoSize, float anAspectRatio, float aNearPlane, float aFarPlane);
 glm::mat4 Projection(float aFOV, float anAspectRatio, float aNearPlane, float aFarPlane);
+glm::mat4 Projection(const CameraData& aCameraData);
 glm::mat4 WorldToClip(const CameraData& aCameraData);
 } // namespace Utils
 

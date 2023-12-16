@@ -22,10 +22,12 @@ struct CameraRuntimeData
 {
     MovingFrame myReferenceFrame {};
     MovingFrame myLocalFrame {};
-    float myFOV {0.f};
+    bool myIsOrtho {false};
     float myAspectRatio {0.f};
     float myNearPlane {0.f};
     float myFarPlane {0.f};
 
+    mutable float myFOV {0.f};
+    mutable float myOrthoSize {0.f};
     mutable Vec3 myDesiredTwist[8];
 };

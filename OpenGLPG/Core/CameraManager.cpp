@@ -131,6 +131,7 @@ void CameraManager::DebugDraw() const
             {
                 ImGui::Text("Aspect Ratio: %9.4f", data.myAspectRatio);
                 ImGui::Text("FOV         : %9.4f", data.myFOV);
+                ImGui::Text("Ortho Size  : %9.4f", data.myOrthoSize);
                 ImGui::Text("Near Plane  : %9.4f", data.myNearPlane);
                 ImGui::Text("Far Plane   : %9.4f", data.myFarPlane);
 

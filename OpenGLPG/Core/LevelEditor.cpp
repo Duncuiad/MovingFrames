@@ -31,9 +31,20 @@ void LevelEditor::HandleInput(const UpdateParams& someParams)
             const Vec2 clipPos {mousePosition / viewportSize * 2.f - Vec2 {1.f}};
             const CameraData& data {myWorld.GetActiveCameraData()};
             const Transform& matrix {data.myCameraTransform};
-            const Vec3 rayVector {clipPos.x * (viewportSize.x / viewportSize.y) * tan(data.myFOVy * 0.5f) * matrix[0] +
-                                  -clipPos.y * tan(data.myFOVy * 0.5f) * matrix[1] - matrix[2]};
-            myWorld.GetCollisionSystem().RayCast(Vec3(matrix[3]), Vec3(rayVector));
+            if (data.myIsOrtho)
+            {
+                const Vec3 position {matrix[3] +
+                                     clipPos.x * (viewportSize.x / viewportSize.y) * data.myOrthoSize * matrix[0] +
+                                     -clipPos.y * matrix[1] * data.myOrthoSize};
+                myWorld.GetCollisionSystem().RayCast(position, -Vec3(matrix[2]));
+            }
+            else
+            {
+                const Vec3 rayVector {clipPos.x * (viewportSize.x / viewportSize.y) * tan(data.myFOVy * 0.5f) *
+                                          matrix[0] +
+                                      -clipPos.y * tan(data.myFOVy * 0.5f) * matrix[1] - matrix[2]};
+                myWorld.GetCollisionSystem().RayCast(Vec3(matrix[3]), rayVector);
+            }
         }
     }
 }

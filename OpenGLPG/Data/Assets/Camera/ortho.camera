@@ -7,22 +7,17 @@ myBehaviors
 
 	0
 	{
-		InputRotationCameraBehavior
-		myHorizontalSpeed
+		InputOrthoSizeCameraBehavior
+		mySpeed
 		{
-			0.872665
-		}
-
-		myVerticalSpeed
-		{
-			0.872665
+			0.01
 		}
 
 	}
 
 	1
 	{
-		InputTranslationCameraBehavior
+		InputOrthoTranslationCameraBehavior
 		mySpeed
 		{
 			1.000000
@@ -34,12 +29,12 @@ myBehaviors
 
 myFOV
 {
-	0.4
+	0
 }
 
 myOrthoSize
 {
-	0
+	1
 }
 
 myAspectRatio

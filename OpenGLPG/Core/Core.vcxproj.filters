@@ -297,6 +297,12 @@
     <ClInclude Include="Dodec.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="InputOrthoTranslationCameraBehavior.h">
+      <Filter>Camera\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="InputOrthoSizeCameraBehavior.h">
+      <Filter>Camera\Behaviors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -517,6 +523,12 @@
     </ClCompile>
     <ClCompile Include="Dodec.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="InputOrthoTranslationCameraBehavior.cpp">
+      <Filter>Camera\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="InputOrthoSizeCameraBehavior.cpp">
+      <Filter>Camera\Behaviors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

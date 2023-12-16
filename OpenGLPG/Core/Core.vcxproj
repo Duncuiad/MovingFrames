@@ -176,6 +176,8 @@
     <ClInclude Include="GraphCmp.h" />
     <ClInclude Include="Dual.h" />
     <ClInclude Include="FrameSpline.h" />
+    <ClInclude Include="InputOrthoSizeCameraBehavior.h" />
+    <ClInclude Include="InputOrthoTranslationCameraBehavior.h" />
     <ClInclude Include="TileFace.h" />
     <ClInclude Include="TileHalfEdge.h" />
     <ClInclude Include="TileMesh.h" />
@@ -254,6 +256,8 @@
     <ClCompile Include="GameInputData.cpp" />
     <ClCompile Include="GraphCmp.cpp" />
     <ClCompile Include="ImGuiWidgets.cpp" />
+    <ClCompile Include="InputOrthoSizeCameraBehavior.cpp" />
+    <ClCompile Include="InputOrthoTranslationCameraBehavior.cpp" />
     <ClCompile Include="InputRotationCameraBehavior.cpp" />
     <ClCompile Include="InputTranslationCameraBehavior.cpp" />
     <ClCompile Include="InterpolationUtils.cpp" />

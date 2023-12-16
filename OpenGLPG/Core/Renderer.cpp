@@ -30,9 +30,7 @@ void Renderer::Render(const RenderParams& someParams)
         viewportAdjustment[0][0] = viewPortSize.y / viewPortSize.x * activeCameraData.myAspectRatio;
 
         const Mat4 view {glm::affineInverse(activeCameraData.myCameraTransform)};
-        const Mat4 projection {viewportAdjustment * Utils::Projection(activeCameraData.myFOVy,
-                                                                      activeCameraData.myAspectRatio,
-                                                                      activeCameraData.myNear, activeCameraData.myFar)};
+        const Mat4 projection {viewportAdjustment * Utils::Projection(activeCameraData)};
         const Mat4 worldToClip {viewportAdjustment * Utils::WorldToClip(activeCameraData)};
 
         for (const auto& [uid, entity] : someParams.myWorld->GetEntities())
