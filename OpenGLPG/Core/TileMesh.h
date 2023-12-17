@@ -23,6 +23,7 @@ public:
     void Reset(TileType aType);
     void SubdivideAllFaces();
     void RandomizeVertexColors(float aRatio);
+    void ColorVerticesSatisfying(const TileVertex::Predicate& aPredicate);
     TileVertex::Data* GetVertexData(int aVertexIdx);
     TileFace::Data* GetFaceData(int aFaceIdx);
     const Dodec& GetCoordinates(int aVertexIdx);

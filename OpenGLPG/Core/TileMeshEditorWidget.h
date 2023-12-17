@@ -7,6 +7,7 @@
 class TileMeshEditorWidget : public EditorWidget
 {
 public:
+    TileMeshEditorWidget();
     void AttachTileMeshObject(TileMesh& aTileMesh);
     void Draw() override;
 
@@ -42,8 +43,12 @@ public:
 private:
     bool DrawShowdata();
     void DrawEditing();
+    bool DrawBrushes();
+    bool DrawBrushRandom();
+    bool DrawBrushNorm();
     bool DrawReset();
     void DrawCoordinates(const Dodec& aDodec);
+    void DrawDodec(const char* aName, const Dodec& aDodec);
 
     enum class DodecDisplayStyle {
         RealI,
@@ -51,6 +56,14 @@ private:
         IntegerIZ
     };
 
+    enum class ComparisonType {
+        Less,
+        Equal,
+        Greater
+    };
+
     DodecDisplayStyle myDodecDisplayStyle {DodecDisplayStyle::IntegerIN};
+    ComparisonType myNormSelectionType {ComparisonType::Equal};
+    int myNormComparisonData[2];
     float myVertexColorThreshold {0.f};
 };

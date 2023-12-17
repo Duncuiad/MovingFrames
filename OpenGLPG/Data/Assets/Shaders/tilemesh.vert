@@ -5,6 +5,7 @@ layout (location = 2) in vec2 aUV;
 
 out vec3 vertexColor;
 out vec2 uvs;
+flat out int faceColor;
 
 uniform mat4 Model;
 uniform mat4 WorldToClip;
@@ -15,4 +16,5 @@ void main()
     gl_Position = WorldToClip * Model * gl_Position;
     vertexColor = aNormal;
     uvs = aUV;
+    faceColor = 1;
 }

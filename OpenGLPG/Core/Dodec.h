@@ -21,6 +21,8 @@ public:
     bool operator==(const Dodec& anOther) const = default;
 
     Dodec Conj() const;
+    Dodec ConjNM() const;
+    int Norm() const;
     float Norm2() const;
     Vec2 Pos() const;
     std::tuple<int, int, int, int> GetCoordsININ() const;

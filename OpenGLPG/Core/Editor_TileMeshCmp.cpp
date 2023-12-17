@@ -69,6 +69,53 @@ void AddSquare(const Vec2& aUVOffset, const std::reference_wrapper<const TileVer
     someVerticesOut.push_back(std::move(vertex2));
     someVerticesOut.push_back(std::move(vertex3));
 }
+
+void UpdateMesh(const int aHeightToDisplay, const TileMeshCmp& aTileMeshCmp, DynamicMeshGraphCmp& aGraphCmpOut)
+{
+    Vertex::List vertices;
+    Vertex::IndexList indices;
+
+    const TileMesh& tileMesh {aTileMeshCmp.myTileMesh};
+    const auto trianglesA {tileMesh.GetTriangles(aHeightToDisplay, 1)};
+    const auto trianglesB {tileMesh.GetTriangles(aHeightToDisplay, 2)};
+    const auto squaresA {tileMesh.GetSquares(aHeightToDisplay, 1)};
+    const auto squaresB {tileMesh.GetSquares(aHeightToDisplay, 2)};
+    const auto squaresC {tileMesh.GetSquares(aHeightToDisplay, 4)};
+
+    const auto triangleVertexCount {trianglesA.size() + trianglesB.size()};
+    const auto squareVertexCount {squaresA.size() + squaresB.size() + squaresC.size()};
+    vertices.reserve(triangleVertexCount + squareVertexCount);
+    indices.reserve(triangleVertexCount + (squareVertexCount / 2) * 3);
+
+    for (int i = 0; i < trianglesA.size() / 3; ++i)
+    {
+        AddTriangle(true, &trianglesA[3 * i], vertices, indices);
+    }
+
+    for (int i = 0; i < trianglesB.size() / 3; ++i)
+    {
+        AddTriangle(false, &trianglesB[3 * i], vertices, indices);
+    }
+
+    for (int i = 0; i < squaresA.size() / 4; ++i)
+    {
+        constexpr Vec2 uvOffsetA {0.5f, 0.f};
+        AddSquare(uvOffsetA, &squaresA[4 * i], vertices, indices);
+    }
+
+    for (int i = 0; i < squaresB.size() / 4; ++i)
+    {
+        constexpr Vec2 uvOffsetB {0.5f, 0.5f};
+        AddSquare(uvOffsetB, &squaresB[4 * i], vertices, indices);
+    }
+
+    for (int i = 0; i < squaresC.size() / 4; ++i)
+    {
+        constexpr Vec2 uvOffsetC {0.f, 0.5f};
+        AddSquare(uvOffsetC, &squaresC[4 * i], vertices, indices);
+    }
+    aGraphCmpOut.SetMesh(std::move(vertices), std::move(indices));
+}
 } // namespace
 
 REGISTER_SUBTYPE(Editor_TileMeshCmp)
@@ -147,51 +194,8 @@ void Editor_TileMeshCmp::Update()
 
 void Editor_TileMeshCmp::OnChanged() const
 {
-    Vertex::List vertices;
-    Vertex::IndexList indices;
-
-    const TileMesh& tileMesh {GetTileMeshCmp().myTileMesh};
-    const auto trianglesA {tileMesh.GetTriangles(myWidget.myHeightToDisplay, 1)};
-    const auto trianglesB {tileMesh.GetTriangles(myWidget.myHeightToDisplay, 2)};
-    const auto squaresA {tileMesh.GetSquares(myWidget.myHeightToDisplay, 1)};
-    const auto squaresB {tileMesh.GetSquares(myWidget.myHeightToDisplay, 2)};
-    const auto squaresC {tileMesh.GetSquares(myWidget.myHeightToDisplay, 4)};
-
-    const auto triangleVertexCount {trianglesA.size() + trianglesB.size()};
-    const auto squareVertexCount {squaresA.size() + squaresB.size() + squaresC.size()};
-    vertices.reserve(triangleVertexCount + squareVertexCount);
-    indices.reserve(triangleVertexCount + (squareVertexCount / 2) * 3);
-
-    for (int i = 0; i < trianglesA.size() / 3; ++i)
-    {
-        AddTriangle(true, &trianglesA[3 * i], vertices, indices);
-    }
-
-    for (int i = 0; i < trianglesB.size() / 3; ++i)
-    {
-        AddTriangle(false, &trianglesB[3 * i], vertices, indices);
-    }
-
-    for (int i = 0; i < squaresA.size() / 4; ++i)
-    {
-        constexpr Vec2 uvOffsetA {0.5f, 0.f};
-        AddSquare(uvOffsetA, &squaresA[4 * i], vertices, indices);
-    }
-
-    for (int i = 0; i < squaresB.size() / 4; ++i)
-    {
-        constexpr Vec2 uvOffsetB {0.5f, 0.5f};
-        AddSquare(uvOffsetB, &squaresB[4 * i], vertices, indices);
-    }
-
-    for (int i = 0; i < squaresC.size() / 4; ++i)
-    {
-        constexpr Vec2 uvOffsetC {0.f, 0.5f};
-        AddSquare(uvOffsetC, &squaresC[4 * i], vertices, indices);
-    }
-
     DynamicMeshGraphCmp& graphCmp {GetDynamicMeshGraphCmp()};
-    graphCmp.SetMesh(std::move(vertices), std::move(indices));
+    UpdateMesh(myWidget.myHeightToDisplay, GetTileMeshCmp(), graphCmp);
     graphCmp.GetShader().Use();
     graphCmp.GetShader().SetUniformInt("ShowGraphs", static_cast<int>(myWidget.myShowGraphs));
     graphCmp.GetShader().SetUniformInt("ShowEdges", static_cast<int>(myWidget.myShowEdges));

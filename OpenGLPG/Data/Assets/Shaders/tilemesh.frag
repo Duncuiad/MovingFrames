@@ -3,6 +3,7 @@ out vec4 FragColor;
 
 in vec3 vertexColor;
 in vec2 uvs;
+flat in int faceColor;
 
 uniform int ShowGraphs;
 uniform int ShowEdges;
@@ -10,7 +11,7 @@ uniform int ShowBlocks;
 
 float smoothSize = 3.;
 
-vec4 DrawBlocks(vec2 UV, vec4 fragColor, vec3 vertColor)
+void DrawBlocks(vec2 UV, vec3 vertColor, inout vec4 fragColor)
 {
     float vertexColorValue = max(max(vertColor.x, vertColor.y), vertColor.z);
     float centerColorValue = 0.;
@@ -25,10 +26,9 @@ vec4 DrawBlocks(vec2 UV, vec4 fragColor, vec3 vertColor)
     }
     vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.,0.,0.,1.) : vec4(0.);
     fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
-    return fragColor;
 }
 
-vec4 DrawMarchingSquares(vec2 UV, vec4 fragColor, vec3 vertColor)
+void DrawMarchingSquares(vec2 UV, vec3 vertColor, inout vec4 fragColor)
 {
     if (max(UV.x - 0.5, UV.y - 0.5) > 0.)
     {
@@ -38,10 +38,9 @@ vec4 DrawMarchingSquares(vec2 UV, vec4 fragColor, vec3 vertColor)
         vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.,0.,0.,1.) : vec4(0.);
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
-    return fragColor;
 }
 
-vec4 DrawMarchingTriangles(vec2 UV, vec4 fragColor, vec3 vertColor)
+void DrawMarchingTriangles(vec2 UV, vec3 vertColor, inout vec4 fragColor)
 {
     if (max(UV.x - 0.5, UV.y - 0.5) < 0.)
     {
@@ -55,10 +54,15 @@ vec4 DrawMarchingTriangles(vec2 UV, vec4 fragColor, vec3 vertColor)
         vec4 blockColor = relevantColorValue >0. ? vec4(0.,0.,0.,1.) : vec4(0.);
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
-    return fragColor;
 }
 
-vec4 DrawEdges(vec2 UV, vec4 fragColor, vec2 gradX, vec2 gradY)
+void DrawFaces(int aFaceColor, inout vec4 fragColor)
+{
+    vec4 blockColor = aFaceColor > 0 ? vec4(0.,0.,0.,1.) : vec4(0.);
+    fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
+}
+
+void DrawEdges(vec2 UV, vec2 gradX, vec2 gradY, inout vec4 fragColor)
 {
     vec2 doubleUVs = mod(UV * 2., 1.);
     float lenGradX2 = dot(gradX, gradX);
@@ -74,10 +78,9 @@ vec4 DrawEdges(vec2 UV, vec4 fragColor, vec2 gradX, vec2 gradY)
     float dist2 = min(min(distX2, distY2), distD2);
     float edgeValue = 1. - smoothstep(0., smoothSize, sqrt(dist2));
     fragColor = fragColor * (1. - edgeValue) + (vec4(1., 1., 1., 2. * fragColor.a) - fragColor) * edgeValue;
-    return fragColor;
 }
 
-vec4 DrawDualGraph(vec2 UV, vec4 fragColor, vec2 gradX, vec2 gradY)
+void DrawDualGraph(vec2 UV, vec2 gradX, vec2 gradY, inout vec4 fragColor)
 {
     vec2 doubleUVs = mod(UV * 2., 1.);
     float selectSquares = 2. * step(0., min(0.5 - UV.x, 0.5 - UV.y)) - 1.;
@@ -109,7 +112,6 @@ vec4 DrawDualGraph(vec2 UV, vec4 fragColor, vec2 gradX, vec2 gradY)
 
     fragColor = fragColor * (1. - graphAColor.a) + graphAColor * graphAColor.a;
     fragColor = fragColor * (1. - graphBColor.a) + graphBColor * graphBColor.a;
-    return fragColor;
 }
 
 void main()
@@ -121,17 +123,21 @@ void main()
 
     if (ShowBlocks == 1)
     {
-        //fragColor = DrawBlocks(UV, fragColor, vertexColor);
-        fragColor = DrawMarchingSquares(UV, fragColor, vertexColor);
-        fragColor = DrawMarchingTriangles(UV, fragColor, vertexColor);
+        //DrawBlocks(UV, vertexColor, fragColor);
+        DrawMarchingSquares(UV, vertexColor, fragColor);
+        DrawMarchingTriangles(UV, vertexColor, fragColor);
+    }
+    else if (ShowBlocks == 2)
+    {
+        DrawFaces(faceColor, fragColor);
     }
     if (ShowEdges > 0)
     {
-        fragColor = DrawEdges(UV, fragColor, gradX, gradY);
+        DrawEdges(UV, gradX, gradY, fragColor);
     }
     if (ShowGraphs > 0)
     {
-        fragColor = DrawDualGraph(UV, fragColor, gradX, gradY);
+        DrawDualGraph(UV, gradX, gradY, fragColor);
     }
 
     FragColor = vec4(fragColor.xyz, 1.);

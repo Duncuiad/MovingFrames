@@ -5,7 +5,14 @@
 #include "Assert.h"
 #include "ImGuiWidgets.h"
 
+#include <string>
 #include <tuple>
+
+TileMeshEditorWidget::TileMeshEditorWidget()
+{
+    myNormComparisonData[0] = 0;
+    myNormComparisonData[1] = 0;
+}
 
 void TileMeshEditorWidget::AttachTileMeshObject(TileMesh& aTileMesh)
 {
@@ -24,7 +31,7 @@ void TileMeshEditorWidget::Draw()
 
     changed |= DrawReset();
 
-    if (ImGui::Button("Subdivide"))
+    if (ImGui::Button("Inflate"))
     {
         myTileMesh->SubdivideAllFaces();
         ++myHeightToDisplay;
@@ -34,14 +41,7 @@ void TileMeshEditorWidget::Draw()
                                 "Display Height = %d", ImGuiSliderFlags_AlwaysClamp);
     ImGui::Separator();
 
-    ImGui::SliderFloat("##Random Color", &myVertexColorThreshold, 0., 1., "Randomize Vertices = %.3f",
-                       ImGuiSliderFlags_AlwaysClamp);
-    ImGui::SameLine();
-    if (ImGui::Button("Run"))
-    {
-        myTileMesh->RandomizeVertexColors(myVertexColorThreshold);
-        changed = true;
-    }
+    changed |= DrawBrushes();
 
     if (changed)
     {
@@ -75,7 +75,7 @@ void TileMeshEditorWidget::DrawEditing()
 
         ImGui::Separator();
         ImGui::Text("Selected Vertex");
-        ImGui::BeginChild("SelectedVertex", ImVec2(0, 90), true, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::BeginChild("SelectedVertex", ImVec2(0, 120), true, ImGuiWindowFlags_AlwaysAutoResize);
         DrawCoordinates(coords);
         ImGui::Text("Color: %s", vertexData->myColor ? "B" : "W");
         ImGui::EndChild();
@@ -110,6 +110,108 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::Separator();
         ImGui::TreePop();
     }
+}
+
+bool TileMeshEditorWidget::DrawBrushes()
+{
+    bool changed {false};
+
+    ImGui::Separator();
+    ImGui::PushID("BrushRandom");
+    changed |= DrawBrushRandom();
+    ImGui::PopID();
+
+    ImGui::Separator();
+    ImGui::PushID("BrushNorm");
+    changed |= DrawBrushNorm();
+    ImGui::PopID();
+
+    ImGui::Separator();
+    return changed;
+}
+
+bool TileMeshEditorWidget::DrawBrushRandom()
+{
+    ImGui::SliderFloat("##Random Color", &myVertexColorThreshold, 0., 1., "Randomize Vertices | p = %.3f",
+                       ImGuiSliderFlags_AlwaysClamp);
+    ImGui::SameLine();
+    if (ImGui::Button("Run"))
+    {
+        myTileMesh->RandomizeVertexColors(myVertexColorThreshold);
+        return true;
+    }
+    return false;
+}
+
+bool TileMeshEditorWidget::DrawBrushNorm()
+{
+    std::string comparison = "";
+    switch (myNormSelectionType)
+    {
+    case ComparisonType::Less:
+        comparison = "<";
+        break;
+    case ComparisonType::Equal:
+        comparison = "=";
+        break;
+    case ComparisonType::Greater:
+        comparison = ">";
+        break;
+    default:
+        break;
+    }
+    int normComparison {myNormComparisonData[0] * myNormComparisonData[0] +
+                        myNormComparisonData[1] * myNormComparisonData[1]};
+    ImGui::Text("Norm %s %d", comparison.c_str(), normComparison);
+
+    bool edited {false};
+    ImGui::SameLine();
+    if (ImGui::Button("<"))
+    {
+        myNormSelectionType = ComparisonType::Less;
+        edited = true;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("="))
+    {
+        myNormSelectionType = ComparisonType::Equal;
+        edited = true;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button(">"))
+    {
+        myNormSelectionType = ComparisonType::Greater;
+        edited = true;
+    }
+    edited |= ImGui::SliderInt2("##Paint Norm1", &myNormComparisonData[0], 0, 300);
+    normComparison =
+        myNormComparisonData[0] * myNormComparisonData[0] + myNormComparisonData[1] * myNormComparisonData[1];
+
+    if (edited)
+    {
+        switch (myNormSelectionType)
+        {
+        case ComparisonType::Less: {
+            myTileMesh->ColorVerticesSatisfying(
+                [normComparison](const TileVertex& aVertex) { return aVertex.myCoordinates.Norm() < normComparison; });
+            break;
+        }
+        case ComparisonType::Equal: {
+            myTileMesh->ColorVerticesSatisfying(
+                [normComparison](const TileVertex& aVertex) { return aVertex.myCoordinates.Norm() == normComparison; });
+            break;
+        }
+        case ComparisonType::Greater: {
+            myTileMesh->ColorVerticesSatisfying(
+                [normComparison](const TileVertex& aVertex) { return aVertex.myCoordinates.Norm() > normComparison; });
+            break;
+        }
+        default:
+            break;
+        }
+        return true;
+    }
+    return false;
 }
 
 bool TileMeshEditorWidget::DrawReset()
@@ -155,7 +257,8 @@ bool TileMeshEditorWidget::DrawReset()
 
 void TileMeshEditorWidget::DrawCoordinates(const Dodec& aDodec)
 {
-    const Dodec norm2 {aDodec * aDodec.Conj()};
+    const Dodec conj {aDodec.Conj()};
+    const int norm {aDodec.Norm()};
 
     Widgets::RadioButton("R[i]", &myDodecDisplayStyle, DodecDisplayStyle::RealI);
     ImGui::SameLine();
@@ -163,27 +266,28 @@ void TileMeshEditorWidget::DrawCoordinates(const Dodec& aDodec)
     ImGui::SameLine();
     Widgets::RadioButton("Z[i,z]", &myDodecDisplayStyle, DodecDisplayStyle::IntegerIZ);
 
+    DrawDodec("Dodec", aDodec);
+    ImGui::Text("Norm: %d", norm);
+    DrawDodec("Norm2", aDodec * aDodec.Conj());
+}
+
+void TileMeshEditorWidget::DrawDodec(const char* aName, const Dodec& aDodec)
+{
     switch (myDodecDisplayStyle)
     {
     case DodecDisplayStyle::RealI: {
         const Vec2 pos {aDodec.Pos()};
-        const Vec2 npos {norm2.Pos()};
-        ImGui::Text("Dodec: %9.5f%s + %9.5f%s", pos.x, "", pos.y, "i");
-        ImGui::Text("Norm2: %9.5f%s + %9.5f%s", npos.x, "", npos.y, "i");
+        ImGui::Text("%s: %9.5f%s + %9.5f%s", aName, pos.x, "", pos.y, "i");
         break;
     }
     case DodecDisplayStyle::IntegerIN: {
         const auto [x, y, z, w] {aDodec.GetCoordsININ()};
-        const auto [nx, ny, nz, nw] {norm2.GetCoordsININ()};
-        ImGui::Text("Dodec: %d%s + %d%s + %d%s + %d%s", x, "", y, "i", z, "n", w, "in");
-        ImGui::Text("Norm2: %d%s + %d%s + %d%s + %d%s", nx, "", ny, "i", nz, "n", nw, "in");
+        ImGui::Text("%s: %d%s + %d%s + %d%s + %d%s", aName, x, "", y, "i", z, "n", w, "in");
         break;
     }
     case DodecDisplayStyle::IntegerIZ: {
         const auto [x, y, z, w] {aDodec.GetCoordsIZIZ()};
-        const auto [nx, ny, nz, nw] {norm2.GetCoordsIZIZ()};
-        ImGui::Text("Dodec: %d%s + %d%s + %d%s + %d%s", x, "", y, "i", z, "z", w, "iz");
-        ImGui::Text("Norm2: %d%s + %d%s + %d%s + %d%s", nx, "", ny, "i", nz, "z", nw, "iz");
+        ImGui::Text("%s: %d%s + %d%s + %d%s + %d%s", aName, x, "", y, "i", z, "z", w, "iz");
         break;
     }
     }

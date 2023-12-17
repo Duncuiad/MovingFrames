@@ -100,6 +100,14 @@ void TileMesh::RandomizeVertexColors(float aRatio)
     }
 }
 
+void TileMesh::ColorVerticesSatisfying(const TileVertex::Predicate& aPredicate)
+{
+    for (TileVertex& vertex : myVertices)
+    {
+        vertex.myData.myColor = aPredicate(vertex);
+    }
+}
+
 TileVertex::Data* TileMesh::GetVertexData(int aVertexIdx)
 {
     if (0 <= aVertexIdx && aVertexIdx < myVertices.Count())

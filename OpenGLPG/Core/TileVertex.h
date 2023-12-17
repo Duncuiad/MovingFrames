@@ -4,10 +4,13 @@
 #include "MathDefines.h"
 #include "Serializable.h"
 
+#include <functional>
 #include <optional>
 
 struct TileVertex : public Serializable
 {
+    using Predicate = std::function<bool(const TileVertex&)>;
+
     TileVertex() = default;
     TileVertex(int anIndex, int aHeight, const Dodec& aDodec);
     virtual void Serialize(Serializer& aSerializer) override;

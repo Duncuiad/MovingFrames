@@ -46,9 +46,39 @@ Dodec Dodec::Conj() const
     return {myO + myN, -myI - myIN, -myN, myIN};
 }
 
+Dodec Dodec::ConjNM() const
+{
+    return {myO + myN - 2 * myIN, myI + 2 * myN + myIN, -myN, -myIN};
+}
+
+int Dodec::Norm() const
+{
+    const int a = myO;
+    const int b = myI;
+    const int c = myN;
+    const int d = myIN;
+
+    // A few equivalent implementations:
+
+    /*
+    const Dodec norm = *this * Conj() * ConjNM() * ConjNM().Conj();
+    return norm.myO;
+    */
+
+    /*
+    const int x = a * a + b * b + 2 * c * c + 2 * d * d + a * c + b * d - 2 * a * d + 2 * b * c;
+    const int y = a * d - b * c - c * c - d * d;
+    return x * x - 3 * y * y
+    */
+
+    const int x = a * a + a * c - 2 * a * d - b * b - 2 * b * c - b * d - 2 * c * d;
+    const int y = 2 * a * b + 2 * a * c + a * d + b * c - 2 * b * d + c * c - d * d;
+    return x * x + y * y;
+}
+
 float Dodec::Norm2() const
 {
-    const Dodec norm2 {*this * this->Conj()};
+    const Dodec norm2 {*this * Conj()};
     const Vec2 pos {norm2.Pos()};
     ASSERT(pos.y == 0.f, "The calculated norm is wrong");
     return pos.x;
