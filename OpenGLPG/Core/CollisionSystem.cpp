@@ -12,7 +12,7 @@ CollisionSystem::CollisionSystem(const ConstructionParams& someParams)
     : myEntities {someParams.myEntities}
 {}
 
-bool CollisionSystem::RayCast(const Vec3& aRayStart, const Vec3& aRayDirection) const
+bool CollisionSystem::RayCast(const Vec3& aRayStart, const Vec3& aRayDirection, const CollisionTag& aTag) const
 {
     ASSERT(glm::length(aRayDirection) > 0.f, "Invalid ray cast direction");
     const Vec3 direction {glm::normalize(aRayDirection)};
@@ -34,7 +34,7 @@ bool CollisionSystem::RayCast(const Vec3& aRayStart, const Vec3& aRayDirection) 
 
     if (hitCollider != nullptr)
     {
-        hitCollider->ProcessHit();
+        hitCollider->AddHit(aTag);
         return true;
     }
     return false;

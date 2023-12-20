@@ -61,6 +61,9 @@
     <Filter Include="Collision">
       <UniqueIdentifier>{45b03813-d477-40ce-9c5a-0f60cc108551}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Collision\Components">
+      <UniqueIdentifier>{9d69b9ab-480b-47ea-9288-992895671de9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -285,9 +288,6 @@
     <ClInclude Include="ClientInputManager.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="ColliderCmp.h">
-      <Filter>Engine\Components</Filter>
-    </ClInclude>
     <ClInclude Include="TileMeshColliderCmp.h">
       <Filter>Tiles\Components</Filter>
     </ClInclude>
@@ -302,6 +302,12 @@
     </ClInclude>
     <ClInclude Include="InputOrthoSizeCameraBehavior.h">
       <Filter>Camera\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionTag.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderCmp.h">
+      <Filter>Collision\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -512,9 +518,6 @@
     <ClCompile Include="ClientInputManager.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="ColliderCmp.cpp">
-      <Filter>Engine\Components</Filter>
-    </ClCompile>
     <ClCompile Include="TileMeshColliderCmp.cpp">
       <Filter>Tiles\Components</Filter>
     </ClCompile>
@@ -529,6 +532,9 @@
     </ClCompile>
     <ClCompile Include="InputOrthoSizeCameraBehavior.cpp">
       <Filter>Camera\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderCmp.cpp">
+      <Filter>Collision\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

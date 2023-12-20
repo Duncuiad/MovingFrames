@@ -150,6 +150,7 @@
     <ClInclude Include="ClientInputManager.h" />
     <ClInclude Include="ColliderCmp.h" />
     <ClInclude Include="CollisionSystem.h" />
+    <ClInclude Include="CollisionTag.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Dodec.h" />

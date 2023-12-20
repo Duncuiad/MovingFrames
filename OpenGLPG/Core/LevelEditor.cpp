@@ -4,6 +4,7 @@
 
 #include "CameraData.h"
 #include "CollisionSystem.h"
+#include "CollisionTag.h"
 #include "MathDefines.h"
 #include "Transform.h"
 
@@ -21,8 +22,18 @@ void LevelEditor::Update(const UpdateParams& someParams)
 
 void LevelEditor::HandleInput(const UpdateParams& someParams)
 {
+    CollisionTag tag {CollisionTag::None};
     const GameInputData::InputContainer& inputs {myInputData.myInputs};
     if (inputs.at(GameInput::theMouseClickLeft) > 0.f)
+    {
+        tag = CollisionTag::PickLeftClick;
+    }
+    else if (inputs.at(GameInput::theMouseClickRight) > 0.f)
+    {
+        tag = CollisionTag::PickRightClick;
+    }
+
+    if (tag != CollisionTag::None)
     {
         const Vec2 mousePosition {inputs.at(GameInput::theMousePosX), inputs.at(GameInput::theMousePosY)};
         if (mousePosition.x >= 0.f && mousePosition.y >= 0.f)
@@ -36,14 +47,14 @@ void LevelEditor::HandleInput(const UpdateParams& someParams)
                 const Vec3 position {matrix[3] +
                                      clipPos.x * (viewportSize.x / viewportSize.y) * data.myOrthoSize * matrix[0] +
                                      -clipPos.y * matrix[1] * data.myOrthoSize};
-                myWorld.GetCollisionSystem().RayCast(position, -Vec3(matrix[2]));
+                myWorld.GetCollisionSystem().RayCast(position, -Vec3(matrix[2]), tag);
             }
             else
             {
                 const Vec3 rayVector {clipPos.x * (viewportSize.x / viewportSize.y) * tan(data.myFOVy * 0.5f) *
                                           matrix[0] +
                                       -clipPos.y * tan(data.myFOVy * 0.5f) * matrix[1] - matrix[2]};
-                myWorld.GetCollisionSystem().RayCast(Vec3(matrix[3]), rayVector);
+                myWorld.GetCollisionSystem().RayCast(Vec3(matrix[3]), rayVector, tag);
             }
         }
     }

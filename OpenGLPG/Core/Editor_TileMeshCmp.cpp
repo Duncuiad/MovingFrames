@@ -135,10 +135,15 @@ void Editor_TileMeshCmp::Update()
     using ActionMode = TileMeshEditorWidget::ActionMode;
 
     const TileMeshColliderCmp& collider {GetTileMeshColliderCmp()};
-    if (collider.myData.myWasHit)
+    for (const TileMeshColliderCmp::Hit& hit : collider.myHits)
     {
-        TileVertex::Data* vertexData {GetTileMeshCmp().myTileMesh.GetVertexData(collider.myData.myHitVertex)};
-        TileFace::Data* faceData {GetTileMeshCmp().myTileMesh.GetFaceData(collider.myData.myHitFace)};
+        if (hit.myTag != CollisionTag::PickLeftClick && hit.myTag != CollisionTag::PickRightClick)
+        {
+            continue;
+        }
+
+        TileVertex::Data* vertexData {GetTileMeshCmp().myTileMesh.GetVertexData(hit.myData.myHitVertex)};
+        TileFace::Data* faceData {GetTileMeshCmp().myTileMesh.GetFaceData(hit.myData.myHitFace)};
         ASSERT(vertexData != nullptr, "Invalid vertex index");
         ASSERT(faceData != nullptr, "Invalid face index");
 
@@ -163,23 +168,17 @@ void Editor_TileMeshCmp::Update()
         if (selectedResource != nullptr && color != nullptr)
         {
             *selectedResource =
-                myWidget.myActionMode == ActionMode::Vertices ? collider.myData.myHitVertex : collider.myData.myHitFace;
+                myWidget.myActionMode == ActionMode::Vertices ? hit.myData.myHitVertex : hit.myData.myHitFace;
 
             switch (myWidget.myClickAction)
             {
             case ClickAction::Inspect: {
                 break;
             }
-            case ClickAction::FlipColor: {
-                *color = !(*color);
-                break;
-            }
-            case ClickAction::PaintBlack: {
-                *color = true;
-                break;
-            }
-            case ClickAction::PaintWhite: {
-                *color = false;
+            case ClickAction::Paint: {
+                *color = (hit.myTag == CollisionTag::PickLeftClick)
+                             ? true
+                             : ((hit.myTag == CollisionTag::PickRightClick) ? false : *color);
                 break;
             }
             default: {

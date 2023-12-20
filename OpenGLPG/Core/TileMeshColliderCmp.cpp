@@ -61,8 +61,3 @@ const Transform& TileMeshColliderCmp::GetTransform() const
     ASSERT(cmp != nullptr, "Couldn't find required component");
     return cmp->GetTransform();
 }
-
-void TileMeshColliderCmp::ProcessHit() const
-{
-    myData.myWasHit = true;
-}

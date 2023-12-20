@@ -104,9 +104,7 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::Separator();
         ImGui::Text("Action");
         Widgets::RadioButton("Inspect", &myClickAction, ClickAction::Inspect);
-        Widgets::RadioButton("Color", &myClickAction, ClickAction::FlipColor);
-        Widgets::RadioButton("Black", &myClickAction, ClickAction::PaintBlack);
-        Widgets::RadioButton("White", &myClickAction, ClickAction::PaintWhite);
+        Widgets::RadioButton("Paint", &myClickAction, ClickAction::Paint);
         ImGui::Separator();
         ImGui::TreePop();
     }
@@ -124,6 +122,11 @@ bool TileMeshEditorWidget::DrawBrushes()
     ImGui::Separator();
     ImGui::PushID("BrushNorm");
     changed |= DrawBrushNorm();
+    ImGui::PopID();
+
+    ImGui::Separator();
+    ImGui::PushID("BrushHeight");
+    changed |= DrawBrushHeight();
     ImGui::PopID();
 
     ImGui::Separator();
@@ -214,6 +217,73 @@ bool TileMeshEditorWidget::DrawBrushNorm()
     return false;
 }
 
+bool TileMeshEditorWidget::DrawBrushHeight()
+{
+    std::string comparison = "";
+    switch (myHeightSelectionType)
+    {
+    case ComparisonType::Less:
+        comparison = "<";
+        break;
+    case ComparisonType::Equal:
+        comparison = "=";
+        break;
+    case ComparisonType::Greater:
+        comparison = ">";
+        break;
+    default:
+        break;
+    }
+    ImGui::Text("Height %s %d", comparison.c_str(), myHeightComparisonData);
+
+    bool edited {false};
+    ImGui::SameLine();
+    if (ImGui::Button("<"))
+    {
+        myHeightSelectionType = ComparisonType::Less;
+        edited = true;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("="))
+    {
+        myHeightSelectionType = ComparisonType::Equal;
+        edited = true;
+    }
+    ImGui::SameLine();
+    if (ImGui::Button(">"))
+    {
+        myHeightSelectionType = ComparisonType::Greater;
+        edited = true;
+    }
+    edited |= ImGui::SliderInt("##Paint Norm1", &myHeightComparisonData, -1, myTileMesh->GetMaxHeight() + 1);
+
+    if (edited)
+    {
+        switch (myHeightSelectionType)
+        {
+        case ComparisonType::Less: {
+            myTileMesh->ColorVerticesSatisfying(
+                [this](const TileVertex& aVertex) { return aVertex.myHeight < myHeightComparisonData; });
+            break;
+        }
+        case ComparisonType::Equal: {
+            myTileMesh->ColorVerticesSatisfying(
+                [this](const TileVertex& aVertex) { return aVertex.myHeight == myHeightComparisonData; });
+            break;
+        }
+        case ComparisonType::Greater: {
+            myTileMesh->ColorVerticesSatisfying(
+                [this](const TileVertex& aVertex) { return aVertex.myHeight > myHeightComparisonData; });
+            break;
+        }
+        default:
+            break;
+        }
+        return true;
+    }
+    return false;
+}
+
 bool TileMeshEditorWidget::DrawReset()
 {
     bool isResetting {false};
@@ -258,7 +328,6 @@ bool TileMeshEditorWidget::DrawReset()
 void TileMeshEditorWidget::DrawCoordinates(const Dodec& aDodec)
 {
     const Dodec conj {aDodec.Conj()};
-    const int norm {aDodec.Norm()};
 
     Widgets::RadioButton("R[i]", &myDodecDisplayStyle, DodecDisplayStyle::RealI);
     ImGui::SameLine();
@@ -267,8 +336,9 @@ void TileMeshEditorWidget::DrawCoordinates(const Dodec& aDodec)
     Widgets::RadioButton("Z[i,z]", &myDodecDisplayStyle, DodecDisplayStyle::IntegerIZ);
 
     DrawDodec("Dodec", aDodec);
-    ImGui::Text("Norm: %d", norm);
+    ImGui::Text("Norm: %d", aDodec.Norm());
     DrawDodec("Norm2", aDodec * aDodec.Conj());
+    DrawDodec("NormNM", aDodec * aDodec.ConjNM());
 }
 
 void TileMeshEditorWidget::DrawDodec(const char* aName, const Dodec& aDodec)

@@ -1,15 +1,18 @@
 #pragma once
 
+#include "CollisionTag.h"
 #include "Component.h"
 #include "MathDefines.h"
 #include "Serializer.h"
 #include "TransformCmp.h"
 
+#include <vector>
+
 class ColliderCmp : public Component
 {
 public:
     virtual float RayCastHit(const Vec3& aRayStart, const Vec3& aRayDirection) const = 0;
-    virtual void ProcessHit() const = 0;
+    virtual void AddHit(const CollisionTag& aTag) const = 0;
     virtual void Reset() const {};
     bool RayVsBoundingSphere(const Vec3& aRayStart, const Vec3& aRayDirection) const;
 
@@ -31,7 +34,17 @@ template <typename CollisionData>
 class ColliderCmpT : public ColliderCmp
 {
 public:
-    void Reset() const override { myData = CollisionData {}; }
+    void Reset() const override { myHits.clear(); }
+    void AddHit(const CollisionTag& aTag) const override { myHits.emplace_back(aTag, myData); }
 
+    struct Hit
+    {
+        CollisionTag myTag;
+        CollisionData myData;
+    };
+
+    mutable std::vector<Hit> myHits;
+
+protected:
     mutable CollisionData myData;
 };

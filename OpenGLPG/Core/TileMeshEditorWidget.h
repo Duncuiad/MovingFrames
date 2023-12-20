@@ -24,9 +24,7 @@ public:
 
     enum class ClickAction {
         Inspect,
-        FlipColor,
-        PaintBlack,
-        PaintWhite
+        Paint,
     };
 
     TileMesh* myTileMesh {nullptr};
@@ -46,6 +44,7 @@ private:
     bool DrawBrushes();
     bool DrawBrushRandom();
     bool DrawBrushNorm();
+    bool DrawBrushHeight();
     bool DrawReset();
     void DrawCoordinates(const Dodec& aDodec);
     void DrawDodec(const char* aName, const Dodec& aDodec);
@@ -64,6 +63,8 @@ private:
 
     DodecDisplayStyle myDodecDisplayStyle {DodecDisplayStyle::IntegerIN};
     ComparisonType myNormSelectionType {ComparisonType::Equal};
+    ComparisonType myHeightSelectionType {ComparisonType::Equal};
     int myNormComparisonData[2];
+    int myHeightComparisonData {0};
     float myVertexColorThreshold {0.f};
 };

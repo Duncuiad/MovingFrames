@@ -11,7 +11,6 @@ struct TileMeshCollisionData
 {
     int myHitFace {-1};
     int myHitVertex {-1};
-    bool myWasHit {false};
 };
 
 class TileMeshColliderCmp : public ColliderCmpT<TileMeshCollisionData>
@@ -24,7 +23,6 @@ public:
 
 private:
     float RayCastHit(const Vec3& aRayStart, const Vec3& aRayDirection) const override;
-    void ProcessHit() const override;
     const TileMeshCmp& GetTileMeshCmp() const;
     const Transform& GetTransform() const;
 
