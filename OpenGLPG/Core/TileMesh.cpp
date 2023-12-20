@@ -27,6 +27,14 @@ void TileMesh::Serialize(Serializer& aSerializer)
     aSerializer.Process("myVertices", myVertices);
     aSerializer.Process("myHalfEdges", myHalfEdges);
     aSerializer.Process("myFaces", myFaces);
+
+    for (const TileFace& face : myFaces)
+    {
+        if (face.myParent != -1)
+        {
+            myFaces[face.myParent].myChildren.PushBack(face.myIndex);
+        }
+    }
 }
 
 void TileMesh::Reset(TileType aType)

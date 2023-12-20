@@ -23,7 +23,6 @@ void TileFace::Serialize(Serializer& aSerializer)
     myType = static_cast<TileType>(type);
 
     aSerializer.Process("myParent", myParent);
-    aSerializer.Process("myChildren", myChildren);
     aSerializer.Process("myData", myData);
 }
 
