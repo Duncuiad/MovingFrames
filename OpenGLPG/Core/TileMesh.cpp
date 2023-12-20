@@ -286,14 +286,14 @@ std::pair<Array<Vec2>, Array<unsigned int>> TileMesh::GetMesh(int aHeight) const
     return std::make_pair(std::move(vertices), std::move(indices));
 }
 
-std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition) const
+std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition, int aMaxFaceHeight) const
 {
     if (myFaces.Count() == 0)
     {
         return {-1, -1};
     }
 
-    int maxHeight {-1};
+    int currentHeight {-1};
     int faceIdx {-1};
     int vertexIdx {-1};
     std::deque<int> faceQueue;
@@ -305,9 +305,14 @@ std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition) const
         const TileFace& face {myFaces[faceQueue.front()]};
         faceQueue.pop_front();
 
+        if (aMaxFaceHeight != -1 && face.myHeight > aMaxFaceHeight)
+        {
+            continue;
+        }
+
         if (Contains(face, aPosition))
         {
-            if (face.myHeight > maxHeight)
+            if (face.myHeight > currentHeight)
             {
                 faceIdx = face.myIndex;
             }

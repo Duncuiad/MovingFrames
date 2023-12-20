@@ -199,6 +199,7 @@ void Editor_TileMeshCmp::OnChanged() const
     graphCmp.GetShader().SetUniformInt("ShowGraphs", static_cast<int>(myWidget.myShowGraphs));
     graphCmp.GetShader().SetUniformInt("ShowEdges", static_cast<int>(myWidget.myShowEdges));
     graphCmp.GetShader().SetUniformInt("ShowBlocks", static_cast<int>(myWidget.myShowBlocks));
+    GetTileMeshColliderCmp().myMaxFaceHeight = myWidget.myHeightToDisplay;
 }
 
 TileMeshCmp& Editor_TileMeshCmp::GetTileMeshCmp() const
@@ -215,9 +216,9 @@ DynamicMeshGraphCmp& Editor_TileMeshCmp::GetDynamicMeshGraphCmp() const
     return *cmp;
 }
 
-const TileMeshColliderCmp& Editor_TileMeshCmp::GetTileMeshColliderCmp() const
+TileMeshColliderCmp& Editor_TileMeshCmp::GetTileMeshColliderCmp() const
 {
-    const TileMeshColliderCmp* cmp {GetEntity().GetComponent<TileMeshColliderCmp>()};
+    TileMeshColliderCmp* cmp {GetEntity().GetEditableComponent<TileMeshColliderCmp>()};
     ASSERT(cmp != nullptr, "Couldn't find required component");
     return *cmp;
 }

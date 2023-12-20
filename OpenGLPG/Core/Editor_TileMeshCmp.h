@@ -20,5 +20,5 @@ public:
 private:
     TileMeshCmp& GetTileMeshCmp() const;
     DynamicMeshGraphCmp& GetDynamicMeshGraphCmp() const;
-    const TileMeshColliderCmp& GetTileMeshColliderCmp() const;
+    TileMeshColliderCmp& GetTileMeshColliderCmp() const;
 };

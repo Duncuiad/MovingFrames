@@ -33,7 +33,7 @@ public:
     bool Contains(const TileFace& aFace, const Vec2& aPosition) const;
     int GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) const;
     std::pair<Array<Vec2>, Array<unsigned int>> GetMesh(int aHeight) const;
-    std::pair<int, int> GetVertexAndFace(const Vec2& aPosition) const;
+    std::pair<int, int> GetVertexAndFace(const Vec2& aPosition, int aMaxFaceHeight = -1) const;
     std::vector<std::reference_wrapper<const TileVertex>> GetTriangles(int aHeight, int aTriangleTypeMask = 3) const;
     std::vector<std::reference_wrapper<const TileVertex>> GetSquares(int aHeight, int aSquareTypeMask = 7) const;
 

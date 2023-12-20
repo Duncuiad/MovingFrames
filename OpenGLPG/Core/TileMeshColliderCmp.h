@@ -21,6 +21,8 @@ class TileMeshColliderCmp : public ColliderCmpT<TileMeshCollisionData>
 public:
     void OnEnterWorld() override;
 
+    int myMaxFaceHeight {-1};
+
 private:
     float RayCastHit(const Vec3& aRayStart, const Vec3& aRayDirection) const override;
     const TileMeshCmp& GetTileMeshCmp() const;
