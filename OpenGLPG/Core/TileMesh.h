@@ -29,6 +29,7 @@ public:
     const Dodec& GetCoordinates(int aVertexIdx);
 
     int GetMaxHeight() const;
+    std::pair<Vec2, float> GetBoundingCircle(const TileFace& aFace) const;
     bool Contains(const TileFace& aFace, const Vec2& aPosition) const;
     int GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) const;
     std::pair<Array<Vec2>, Array<unsigned int>> GetMesh(int aHeight) const;

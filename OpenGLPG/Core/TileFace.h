@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Array.h"
+#include "MathDefines.h"
 #include "Serializable.h"
+
+#include <utility>
 
 enum class TileType {
     TriangleA,
@@ -29,8 +32,10 @@ struct TileFace : public Serializable
     int myParent {-1};
     Array<int> myChildren;
 
-    struct Data
+    struct Data : public Serializable
     {
+        virtual void Serialize(Serializer& aSerializer) override;
+
         bool myColor {false};
     };
 

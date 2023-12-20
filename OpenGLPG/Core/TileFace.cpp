@@ -3,6 +3,7 @@
 #include "TileFace.h"
 
 #include "Serializer.h"
+#include "TileHalfEdge.h"
 
 TileFace::TileFace(int anIndex, int aHeight, TileType aType, int anEdge)
     : myIndex {anIndex}
@@ -20,6 +21,10 @@ void TileFace::Serialize(Serializer& aSerializer)
     int type {static_cast<int>(myType)};
     aSerializer.Process("myType", type);
     myType = static_cast<TileType>(type);
+
+    aSerializer.Process("myParent", myParent);
+    aSerializer.Process("myChildren", myChildren);
+    aSerializer.Process("myData", myData);
 }
 
 bool TileFace::IsTriangle() const
@@ -30,4 +35,9 @@ bool TileFace::IsTriangle() const
 bool TileFace::IsSquare() const
 {
     return myType == TileType::SquareA || myType == TileType::SquareB || myType == TileType::SquareC;
+}
+
+void TileFace::Data::Serialize(Serializer& aSerializer)
+{
+    aSerializer.Process("myColor", myColor);
 }

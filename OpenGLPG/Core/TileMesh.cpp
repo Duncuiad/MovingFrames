@@ -6,6 +6,7 @@
 #include "MathDefines.h"
 
 #include <algorithm>
+#include <deque>
 #include <random>
 
 namespace
@@ -144,6 +145,37 @@ int TileMesh::GetMaxHeight() const
         ->myHeight;
 }
 
+std::pair<Vec2, float> TileMesh::GetBoundingCircle(const TileFace& aFace) const
+{
+    // Upper bounds for the max distance from the center of the face to any point in any face in its subhierarchy
+    constexpr float triangleUpperBound {0.59f * 0.59f};
+    constexpr float squareUpperBound {0.73f * 0.73f};
+
+    const TileHalfEdge& edge0 {myHalfEdges[aFace.myEdge]};
+    const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
+    const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
+    const Vec2& vertex0 {myVertices[edge0.myVertex].GetPosition()};
+    const Vec2& vertex1 {myVertices[edge1.myVertex].GetPosition()};
+    const Vec2& vertex2 {myVertices[edge2.myVertex].GetPosition()};
+    Vec2 resultCenter {vertex0 + vertex1 + vertex2};
+    float resultRadiusSqd {glm::dot(vertex1 - vertex0, vertex1 - vertex0)};
+
+    if (aFace.IsTriangle())
+    {
+        resultCenter /= 3.f;
+        resultRadiusSqd *= triangleUpperBound;
+    }
+    else
+    {
+        const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
+        const Vec2& vertex3 {myVertices[edge3.myVertex].GetPosition()};
+        resultCenter = (resultCenter + vertex3) * 0.25f;
+        resultRadiusSqd *= squareUpperBound;
+    }
+
+    return {resultCenter, resultRadiusSqd};
+}
+
 bool TileMesh::Contains(const TileFace& aFace, const Vec2& aPosition) const
 {
     bool isInside {true};
@@ -248,12 +280,23 @@ std::pair<Array<Vec2>, Array<unsigned int>> TileMesh::GetMesh(int aHeight) const
 
 std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition) const
 {
+    if (myFaces.Count() == 0)
+    {
+        return {-1, -1};
+    }
+
     int maxHeight {-1};
     int faceIdx {-1};
     int vertexIdx {-1};
-    // @todo: make the lookup hierarchical
-    for (const TileFace& face : myFaces)
+    std::deque<int> faceQueue;
+    ASSERT(myFaces.GetFirst().myHeight == 0, "Missing root face");
+    faceQueue.push_back(myFaces.GetFirst().myIndex);
+
+    while (!faceQueue.empty())
     {
+        const TileFace& face {myFaces[faceQueue.front()]};
+        faceQueue.pop_front();
+
         if (Contains(face, aPosition))
         {
             if (face.myHeight > maxHeight)
@@ -261,7 +304,18 @@ std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition) const
                 faceIdx = face.myIndex;
             }
         }
+
+        for (const int childIdx : face.myChildren)
+        {
+            const TileFace& child {myFaces[childIdx]};
+            const auto [center, radiusSqd] = GetBoundingCircle(child);
+            if (glm::dot(aPosition - center, aPosition - center) < radiusSqd)
+            {
+                faceQueue.push_back(child.myIndex);
+            }
+        }
     }
+
     if (faceIdx != -1)
     {
         vertexIdx = GetClosestVertex(myFaces[faceIdx], aPosition);
