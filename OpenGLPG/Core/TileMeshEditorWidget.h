@@ -44,6 +44,7 @@ private:
     bool DrawBrushes();
     bool DrawBrushRandom();
     bool DrawBrushNorm();
+    bool DrawBrushNormAlt();
     bool DrawBrushHeight();
     bool DrawReset();
     void DrawCoordinates(const Dodec& aDodec);
@@ -63,8 +64,10 @@ private:
 
     DodecDisplayStyle myDodecDisplayStyle {DodecDisplayStyle::IntegerIN};
     ComparisonType myNormSelectionType {ComparisonType::Equal};
+    ComparisonType myNormAltSelectionType {ComparisonType::Equal};
     ComparisonType myHeightSelectionType {ComparisonType::Equal};
     int myNormComparisonData[2];
+    float myNormAltComparisonData {0};
     int myHeightComparisonData {0};
     float myVertexColorThreshold {0.f};
 };
