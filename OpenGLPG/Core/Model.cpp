@@ -63,23 +63,23 @@ void Model::ProcessAssimpMesh(aiMesh* aMesh, const aiScene* aScene)
         vector.x = aMesh->mVertices[i].x;
         vector.y = aMesh->mVertices[i].y;
         vector.z = aMesh->mVertices[i].z;
-        vertex.Position = vector;
+        vertex.myPosition = vector;
 
         vector.x = aMesh->mNormals[i].x;
         vector.y = aMesh->mNormals[i].y;
         vector.z = aMesh->mNormals[i].z;
-        vertex.Normal = vector;
+        vertex.myNormal = vector;
 
         if (aMesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
         {
             glm::vec2 vec;
             vec.x = aMesh->mTextureCoords[0][i].x;
             vec.y = aMesh->mTextureCoords[0][i].y;
-            vertex.TexCoords = vec;
+            vertex.myTexCoords = vec;
         }
         else
         {
-            vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+            vertex.myTexCoords = glm::vec2(0.0f, 0.0f);
         }
 
         vertices.push_back(vertex);

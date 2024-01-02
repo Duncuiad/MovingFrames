@@ -12,9 +12,9 @@ struct Vertex
     using Index = unsigned int;
     using IndexList = std::vector<Index>;
 
-    glm::vec3 Position;
-    glm::vec3 Normal;
-    glm::vec2 TexCoords;
+    glm::vec3 myPosition;
+    glm::vec3 myNormal;
+    glm::vec2 myTexCoords;
 };
 
 class Mesh

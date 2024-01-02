@@ -154,8 +154,6 @@ bool TileMeshEditorWidget::DrawBrushes()
     if (ImGui::TreeNode("Brushes"))
     {
         ImGui::PushID("BrushRandom");
-        ImGui::Bullet();
-        ImGui::Text("Random");
         changed |= DrawBrushRandom();
         ImGui::PopID();
 
@@ -176,7 +174,8 @@ bool TileMeshEditorWidget::DrawBrushes()
         if (ImGui::Button("Norm"))
         {
             changed = true;
-            myTileMesh->ColorVertices([](const TileVertex& aVertex) { return aVertex.myCoordinates.Norm(); });
+            myTileMesh->ColorVertices(
+                [](const TileVertex& aVertex) { return static_cast<float>(aVertex.myCoordinates.Norm()); });
         }
 
         ImGui::SameLine();
@@ -184,7 +183,7 @@ bool TileMeshEditorWidget::DrawBrushes()
         {
             changed = true;
             myTileMesh->ColorVertices(
-                [](const TileVertex& aVertex) { return sqrt(sqrt(aVertex.myCoordinates.Norm())); });
+                [](const TileVertex& aVertex) { return sqrt(sqrt(static_cast<float>(aVertex.myCoordinates.Norm()))); });
         }
 
         ImGui::Bullet();
@@ -242,6 +241,8 @@ bool TileMeshEditorWidget::DrawBrushes()
 
 bool TileMeshEditorWidget::DrawBrushRandom()
 {
+    ImGui::Bullet();
+    ImGui::Text("Random");
     ImGui::SliderFloat("##Random Color", &myVertexColorThreshold, 0., 1., "p = %.3f", ImGuiSliderFlags_AlwaysClamp);
     ImGui::SameLine();
     if (ImGui::Button("Run"))

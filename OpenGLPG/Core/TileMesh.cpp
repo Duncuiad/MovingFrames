@@ -261,49 +261,6 @@ int TileMesh::GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) con
     return vertexIdx;
 }
 
-std::pair<Array<Vec2>, Array<unsigned int>> TileMesh::GetMesh(int aHeight) const
-{
-    Array<Vec2> vertices;
-    Array<unsigned int> indices;
-
-    std::unordered_map<int, int> vertexInverseMapping;
-
-    for (const TileVertex& vertex : myVertices)
-    {
-        if (vertex.myHeight <= aHeight)
-        {
-            vertexInverseMapping[vertex.myIndex] = vertices.Count();
-            vertices.PushBack(vertex.GetPosition());
-        }
-    }
-
-    for (const TileFace& face : myFaces)
-    {
-        if (face.myHeight != aHeight)
-        {
-            continue;
-        }
-
-        const TileHalfEdge& edge0 {myHalfEdges[face.myEdge]};
-        const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
-        const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
-
-        indices.PushBack(vertexInverseMapping[edge0.myVertex]);
-        indices.PushBack(vertexInverseMapping[edge1.myVertex]);
-        indices.PushBack(vertexInverseMapping[edge2.myVertex]);
-
-        if (face.IsSquare())
-        {
-            const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
-            indices.PushBack(vertexInverseMapping[edge2.myVertex]);
-            indices.PushBack(vertexInverseMapping[edge3.myVertex]);
-            indices.PushBack(vertexInverseMapping[edge0.myVertex]);
-        }
-    }
-
-    return std::make_pair(std::move(vertices), std::move(indices));
-}
-
 std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition, int aMaxFaceHeight) const
 {
     if (myFaces.Count() == 0)
@@ -354,57 +311,19 @@ std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition, int aMaxFa
     return {vertexIdx, faceIdx};
 }
 
-std::vector<std::reference_wrapper<const TileVertex>> TileMesh::GetTriangles(int aHeight, int aTriangleTypeMask) const
+const Array<TileVertex>& TileMesh::GetVertices() const
 {
-    std::vector<std::reference_wrapper<const TileVertex>> vertices;
-
-    for (const TileFace& face : myFaces)
-    {
-        if (face.myHeight != aHeight || !face.IsTriangle() ||
-            (face.myType == TileType::TriangleA && !(aTriangleTypeMask & 1)) ||
-            (face.myType == TileType::TriangleB && !(aTriangleTypeMask & 2)))
-        {
-            continue;
-        }
-
-        const TileHalfEdge& edge0 {myHalfEdges[face.myEdge]};
-        const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
-        const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
-
-        vertices.push_back(myVertices[edge0.myVertex]);
-        vertices.push_back(myVertices[edge1.myVertex]);
-        vertices.push_back(myVertices[edge2.myVertex]);
-    }
-
-    return vertices;
+    return myVertices;
 }
 
-std::vector<std::reference_wrapper<const TileVertex>> TileMesh::GetSquares(int aHeight, int aTriangleTypeMask) const
+const Array<TileHalfEdge>& TileMesh::GetEdges() const
 {
-    std::vector<std::reference_wrapper<const TileVertex>> vertices;
+    return myHalfEdges;
+}
 
-    for (const TileFace& face : myFaces)
-    {
-        if (face.myHeight != aHeight || !face.IsSquare() ||
-            (face.myType == TileType::SquareA && !(aTriangleTypeMask & 1)) ||
-            (face.myType == TileType::SquareB && !(aTriangleTypeMask & 2)) ||
-            (face.myType == TileType::SquareC && !(aTriangleTypeMask & 4)))
-        {
-            continue;
-        }
-
-        const TileHalfEdge& edge0 {myHalfEdges[face.myEdge]};
-        const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
-        const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
-        const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
-
-        vertices.push_back(myVertices[edge0.myVertex]);
-        vertices.push_back(myVertices[edge1.myVertex]);
-        vertices.push_back(myVertices[edge2.myVertex]);
-        vertices.push_back(myVertices[edge3.myVertex]);
-    }
-
-    return vertices;
+const Array<TileFace>& TileMesh::GetFaces() const
+{
+    return myFaces;
 }
 
 void TileMesh::CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 /*= -1*/)

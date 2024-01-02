@@ -16,5 +16,5 @@ void main()
     gl_Position = WorldToClip * Model * gl_Position;
     vertexColor = aNormal;
     uvs = aUV;
-    faceColor = 1.0;
+    faceColor = aNormal.x;
 }
