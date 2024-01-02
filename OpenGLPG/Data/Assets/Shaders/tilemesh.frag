@@ -33,9 +33,16 @@ void DrawMarchingSquares(vec2 UV, vec3 vertColor, inout vec4 fragColor)
     if (max(UV.x - 0.5, UV.y - 0.5) > 0.)
     {
         vec2 doubleUVs = mod(UV * 2., 1.);
-        float vertexColorValue = max(max(vertColor.x, vertColor.y), vertColor.z);
-        float centerColorValue = (doubleUVs.x - 0.5) * (doubleUVs.y - 0.5) < 0. && vertColor.y > 0. ? 1. : 0.;
-        vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.) : vec4(0.,0.,0.,1.);
+        vec3 barycentric = doubleUVs.x < doubleUVs.y ? vec3(1. - doubleUVs.y, doubleUVs.y - doubleUVs.x, doubleUVs.x)
+                                                     : vec3(1. - doubleUVs.x, doubleUVs.x - doubleUVs.y, doubleUVs.y);
+        float relevantColorValue = vertColor.y;
+        relevantColorValue = (doubleUVs.x <= 0.5 && doubleUVs.y <= 0.5) ? vertColor.x : relevantColorValue;
+        relevantColorValue = (doubleUVs.x >= 0.5 && doubleUVs.y >= 0.5) ? vertColor.z : relevantColorValue;
+        float relevantBarycentric = barycentric.y;
+        relevantBarycentric = (doubleUVs.x <= 0.5 && doubleUVs.y <= 0.5) ? barycentric.x : relevantBarycentric;
+        relevantBarycentric = (doubleUVs.x >= 0.5 && doubleUVs.y >= 0.5) ? barycentric.z : relevantBarycentric;
+        vec4 blockColor = vec4(vec3(relevantColorValue / relevantBarycentric), 1.);
+
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
 }
@@ -51,7 +58,8 @@ void DrawMarchingTriangles(vec2 UV, vec3 vertColor, inout vec4 fragColor)
         relevantColorValue = (barycentric.x > barycentric.y && barycentric.x > barycentric.z) ? vertColor.x : relevantColorValue;
         relevantColorValue = (barycentric.y > barycentric.x && barycentric.y > barycentric.z) ? vertColor.y : relevantColorValue;
         relevantColorValue = (barycentric.z > barycentric.y && barycentric.z > barycentric.x) ? vertColor.z : relevantColorValue;
-        vec4 blockColor = relevantColorValue > 0. ? vec4(0.) : vec4(0.,0.,0.,1.);
+        float relevantBarycentric = max(max(barycentric.x, barycentric.y), barycentric.z);
+        vec4 blockColor = vec4(vec3(relevantColorValue / relevantBarycentric), 1.);
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
 }

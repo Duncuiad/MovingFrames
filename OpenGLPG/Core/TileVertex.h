@@ -10,6 +10,7 @@
 struct TileVertex : public Serializable
 {
     using Predicate = std::function<bool(const TileVertex&)>;
+    using Evaluation = std::function<float(const TileVertex&)>;
 
     TileVertex() = default;
     TileVertex(int anIndex, int aHeight, const Dodec& aDodec);

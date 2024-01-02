@@ -26,22 +26,25 @@ void TileMeshEditorWidget::Draw()
     ASSERT(myTileMesh != nullptr, "Failed attaching tilemesh object");
     bool changed {false};
 
+    changed |= DrawReset();
     changed |= DrawShowdata();
 
-    DrawEditing();
-
-    changed |= DrawReset();
-
-    if (ImGui::Button("Inflate"))
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    if (ImGui::TreeNode("Mesh"))
     {
-        myTileMesh->SubdivideAllFaces();
-        ++myHeightToDisplay;
-        changed = true;
+        if (ImGui::Button("Inflate"))
+        {
+            myTileMesh->SubdivideAllFaces();
+            ++myHeightToDisplay;
+            changed = true;
+        }
+        changed |= ImGui::SliderInt("##Display Height", &myHeightToDisplay, 0, myTileMesh->GetMaxHeight(),
+                                    "Display Height = %d", ImGuiSliderFlags_AlwaysClamp);
+        ImGui::Separator();
+        ImGui::TreePop();
     }
-    changed |= ImGui::SliderInt("##Display Height", &myHeightToDisplay, 0, myTileMesh->GetMaxHeight(),
-                                "Display Height = %d", ImGuiSliderFlags_AlwaysClamp);
-    ImGui::Separator();
 
+    DrawEditing();
     changed |= DrawBrushes();
 
     if (changed)
@@ -80,14 +83,19 @@ bool TileMeshEditorWidget::DrawShowdata()
 {
     bool changed {false};
 
-    ImGui::Text("Show");
-    changed |= ImGui::Checkbox("Graphs", &myShowGraphs);
-    changed |= ImGui::Checkbox("Edges", &myShowEdges);
-    changed |= Widgets::RadioButton("None", &myShowBlocks, ShowBlocks::None);
-    ImGui::SameLine();
-    changed |= Widgets::RadioButton("Vertices", &myShowBlocks, ShowBlocks::Vertices);
-    ImGui::SameLine();
-    changed |= Widgets::RadioButton("Faces", &myShowBlocks, ShowBlocks::Faces);
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    if (ImGui::TreeNode("Show"))
+    {
+        changed |= ImGui::Checkbox("Graphs", &myShowGraphs);
+        changed |= ImGui::Checkbox("Edges", &myShowEdges);
+        changed |= Widgets::RadioButton("None", &myShowBlocks, ShowBlocks::None);
+        ImGui::SameLine();
+        changed |= Widgets::RadioButton("Vertices", &myShowBlocks, ShowBlocks::Vertices);
+        ImGui::SameLine();
+        changed |= Widgets::RadioButton("Faces", &myShowBlocks, ShowBlocks::Faces);
+        ImGui::Separator();
+        ImGui::TreePop();
+    }
 
     return changed;
 }
@@ -121,6 +129,7 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::Separator();
     }
 
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
     if (ImGui::TreeNode("Editing"))
     {
         ImGui::Text("Mode");
@@ -128,7 +137,7 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::SameLine();
         Widgets::RadioButton("Faces", &myActionMode, ActionMode::Faces);
 
-        ImGui::Separator();
+        ImGui::Spacing();
         ImGui::Text("Action");
         Widgets::RadioButton("Inspect", &myClickAction, ClickAction::Inspect);
         Widgets::RadioButton("Paint", &myClickAction, ClickAction::Paint);
@@ -141,25 +150,99 @@ bool TileMeshEditorWidget::DrawBrushes()
 {
     bool changed {false};
 
-    ImGui::Separator();
-    ImGui::PushID("BrushRandom");
-    changed |= DrawBrushRandom();
-    ImGui::PopID();
-
-    for (auto& block : myThresholdBlocks)
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    if (ImGui::TreeNode("Brushes"))
     {
+        ImGui::PushID("BrushRandom");
+        ImGui::Bullet();
+        ImGui::Text("Random");
+        changed |= DrawBrushRandom();
+        ImGui::PopID();
+
+        for (auto& block : myThresholdBlocks)
+        {
+            ImGui::Bullet();
+            changed |= block->Draw();
+        }
+
+        ImGui::Bullet();
+        if (ImGui::Button("Height"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const TileVertex& aVertex) { return static_cast<float>(aVertex.myHeight); });
+        }
+
+        ImGui::Bullet();
+        if (ImGui::Button("Norm"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const TileVertex& aVertex) { return aVertex.myCoordinates.Norm(); });
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Norm^(1/4)"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices(
+                [](const TileVertex& aVertex) { return sqrt(sqrt(aVertex.myCoordinates.Norm())); });
+        }
+
+        ImGui::Bullet();
+        if (ImGui::Button("ComplexNorm"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const TileVertex& aVertex) {
+                return (aVertex.myCoordinates * aVertex.myCoordinates.Conj()).Pos().x;
+            });
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Sqrt(ComplexNorm)"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const TileVertex& aVertex) {
+                return sqrt((aVertex.myCoordinates * aVertex.myCoordinates.Conj()).Pos().x);
+            });
+        }
+
+        ImGui::Bullet();
+        if (ImGui::Button("NormAlt"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const TileVertex& aVertex) {
+                return (aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x;
+            });
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Sqrt(NormAlt)"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const TileVertex& aVertex) {
+                return sqrt((aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x);
+            });
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Log2(Sqrt(NormAlt))"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const TileVertex& aVertex) {
+                return std::max(
+                    0.5f * log2((aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x), 0.f);
+            });
+        }
+
         ImGui::Separator();
-        changed |= block->Draw();
+        ImGui::TreePop();
     }
 
-    ImGui::Separator();
     return changed;
 }
 
 bool TileMeshEditorWidget::DrawBrushRandom()
 {
-    ImGui::SliderFloat("##Random Color", &myVertexColorThreshold, 0., 1., "Randomize Vertices | p = %.3f",
-                       ImGuiSliderFlags_AlwaysClamp);
+    ImGui::SliderFloat("##Random Color", &myVertexColorThreshold, 0., 1., "p = %.3f", ImGuiSliderFlags_AlwaysClamp);
     ImGui::SameLine();
     if (ImGui::Button("Run"))
     {

@@ -109,6 +109,24 @@ void TileMesh::RandomizeVertexColors(float aRatio)
     }
 }
 
+void TileMesh::ColorVertices(const TileVertex::Evaluation& anEvaluation)
+{
+    const auto [minIt, maxIt] = std::minmax_element(myVertices.begin(), myVertices.end(),
+                                                    [&anEvaluation](const TileVertex& aLeft, const TileVertex& aRight) {
+                                                        return anEvaluation(aLeft) < anEvaluation(aRight);
+                                                    });
+    const float m {anEvaluation(*minIt)};
+    const float M {anEvaluation(*maxIt)};
+
+    if (m < M)
+    {
+        for (TileVertex& vertex : myVertices)
+        {
+            vertex.myData.myColor = (anEvaluation(vertex) - m) / (M - m);
+        }
+    }
+}
+
 void TileMesh::ColorVerticesSatisfying(const TileVertex::Predicate& aPredicate)
 {
     for (TileVertex& vertex : myVertices)
