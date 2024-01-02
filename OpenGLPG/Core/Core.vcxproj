@@ -177,6 +177,8 @@
     <ClInclude Include="GraphCmp.h" />
     <ClInclude Include="Dual.h" />
     <ClInclude Include="FrameSpline.h" />
+    <ClInclude Include="SliderThresholdWidgetBlock.h" />
+    <ClInclude Include="ThresholdWidgetBlock.h" />
     <ClInclude Include="InputOrthoSizeCameraBehavior.h" />
     <ClInclude Include="InputOrthoTranslationCameraBehavior.h" />
     <ClInclude Include="TileFace.h" />
@@ -312,6 +314,7 @@
     <None Include="..\Data\Assets\Shaders\spline.shader" />
     <None Include="..\Data\Assets\Shaders\spline.vert" />
     <None Include="Serializer.inl" />
+    <None Include="SliderThresholdWidgetBlock.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

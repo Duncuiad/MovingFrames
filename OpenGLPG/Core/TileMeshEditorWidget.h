@@ -2,7 +2,11 @@
 
 #include "Dodec.h"
 #include "EditorWidget.h"
+#include "ThresholdWidgetBlock.h"
 #include "TileMesh.h"
+
+#include <memory>
+#include <vector>
 
 class TileMeshEditorWidget : public EditorWidget
 {
@@ -39,13 +43,12 @@ public:
     int mySelectedFace {-1};
 
 private:
+    void CreateThresholdBlocks();
+
     bool DrawShowdata();
     void DrawEditing();
     bool DrawBrushes();
     bool DrawBrushRandom();
-    bool DrawBrushNorm();
-    bool DrawBrushNormAlt();
-    bool DrawBrushHeight();
     bool DrawReset();
     void DrawCoordinates(const Dodec& aDodec);
     void DrawDodec(const char* aName, const Dodec& aDodec);
@@ -56,18 +59,7 @@ private:
         IntegerIZ
     };
 
-    enum class ComparisonType {
-        Less,
-        Equal,
-        Greater
-    };
-
+    std::vector<std::unique_ptr<ThresholdWidgetBlock<TileVertex>>> myThresholdBlocks;
     DodecDisplayStyle myDodecDisplayStyle {DodecDisplayStyle::IntegerIN};
-    ComparisonType myNormSelectionType {ComparisonType::Equal};
-    ComparisonType myNormAltSelectionType {ComparisonType::Equal};
-    ComparisonType myHeightSelectionType {ComparisonType::Equal};
-    int myNormComparisonData[2];
-    float myNormAltComparisonData {0};
-    int myHeightComparisonData {0};
     float myVertexColorThreshold {0.f};
 };

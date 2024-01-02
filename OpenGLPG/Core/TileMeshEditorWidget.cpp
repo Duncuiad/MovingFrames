@@ -4,14 +4,15 @@
 
 #include "Assert.h"
 #include "ImGuiWidgets.h"
+#include "SliderThresholdWidgetBlock.h"
 
+#include <array>
 #include <string>
 #include <tuple>
 
 TileMeshEditorWidget::TileMeshEditorWidget()
 {
-    myNormComparisonData[0] = 0;
-    myNormComparisonData[1] = 0;
+    CreateThresholdBlocks();
 }
 
 void TileMeshEditorWidget::AttachTileMeshObject(TileMesh& aTileMesh)
@@ -47,6 +48,32 @@ void TileMeshEditorWidget::Draw()
     {
         myOnChanged();
     }
+}
+
+void TileMeshEditorWidget::CreateThresholdBlocks()
+{
+    myThresholdBlocks.emplace_back(std::make_unique<Int2SliderThresholdWidgetBlock<TileVertex>>(
+        "Norm", [](const TileVertex& aVertex) { return static_cast<float>(aVertex.myCoordinates.Norm()); },
+        [this](const auto& aPredicate) { myTileMesh->ColorVerticesSatisfying(aPredicate); },
+        []() {
+            return std::array<int, 2> {0, 0};
+        },
+        []() {
+            return std::array<int, 2> {300, 300};
+        }));
+
+    myThresholdBlocks.emplace_back(std::make_unique<FloatSliderThresholdWidgetBlock<TileVertex>>(
+        "Alt Norm",
+        [](const TileVertex& aVertex) {
+            return 0.5f * log2((aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x);
+        },
+        [this](const auto& aPredicate) { myTileMesh->ColorVerticesSatisfying(aPredicate); }, []() { return 0.f; },
+        []() { return 10.f; }));
+
+    myThresholdBlocks.emplace_back(std::make_unique<IntSliderThresholdWidgetBlock<TileVertex>>(
+        "Height", [](const TileVertex& aVertex) { return static_cast<float>(aVertex.myHeight); },
+        [this](const auto& aPredicate) { myTileMesh->ColorVerticesSatisfying(aPredicate); }, []() { return -1; },
+        [this]() { return myTileMesh->GetMaxHeight() + 1; }));
 }
 
 bool TileMeshEditorWidget::DrawShowdata()
@@ -119,20 +146,11 @@ bool TileMeshEditorWidget::DrawBrushes()
     changed |= DrawBrushRandom();
     ImGui::PopID();
 
-    ImGui::Separator();
-    ImGui::PushID("BrushNorm");
-    changed |= DrawBrushNorm();
-    ImGui::PopID();
-
-    ImGui::Separator();
-    ImGui::PushID("BrushNormAlt");
-    changed |= DrawBrushNormAlt();
-    ImGui::PopID();
-
-    ImGui::Separator();
-    ImGui::PushID("BrushHeight");
-    changed |= DrawBrushHeight();
-    ImGui::PopID();
+    for (auto& block : myThresholdBlocks)
+    {
+        ImGui::Separator();
+        changed |= block->Draw();
+    }
 
     ImGui::Separator();
     return changed;
@@ -146,218 +164,6 @@ bool TileMeshEditorWidget::DrawBrushRandom()
     if (ImGui::Button("Run"))
     {
         myTileMesh->RandomizeVertexColors(myVertexColorThreshold);
-        return true;
-    }
-    return false;
-}
-
-bool TileMeshEditorWidget::DrawBrushNorm()
-{
-    std::string comparison = "";
-    switch (myNormSelectionType)
-    {
-    case ComparisonType::Less:
-        comparison = "<";
-        break;
-    case ComparisonType::Equal:
-        comparison = "=";
-        break;
-    case ComparisonType::Greater:
-        comparison = ">";
-        break;
-    default:
-        break;
-    }
-    int normComparison {myNormComparisonData[0] * myNormComparisonData[0] +
-                        myNormComparisonData[1] * myNormComparisonData[1]};
-    ImGui::Text("Norm %s %d", comparison.c_str(), normComparison);
-
-    bool edited {false};
-    ImGui::SameLine();
-    if (ImGui::Button("<"))
-    {
-        myNormSelectionType = ComparisonType::Less;
-        edited = true;
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("="))
-    {
-        myNormSelectionType = ComparisonType::Equal;
-        edited = true;
-    }
-    ImGui::SameLine();
-    if (ImGui::Button(">"))
-    {
-        myNormSelectionType = ComparisonType::Greater;
-        edited = true;
-    }
-    edited |= ImGui::SliderInt2("##Paint Norm1", &myNormComparisonData[0], 0, 300);
-    normComparison =
-        myNormComparisonData[0] * myNormComparisonData[0] + myNormComparisonData[1] * myNormComparisonData[1];
-
-    if (edited)
-    {
-        switch (myNormSelectionType)
-        {
-        case ComparisonType::Less: {
-            myTileMesh->ColorVerticesSatisfying(
-                [normComparison](const TileVertex& aVertex) { return aVertex.myCoordinates.Norm() < normComparison; });
-            break;
-        }
-        case ComparisonType::Equal: {
-            myTileMesh->ColorVerticesSatisfying(
-                [normComparison](const TileVertex& aVertex) { return aVertex.myCoordinates.Norm() == normComparison; });
-            break;
-        }
-        case ComparisonType::Greater: {
-            myTileMesh->ColorVerticesSatisfying(
-                [normComparison](const TileVertex& aVertex) { return aVertex.myCoordinates.Norm() > normComparison; });
-            break;
-        }
-        default:
-            break;
-        }
-        return true;
-    }
-    return false;
-}
-
-bool TileMeshEditorWidget::DrawBrushNormAlt()
-{
-    std::string comparison = "";
-    switch (myNormAltSelectionType)
-    {
-    case ComparisonType::Less:
-        comparison = "<";
-        break;
-    case ComparisonType::Equal:
-        comparison = "=";
-        break;
-    case ComparisonType::Greater:
-        comparison = ">";
-        break;
-    default:
-        break;
-    }
-    ImGui::Text("NormAlt %s %.3f", comparison.c_str(), myNormAltComparisonData);
-
-    bool edited {false};
-    ImGui::SameLine();
-    if (ImGui::Button("<"))
-    {
-        myNormAltSelectionType = ComparisonType::Less;
-        edited = true;
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("="))
-    {
-        myNormAltSelectionType = ComparisonType::Equal;
-        edited = true;
-    }
-    ImGui::SameLine();
-    if (ImGui::Button(">"))
-    {
-        myNormAltSelectionType = ComparisonType::Greater;
-        edited = true;
-    }
-    edited |= ImGui::SliderFloat("##Paint NormAlt", &myNormAltComparisonData, 0.f, 20.f, "%.3f",
-                                 ImGuiSliderFlags_NoRoundToFormat);
-
-    if (edited)
-    {
-        switch (myNormAltSelectionType)
-        {
-        case ComparisonType::Less: {
-            myTileMesh->ColorVerticesSatisfying([this](const TileVertex& aVertex) {
-                return 0.5f * log2((aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x) <
-                       myNormAltComparisonData;
-            });
-            break;
-        }
-        case ComparisonType::Equal: {
-            myTileMesh->ColorVerticesSatisfying([this](const TileVertex& aVertex) {
-                return 0.5f * log2((aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x) ==
-                       myNormAltComparisonData;
-            });
-            break;
-        }
-        case ComparisonType::Greater: {
-            myTileMesh->ColorVerticesSatisfying([this](const TileVertex& aVertex) {
-                return 0.5f * log2((aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x) >
-                       myNormAltComparisonData;
-            });
-            break;
-        }
-        default:
-            break;
-        }
-        return true;
-    }
-    return false;
-}
-
-bool TileMeshEditorWidget::DrawBrushHeight()
-{
-    std::string comparison = "";
-    switch (myHeightSelectionType)
-    {
-    case ComparisonType::Less:
-        comparison = "<";
-        break;
-    case ComparisonType::Equal:
-        comparison = "=";
-        break;
-    case ComparisonType::Greater:
-        comparison = ">";
-        break;
-    default:
-        break;
-    }
-    ImGui::Text("Height %s %d", comparison.c_str(), myHeightComparisonData);
-
-    bool edited {false};
-    ImGui::SameLine();
-    if (ImGui::Button("<"))
-    {
-        myHeightSelectionType = ComparisonType::Less;
-        edited = true;
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("="))
-    {
-        myHeightSelectionType = ComparisonType::Equal;
-        edited = true;
-    }
-    ImGui::SameLine();
-    if (ImGui::Button(">"))
-    {
-        myHeightSelectionType = ComparisonType::Greater;
-        edited = true;
-    }
-    edited |= ImGui::SliderInt("##Paint Norm1", &myHeightComparisonData, -1, myTileMesh->GetMaxHeight() + 1);
-
-    if (edited)
-    {
-        switch (myHeightSelectionType)
-        {
-        case ComparisonType::Less: {
-            myTileMesh->ColorVerticesSatisfying(
-                [this](const TileVertex& aVertex) { return aVertex.myHeight < myHeightComparisonData; });
-            break;
-        }
-        case ComparisonType::Equal: {
-            myTileMesh->ColorVerticesSatisfying(
-                [this](const TileVertex& aVertex) { return aVertex.myHeight == myHeightComparisonData; });
-            break;
-        }
-        case ComparisonType::Greater: {
-            myTileMesh->ColorVerticesSatisfying(
-                [this](const TileVertex& aVertex) { return aVertex.myHeight > myHeightComparisonData; });
-            break;
-        }
-        default:
-            break;
-        }
         return true;
     }
     return false;

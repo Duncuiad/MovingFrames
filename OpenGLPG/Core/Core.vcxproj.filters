@@ -309,6 +309,12 @@
     <ClInclude Include="ColliderCmp.h">
       <Filter>Collision\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ThresholdWidgetBlock.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="SliderThresholdWidgetBlock.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -506,9 +512,6 @@
     <ClCompile Include="DynamicMesh.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="TileMeshEditorWidget.cpp">
-      <Filter>Tiles\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Editor_TileMeshCmp.cpp">
       <Filter>Tiles\Components</Filter>
     </ClCompile>
@@ -535,6 +538,9 @@
     </ClCompile>
     <ClCompile Include="ColliderCmp.cpp">
       <Filter>Collision\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMeshEditorWidget.cpp">
+      <Filter>Tiles\Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -587,6 +593,9 @@
     </None>
     <None Include="..\Data\Assets\Shaders\sheet.frag">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="SliderThresholdWidgetBlock.inl">
+      <Filter>Editor</Filter>
     </None>
   </ItemGroup>
 </Project>
