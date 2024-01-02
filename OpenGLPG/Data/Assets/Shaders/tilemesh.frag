@@ -3,7 +3,7 @@ out vec4 FragColor;
 
 in vec3 vertexColor;
 in vec2 uvs;
-flat in int faceColor;
+flat in float faceColor;
 
 uniform int ShowGraphs;
 uniform int ShowEdges;
@@ -24,7 +24,7 @@ void DrawBlocks(vec2 UV, vec3 vertColor, inout vec4 fragColor)
         vec2 doubleUVs = mod(UV * 2., 1.);
         centerColorValue = (doubleUVs.x - 0.5) * (doubleUVs.y - 0.5) < 0. && vertColor.y > 0. ? 1. : 0.;
     }
-    vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.,0.,0.,1.) : vec4(0.);
+    vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.) : vec4(0.,0.,0.,1.);
     fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
 }
 
@@ -35,7 +35,7 @@ void DrawMarchingSquares(vec2 UV, vec3 vertColor, inout vec4 fragColor)
         vec2 doubleUVs = mod(UV * 2., 1.);
         float vertexColorValue = max(max(vertColor.x, vertColor.y), vertColor.z);
         float centerColorValue = (doubleUVs.x - 0.5) * (doubleUVs.y - 0.5) < 0. && vertColor.y > 0. ? 1. : 0.;
-        vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.,0.,0.,1.) : vec4(0.);
+        vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.) : vec4(0.,0.,0.,1.);
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
 }
@@ -51,14 +51,14 @@ void DrawMarchingTriangles(vec2 UV, vec3 vertColor, inout vec4 fragColor)
         relevantColorValue = (barycentric.x > barycentric.y && barycentric.x > barycentric.z) ? vertColor.x : relevantColorValue;
         relevantColorValue = (barycentric.y > barycentric.x && barycentric.y > barycentric.z) ? vertColor.y : relevantColorValue;
         relevantColorValue = (barycentric.z > barycentric.y && barycentric.z > barycentric.x) ? vertColor.z : relevantColorValue;
-        vec4 blockColor = relevantColorValue >0. ? vec4(0.,0.,0.,1.) : vec4(0.);
+        vec4 blockColor = relevantColorValue > 0. ? vec4(0.) : vec4(0.,0.,0.,1.);
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
 }
 
-void DrawFaces(int aFaceColor, inout vec4 fragColor)
+void DrawFaces(float aFaceColor, inout vec4 fragColor)
 {
-    vec4 blockColor = aFaceColor > 0 ? vec4(0.,0.,0.,1.) : vec4(0.);
+    vec4 blockColor = aFaceColor < 1.0 ? vec4(0.,0.,0.,1.) : vec4(0.);
     fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
 }
 

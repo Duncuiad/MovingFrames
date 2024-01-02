@@ -104,7 +104,7 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::Text("Selected Vertex");
         ImGui::BeginChild("SelectedVertex", ImVec2(0, 150), true, ImGuiWindowFlags_AlwaysAutoResize);
         DrawCoordinates(coords);
-        ImGui::Text("Color: %s", vertexData->myColor ? "B" : "W");
+        ImGui::Text("Color: %.3f", vertexData->myColor);
         ImGui::EndChild();
         ImGui::Separator();
     }
@@ -116,7 +116,7 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::Separator();
         ImGui::Text("Selected Face");
         ImGui::BeginChild("SelectedFace", ImVec2(0, 30), true, ImGuiWindowFlags_AlwaysAutoResize);
-        ImGui::Text("Color: %s", faceData->myColor ? "B" : "W");
+        ImGui::Text("Color: %.3f", faceData->myColor);
         ImGui::EndChild();
         ImGui::Separator();
     }

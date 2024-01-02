@@ -30,13 +30,13 @@ void AddTriangle(bool anIsTypeA, const std::reference_wrapper<const TileVertex>*
     someIndicesOut.push_back(firstVertexIdx + 2u);
 
     Vertex vertex0 {Vec3 {aDataBuffer[0].get().GetPosition(), 0.f},
-                    Vec3 {aDataBuffer[0].get().myData.myColor ? 1.f : 0.f, 0.f, 0.f},
+                    Vec3 {aDataBuffer[0].get().myData.myColor, 0.f, 0.f},
                     anIsTypeA ? Vec2 {0.5f, 0.5f} : Vec2 {0.f, 0.f}};
     Vertex vertex1 {Vec3 {aDataBuffer[1].get().GetPosition(), 0.f},
-                    Vec3 {0.f, aDataBuffer[1].get().myData.myColor ? 1.f : 0.f, 0.f},
+                    Vec3 {0.f, aDataBuffer[1].get().myData.myColor, 0.f},
                     anIsTypeA ? Vec2 {0.f, 0.5f} : Vec2 {0.5f, 0.f}};
     Vertex vertex2 {Vec3 {aDataBuffer[2].get().GetPosition(), 0.f},
-                    Vec3 {0.f, 0.f, aDataBuffer[2].get().myData.myColor ? 1.f : 0.f},
+                    Vec3 {0.f, 0.f, aDataBuffer[2].get().myData.myColor},
                     anIsTypeA ? Vec2 {0.f, 0.f} : Vec2 {0.5f, 0.5f}};
 
     someVerticesOut.push_back(std::move(vertex0));
@@ -56,13 +56,13 @@ void AddSquare(const Vec2& aUVOffset, const std::reference_wrapper<const TileVer
     someIndicesOut.push_back(firstVertexIdx);
 
     Vertex vertex0 {Vec3 {aDataBuffer[0].get().GetPosition(), 0.f},
-                    Vec3 {aDataBuffer[0].get().myData.myColor ? 1.f : 0.f, 0.f, 0.f}, aUVOffset + Vec2 {0.f, 0.f}};
+                    Vec3 {aDataBuffer[0].get().myData.myColor, 0.f, 0.f}, aUVOffset + Vec2 {0.f, 0.f}};
     Vertex vertex1 {Vec3 {aDataBuffer[1].get().GetPosition(), 0.f},
-                    Vec3 {0.f, aDataBuffer[1].get().myData.myColor ? 1.f : 0.f, 0.f}, aUVOffset + Vec2 {0.5f, 0.f}};
+                    Vec3 {0.f, aDataBuffer[1].get().myData.myColor, 0.f}, aUVOffset + Vec2 {0.5f, 0.f}};
     Vertex vertex2 {Vec3 {aDataBuffer[2].get().GetPosition(), 0.f},
-                    Vec3 {0.f, 0.f, aDataBuffer[2].get().myData.myColor ? 1.f : 0.f}, aUVOffset + Vec2 {0.5, 0.5f}};
+                    Vec3 {0.f, 0.f, aDataBuffer[2].get().myData.myColor}, aUVOffset + Vec2 {0.5, 0.5f}};
     Vertex vertex3 {Vec3 {aDataBuffer[3].get().GetPosition(), 0.f},
-                    Vec3 {0.f, aDataBuffer[3].get().myData.myColor ? 1.f : 0.f, 0.f}, aUVOffset + Vec2 {0.f, 0.5f}};
+                    Vec3 {0.f, aDataBuffer[3].get().myData.myColor, 0.f}, aUVOffset + Vec2 {0.f, 0.5f}};
 
     someVerticesOut.push_back(std::move(vertex0));
     someVerticesOut.push_back(std::move(vertex1));
@@ -148,7 +148,7 @@ void Editor_TileMeshCmp::Update()
         ASSERT(faceData != nullptr, "Invalid face index");
 
         int* selectedResource {nullptr};
-        bool* color {nullptr};
+        float* color {nullptr};
         switch (myWidget.myActionMode)
         {
         case ActionMode::Vertices: {
@@ -177,8 +177,8 @@ void Editor_TileMeshCmp::Update()
             }
             case ClickAction::Paint: {
                 *color = (hit.myTag == CollisionTag::PickLeftClick)
-                             ? true
-                             : ((hit.myTag == CollisionTag::PickRightClick) ? false : *color);
+                             ? 0.f
+                             : ((hit.myTag == CollisionTag::PickRightClick) ? 1.f : *color);
                 break;
             }
             default: {

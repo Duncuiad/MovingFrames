@@ -105,7 +105,7 @@ void TileMesh::RandomizeVertexColors(float aRatio)
     std::uniform_real_distribution<float> dist {};
     for (TileVertex& vertex : myVertices)
     {
-        vertex.myData.myColor = dist(e2) < aRatio;
+        vertex.myData.myColor = dist(e2) < aRatio ? 0.f : 1.f;
     }
 }
 
@@ -113,7 +113,7 @@ void TileMesh::ColorVerticesSatisfying(const TileVertex::Predicate& aPredicate)
 {
     for (TileVertex& vertex : myVertices)
     {
-        vertex.myData.myColor = aPredicate(vertex);
+        vertex.myData.myColor = aPredicate(vertex) ? 0.f : 1.f;
     }
 }
 

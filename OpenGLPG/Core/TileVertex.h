@@ -25,7 +25,7 @@ struct TileVertex : public Serializable
     {
         virtual void Serialize(Serializer& aSerializer) override;
 
-        bool myColor {false};
+        float myColor {1.f};
     };
 
     Data myData;
