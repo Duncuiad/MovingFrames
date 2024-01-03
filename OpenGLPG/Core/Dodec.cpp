@@ -104,6 +104,11 @@ std::tuple<int, int, int, int> Dodec::GetCoordsIZIZ() const
     return {myO + myN - myIN, myI + myN + myIN, -myN, -myIN};
 }
 
+std::tuple<int, int, int, int> Dodec::GetCoordsPowersP() const
+{
+    return {myO + myN - myIN, myIN, -myN, myI + myN};
+}
+
 Dodec Dodec::O()
 {
     // Returns the real unit in the complex field
@@ -118,24 +123,24 @@ Dodec Dodec::I()
 
 Dodec Dodec::N()
 {
-    // Returns sqrt(2-sqrt(3)) * exp(pi/12)
+    // Returns sqrt(2-sqrt(3)) * exp(pi/12*i)
     return {0, 0, 1, 0};
 }
 
 Dodec Dodec::M()
 {
-    // Returns sqrt(2+sqrt(3)) * exp(5*pi/12)
+    // Returns sqrt(2+sqrt(3)) * exp(5*pi/12*i)
     return {1, 2, -1, 0};
 }
 
 Dodec Dodec::Z()
 {
-    // Returns exp(pi/3)
+    // Returns exp(pi/3*i)
     return {1, 1, -1, 0};
 }
 
 Dodec Dodec::P()
 {
-    // Returns exp(pi/6)
+    // Returns exp(pi/6*i)
     return {1, 0, 0, 1};
 }

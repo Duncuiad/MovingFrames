@@ -57,7 +57,8 @@ private:
     enum class DodecDisplayStyle {
         RealI,
         IntegerIN,
-        IntegerIZ
+        IntegerIZ,
+        PowersP
     };
 
     std::vector<std::unique_ptr<ThresholdWidgetBlock<TileVertex::Pair>>> myThresholdBlocks;

@@ -27,6 +27,7 @@ public:
     Vec2 Pos() const;
     std::tuple<int, int, int, int> GetCoordsININ() const;
     std::tuple<int, int, int, int> GetCoordsIZIZ() const;
+    std::tuple<int, int, int, int> GetCoordsPowersP() const;
 
     static Dodec O();
     static Dodec I();

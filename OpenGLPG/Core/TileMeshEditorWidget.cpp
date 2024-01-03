@@ -308,6 +308,8 @@ void TileMeshEditorWidget::DrawCoordinates(const Dodec& aDodec)
     Widgets::RadioButton("Z[i,n]", &myDodecDisplayStyle, DodecDisplayStyle::IntegerIN);
     ImGui::SameLine();
     Widgets::RadioButton("Z[i,z]", &myDodecDisplayStyle, DodecDisplayStyle::IntegerIZ);
+    ImGui::SameLine();
+    Widgets::RadioButton("Z[p]", &myDodecDisplayStyle, DodecDisplayStyle::PowersP);
 
     DrawDodec("Dodec", aDodec);
     ImGui::Text("Norm: %d", aDodec.Norm());
@@ -335,5 +337,12 @@ void TileMeshEditorWidget::DrawDodec(const char* aName, const Dodec& aDodec)
         ImGui::Text("%s: %d%s + %d%s + %d%s + %d%s", aName, x, "", y, "i", z, "z", w, "iz");
         break;
     }
+    case DodecDisplayStyle::PowersP: {
+        const auto [x, y, z, w] {aDodec.GetCoordsPowersP()};
+        ImGui::Text("%s: %d%s + %d%s + %d%s + %d%s", aName, x, "", y, "p", z, "z", w, "i");
+        break;
+    }
+    default:
+        break;
     }
 }
