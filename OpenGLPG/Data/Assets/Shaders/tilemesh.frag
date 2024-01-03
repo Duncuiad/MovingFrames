@@ -28,10 +28,12 @@ void DrawBlocks(vec2 UV, vec3 vertColor, inout vec4 fragColor)
     fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
 }
 
-void DrawMarchingSquares(vec2 UV, vec3 vertColor, inout vec4 fragColor)
+void DrawMarchingSquares(in vec2 UV, in vec3 vertColor, inout vec4 fragColor)
 {
     if (max(UV.x - 0.5, UV.y - 0.5) > 0.)
-    {
+    {   
+        UV.x = UV.x > 0.5 ? clamp(UV.x, 0.50001, 0.99999) : clamp(UV.x, 0.00001, 0.49999);
+        UV.y = UV.y > 0.5 ? clamp(UV.y, 0.50001, 0.99999) : clamp(UV.y, 0.00001, 0.49999);
         vec2 doubleUVs = mod(UV * 2., 1.);
         vec3 barycentric = doubleUVs.x < doubleUVs.y ? vec3(1. - doubleUVs.y, doubleUVs.y - doubleUVs.x, doubleUVs.x)
                                                      : vec3(1. - doubleUVs.x, doubleUVs.x - doubleUVs.y, doubleUVs.y);
@@ -42,35 +44,34 @@ void DrawMarchingSquares(vec2 UV, vec3 vertColor, inout vec4 fragColor)
         relevantBarycentric = (doubleUVs.x <= 0.5 && doubleUVs.y <= 0.5) ? barycentric.x : relevantBarycentric;
         relevantBarycentric = (doubleUVs.x >= 0.5 && doubleUVs.y >= 0.5) ? barycentric.z : relevantBarycentric;
         vec4 blockColor = vec4(vec3(relevantColorValue / relevantBarycentric), 1.);
-
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
 }
 
-void DrawMarchingTriangles(vec2 UV, vec3 vertColor, inout vec4 fragColor)
+void DrawMarchingTriangles(in vec2 UV, in vec3 vertColor, inout vec4 fragColor)
 {
     if (max(UV.x - 0.5, UV.y - 0.5) < 0.)
     {
-        vec2 doubleUVs = mod(UV * 2., 1.);
+        vec2 doubleUVs = clamp(UV, vec2(0.00001), vec2(0.49999)) * 2.;
         vec3 barycentric = doubleUVs.x < doubleUVs.y ? vec3(doubleUVs.x, doubleUVs.y - doubleUVs.x, 1. - doubleUVs.y)
                                                      : vec3(1. - doubleUVs.x, doubleUVs.x - doubleUVs.y, doubleUVs.y);
         float relevantColorValue = 0.;
-        relevantColorValue = (barycentric.x > barycentric.y && barycentric.x > barycentric.z) ? vertColor.x : relevantColorValue;
-        relevantColorValue = (barycentric.y > barycentric.x && barycentric.y > barycentric.z) ? vertColor.y : relevantColorValue;
-        relevantColorValue = (barycentric.z > barycentric.y && barycentric.z > barycentric.x) ? vertColor.z : relevantColorValue;
+        relevantColorValue = (barycentric.x >= barycentric.z && barycentric.x >= barycentric.y) ? vertColor.x : relevantColorValue;
+        relevantColorValue = (barycentric.y >= barycentric.x && barycentric.y >= barycentric.z) ? vertColor.y : relevantColorValue;
+        relevantColorValue = (barycentric.z >= barycentric.y && barycentric.z >= barycentric.x) ? vertColor.z : relevantColorValue;
         float relevantBarycentric = max(max(barycentric.x, barycentric.y), barycentric.z);
         vec4 blockColor = vec4(vec3(relevantColorValue / relevantBarycentric), 1.);
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
 }
 
-void DrawFaces(float aFaceColor, inout vec4 fragColor)
+void DrawFaces(in float aFaceColor, inout vec4 fragColor)
 {
     vec4 blockColor = aFaceColor < 1.0 ? vec4(0.,0.,0.,1.) : vec4(0.);
     fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
 }
 
-void DrawEdges(vec2 UV, vec2 gradX, vec2 gradY, inout vec4 fragColor)
+void DrawEdges(in vec2 UV, in vec2 gradX, in vec2 gradY, inout vec4 fragColor)
 {
     vec2 doubleUVs = mod(UV * 2., 1.);
     float lenGradX2 = dot(gradX, gradX);
@@ -88,7 +89,7 @@ void DrawEdges(vec2 UV, vec2 gradX, vec2 gradY, inout vec4 fragColor)
     fragColor = fragColor * (1. - edgeValue) + (vec4(1., 1., 1., 2. * fragColor.a) - fragColor) * edgeValue;
 }
 
-void DrawDualGraph(vec2 UV, vec2 gradX, vec2 gradY, inout vec4 fragColor)
+void DrawDualGraph(in vec2 UV, in vec2 gradX, in vec2 gradY, inout vec4 fragColor)
 {
     vec2 doubleUVs = mod(UV * 2., 1.);
     float selectSquares = 2. * step(0., min(0.5 - UV.x, 0.5 - UV.y)) - 1.;

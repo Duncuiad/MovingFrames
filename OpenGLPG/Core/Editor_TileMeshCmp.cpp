@@ -44,11 +44,11 @@ void AddFace(const TileFace& aFace, const TileMesh& aTileMesh, bool anIsDisplayi
     {
         const bool isTypeA {aFace.myType == TileType::TriangleA};
         Vertex vertex0 {Vec3 {edge0.myVertex.Pos(), 0.f}, Vec3 {v0.myData.myColor, 0.f, 0.f},
-                        isTypeA ? Vec2 {0.5f, 0.5f} : Vec2 {0.f, 0.f}};
+                        isTypeA ? Vec2 {0.49998f, 0.49999f} : Vec2 {0.00002f, 0.00001f}};
         Vertex vertex1 {Vec3 {edge1.myVertex.Pos(), 0.f}, Vec3 {0.f, v1.myData.myColor, 0.f},
-                        isTypeA ? Vec2 {0.f, 0.5f} : Vec2 {0.5f, 0.f}};
+                        isTypeA ? Vec2 {0.00001f, 0.49999f} : Vec2 {0.49999f, 0.00001f}};
         Vertex vertex2 {Vec3 {edge2.myVertex.Pos(), 0.f}, Vec3 {0.f, 0.f, v2.myData.myColor},
-                        isTypeA ? Vec2 {0.f, 0.f} : Vec2 {0.5f, 0.5f}};
+                        isTypeA ? Vec2 {0.00001f, 0.00002f} : Vec2 {0.49999f, 0.49998f}};
 
         if (anIsDisplayingFaces)
         {
@@ -71,17 +71,17 @@ void AddFace(const TileFace& aFace, const TileMesh& aTileMesh, bool anIsDisplayi
         const TileHalfEdge& edge3 {tileMeshEdges[edge2.myNext]};
         const TileVertex& v3 {*tileMeshVertices.Find(edge3.myVertex)};
 
-        const Vec2 uvOffset {aFace.myType == TileType::SquareA   ? Vec2 {0.5f, 0.f}
-                             : aFace.myType == TileType::SquareB ? Vec2 {0.5f, 0.5f}
-                                                                 : Vec2 {0.f, 0.5f}};
+        const Vec2 uvOffset {aFace.myType == TileType::SquareA   ? Vec2 {0.50001f, 0.f}
+                             : aFace.myType == TileType::SquareB ? Vec2 {0.50001f, 0.50001f}
+                                                                 : Vec2 {0.f, 0.50001f}};
         Vertex vertex0 {Vec3 {edge0.myVertex.Pos(), 0.f}, Vec3 {v0.myData.myColor, 0.f, 0.f},
                         uvOffset + Vec2 {0.f, 0.f}};
         Vertex vertex1 {Vec3 {edge1.myVertex.Pos(), 0.f}, Vec3 {0.f, v1.myData.myColor, 0.f},
-                        uvOffset + Vec2 {0.5f, 0.f}};
+                        uvOffset + Vec2 {0.49999f, 0.f}};
         Vertex vertex2 {Vec3 {edge2.myVertex.Pos(), 0.f}, Vec3 {0.f, 0.f, v2.myData.myColor},
-                        uvOffset + Vec2 {0.5, 0.5f}};
+                        uvOffset + Vec2 {0.49999f, 0.49999f}};
         Vertex vertex3 {Vec3 {edge3.myVertex.Pos(), 0.f}, Vec3 {0.f, v3.myData.myColor, 0.f},
-                        uvOffset + Vec2 {0.f, 0.5f}};
+                        uvOffset + Vec2 {0.f, 0.49999f}};
 
         if (anIsDisplayingFaces)
         {
