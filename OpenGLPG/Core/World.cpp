@@ -29,7 +29,7 @@ void World::Init()
     // CameraActivationRequest request {{CameraType::FreeCam, glm::radians(45.f), 16.f / 9.f, 0.1f, 200.f}};
     // Keep this around in case I ever break the serialization
 
-    CameraActivationRequest request {{myClientLoader.myAssetFolder + "Camera/freecam.camera"}};
+    CameraActivationRequest request {{myClientLoader.myAssetFolder + "Camera/ortho.camera"}};
     myGameplayCamera = request.GetCameraUID();
     myCameraManager.ActivateCamera(request);
 

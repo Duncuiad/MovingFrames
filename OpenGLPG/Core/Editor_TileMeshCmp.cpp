@@ -131,6 +131,8 @@ void Editor_TileMeshCmp::OnEnterWorld()
 
 void Editor_TileMeshCmp::Update()
 {
+    // @todo: refactor function
+
     using ClickAction = TileMeshEditorWidget::ClickAction;
     using ActionMode = TileMeshEditorWidget::ActionMode;
 
@@ -142,8 +144,9 @@ void Editor_TileMeshCmp::Update()
             continue;
         }
 
-        TileVertex::Data* vertexData {GetTileMeshCmp().myTileMesh.GetVertexData(hit.myData.myHitVertex)};
-        TileFace::Data* faceData {GetTileMeshCmp().myTileMesh.GetFaceData(hit.myData.myHitFace)};
+        TileMesh& tileMesh {GetTileMeshCmp().myTileMesh};
+        TileVertex::Data* vertexData {tileMesh.GetVertexData(hit.myData.myHitVertex)};
+        TileFace::Data* faceData {tileMesh.GetFaceData(hit.myData.myHitFace)};
         ASSERT(vertexData != nullptr, "Invalid vertex index");
         ASSERT(faceData != nullptr, "Invalid face index");
 
@@ -185,6 +188,27 @@ void Editor_TileMeshCmp::Update()
                 *color = (hit.myTag == CollisionTag::PickLeftClick)
                              ? 0.f
                              : ((hit.myTag == CollisionTag::PickRightClick) ? 1.f : *color);
+                break;
+            }
+            case ClickAction::Neighbours: {
+                std::optional<float> desiredColor;
+                if (hit.myTag == CollisionTag::PickLeftClick)
+                {
+                    desiredColor = 0.f;
+                }
+                else if (hit.myTag == CollisionTag::PickRightClick)
+                {
+                    desiredColor = 1.f;
+                }
+                if (desiredColor.has_value() && myWidget.myActionMode == ActionMode::Vertices)
+                {
+                    *color = *desiredColor;
+                    for (const Dodec& neighbour :
+                         tileMesh.GetNeighbouringVertices(hit.myData.myHitVertex, myWidget.myHeightToDisplay))
+                    {
+                        tileMesh.GetVertexData(neighbour)->myColor = *desiredColor;
+                    }
+                }
                 break;
             }
             default: {

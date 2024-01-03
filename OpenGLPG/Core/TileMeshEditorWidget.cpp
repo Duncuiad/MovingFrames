@@ -142,6 +142,7 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::Text("Action");
         Widgets::RadioButton("Inspect", &myClickAction, ClickAction::Inspect);
         Widgets::RadioButton("Paint", &myClickAction, ClickAction::Paint);
+        Widgets::RadioButton("Neighbours", &myClickAction, ClickAction::Neighbours);
         ImGui::Separator();
         ImGui::TreePop();
     }

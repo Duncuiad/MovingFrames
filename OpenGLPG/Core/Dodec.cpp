@@ -144,3 +144,27 @@ Dodec Dodec::P()
     // Returns exp(pi/6*i)
     return {1, 0, 0, 1};
 }
+
+Dodec Dodec::P(int aPower)
+{
+    aPower = Mod(aPower, 12);
+    const int sign = aPower >= 6 ? -1 : 1;
+    aPower = Mod(aPower, 6);
+    switch (aPower)
+    {
+    case 0:
+        return {sign, 0, 0, 0};
+    case 1:
+        return {sign, 0, 0, sign};
+    case 2:
+        return {sign, sign, -sign, 0};
+    case 3:
+        return {0, sign, 0, 0};
+    case 4:
+        return {0, sign, -sign, 0};
+    case 5:
+        return {-sign, sign, 0, -sign};
+    }
+    ASSERT(false, "Error in handling of exponent");
+    return {};
+}

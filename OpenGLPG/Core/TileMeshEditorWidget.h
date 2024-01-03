@@ -30,6 +30,7 @@ public:
     enum class ClickAction {
         Inspect,
         Paint,
+        Neighbours
     };
 
     TileMesh* myTileMesh {nullptr};

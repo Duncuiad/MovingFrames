@@ -15,3 +15,8 @@ using Mat4 = glm::mat4;
 using Quat = glm::quat;
 using DualQuat = glm::dualquat;
 class Dual;
+
+inline int Mod(int x, int y)
+{
+    return (x % y + y) % y;
+}

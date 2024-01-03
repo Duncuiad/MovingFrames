@@ -33,6 +33,7 @@ public:
     bool Contains(const TileFace& aFace, const Vec2& aPosition) const;
     Dodec GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) const;
     std::pair<Dodec, int> GetVertexAndFace(const Vec2& aPosition, int aFaceHeight = -1) const;
+    Array<Dodec> GetNeighbouringVertices(const Dodec& aVertex, int aHeight);
     const TileVertex::Map& GetVertices() const;
     const Array<TileHalfEdge>& GetEdges() const;
     const Array<TileFace>& GetFaces() const;

@@ -309,6 +309,25 @@ std::pair<Dodec, int> TileMesh::GetVertexAndFace(const Vec2& aPosition, int aFac
     return {vertex, faceIdx};
 }
 
+Array<Dodec> TileMesh::GetNeighbouringVertices(const Dodec& aVertex, int aHeight)
+{
+    Array<Dodec> neighbours;
+    Dodec stride {Dodec::O()};
+    for (int i = 0; i < aHeight; ++i)
+    {
+        stride = stride * Dodec::N();
+    }
+    for (int i = 0; i < 12; ++i)
+    {
+        const Dodec candidate {aVertex + stride * Dodec::P(i)};
+        if (myVertices.Contains(candidate))
+        {
+            neighbours.PushBack(candidate);
+        }
+    }
+    return neighbours;
+}
+
 const TileVertex::Map& TileMesh::GetVertices() const
 {
     return myVertices;

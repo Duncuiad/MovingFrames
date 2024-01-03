@@ -35,6 +35,7 @@ public:
     static Dodec M();
     static Dodec Z();
     static Dodec P();
+    static Dodec P(int aPower);
 
 private:
     int myO;
