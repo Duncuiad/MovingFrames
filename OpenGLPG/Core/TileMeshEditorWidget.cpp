@@ -55,8 +55,8 @@ void TileMeshEditorWidget::Draw()
 
 void TileMeshEditorWidget::CreateThresholdBlocks()
 {
-    myThresholdBlocks.emplace_back(std::make_unique<Int2SliderThresholdWidgetBlock<TileVertex>>(
-        "Norm", [](const TileVertex& aVertex) { return static_cast<float>(aVertex.myCoordinates.Norm()); },
+    myThresholdBlocks.emplace_back(std::make_unique<Int2SliderThresholdWidgetBlock<TileVertex::Pair>>(
+        "Norm", [](const auto& aVertex) { return static_cast<float>(aVertex.first.Norm()); },
         [this](const auto& aPredicate) { myTileMesh->ColorVerticesSatisfying(aPredicate); },
         []() {
             return std::array<int, 2> {0, 0};
@@ -65,16 +65,17 @@ void TileMeshEditorWidget::CreateThresholdBlocks()
             return std::array<int, 2> {300, 300};
         }));
 
-    myThresholdBlocks.emplace_back(std::make_unique<FloatSliderThresholdWidgetBlock<TileVertex>>(
+    myThresholdBlocks.emplace_back(std::make_unique<FloatSliderThresholdWidgetBlock<TileVertex::Pair>>(
         "Alt Norm",
-        [](const TileVertex& aVertex) {
-            return 0.5f * log2((aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x);
+        [](const auto& aVertex) {
+            const Dodec& coords {aVertex.first};
+            return 0.5f * log2((coords.ConjNM() * coords.ConjNM().Conj()).Pos().x);
         },
         [this](const auto& aPredicate) { myTileMesh->ColorVerticesSatisfying(aPredicate); }, []() { return 0.f; },
         []() { return 10.f; }));
 
-    myThresholdBlocks.emplace_back(std::make_unique<IntSliderThresholdWidgetBlock<TileVertex>>(
-        "Height", [](const TileVertex& aVertex) { return static_cast<float>(aVertex.myHeight); },
+    myThresholdBlocks.emplace_back(std::make_unique<IntSliderThresholdWidgetBlock<TileVertex::Pair>>(
+        "Height", [](const auto& aVertex) { return static_cast<float>(aVertex.second.myHeight); },
         [this](const auto& aPredicate) { myTileMesh->ColorVerticesSatisfying(aPredicate); }, []() { return -1; },
         [this]() { return myTileMesh->GetMaxHeight() + 1; }));
 }
@@ -102,10 +103,10 @@ bool TileMeshEditorWidget::DrawShowdata()
 
 void TileMeshEditorWidget::DrawEditing()
 {
-    if (mySelectedVertex != -1 && myActionMode == ActionMode::Vertices)
+    if (mySelectedVertex.has_value() && myActionMode == ActionMode::Vertices)
     {
-        const TileVertex::Data* vertexData {myTileMesh->GetVertexData(mySelectedVertex)};
-        const Dodec& coords {myTileMesh->GetCoordinates(mySelectedVertex)};
+        const Dodec& coords {*mySelectedVertex};
+        const TileVertex::Data* vertexData {myTileMesh->GetVertexData(coords)};
         ASSERT(vertexData != nullptr, "Invalid vertex");
 
         ImGui::Separator();
@@ -167,15 +168,14 @@ bool TileMeshEditorWidget::DrawBrushes()
         if (ImGui::Button("Height"))
         {
             changed = true;
-            myTileMesh->ColorVertices([](const TileVertex& aVertex) { return static_cast<float>(aVertex.myHeight); });
+            myTileMesh->ColorVertices([](const auto& aVertex) { return static_cast<float>(aVertex.second.myHeight); });
         }
 
         ImGui::Bullet();
         if (ImGui::Button("Norm"))
         {
             changed = true;
-            myTileMesh->ColorVertices(
-                [](const TileVertex& aVertex) { return static_cast<float>(aVertex.myCoordinates.Norm()); });
+            myTileMesh->ColorVertices([](const auto& aVertex) { return static_cast<float>(aVertex.first.Norm()); });
         }
 
         ImGui::SameLine();
@@ -183,15 +183,16 @@ bool TileMeshEditorWidget::DrawBrushes()
         {
             changed = true;
             myTileMesh->ColorVertices(
-                [](const TileVertex& aVertex) { return sqrt(sqrt(static_cast<float>(aVertex.myCoordinates.Norm()))); });
+                [](const auto& aVertex) { return sqrt(sqrt(static_cast<float>(aVertex.first.Norm()))); });
         }
 
         ImGui::Bullet();
         if (ImGui::Button("ComplexNorm"))
         {
             changed = true;
-            myTileMesh->ColorVertices([](const TileVertex& aVertex) {
-                return (aVertex.myCoordinates * aVertex.myCoordinates.Conj()).Pos().x;
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                return (coords * coords.Conj()).Pos().x;
             });
         }
 
@@ -199,8 +200,9 @@ bool TileMeshEditorWidget::DrawBrushes()
         if (ImGui::Button("Sqrt(ComplexNorm)"))
         {
             changed = true;
-            myTileMesh->ColorVertices([](const TileVertex& aVertex) {
-                return sqrt((aVertex.myCoordinates * aVertex.myCoordinates.Conj()).Pos().x);
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                return sqrt((coords * coords.Conj()).Pos().x);
             });
         }
 
@@ -208,8 +210,9 @@ bool TileMeshEditorWidget::DrawBrushes()
         if (ImGui::Button("NormAlt"))
         {
             changed = true;
-            myTileMesh->ColorVertices([](const TileVertex& aVertex) {
-                return (aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x;
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                return (coords.ConjNM() * coords.ConjNM().Conj()).Pos().x;
             });
         }
 
@@ -217,8 +220,9 @@ bool TileMeshEditorWidget::DrawBrushes()
         if (ImGui::Button("Sqrt(NormAlt)"))
         {
             changed = true;
-            myTileMesh->ColorVertices([](const TileVertex& aVertex) {
-                return sqrt((aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x);
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                return sqrt((coords.ConjNM() * coords.ConjNM().Conj()).Pos().x);
             });
         }
 
@@ -226,9 +230,9 @@ bool TileMeshEditorWidget::DrawBrushes()
         if (ImGui::Button("Log2(Sqrt(NormAlt))"))
         {
             changed = true;
-            myTileMesh->ColorVertices([](const TileVertex& aVertex) {
-                return std::max(
-                    0.5f * log2((aVertex.myCoordinates.ConjNM() * aVertex.myCoordinates.ConjNM().Conj()).Pos().x), 0.f);
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                return std::max(0.5f * log2((coords.ConjNM() * coords.ConjNM().Conj()).Pos().x), 0.f);
             });
         }
 
@@ -286,7 +290,8 @@ bool TileMeshEditorWidget::DrawReset()
         if (isResetting)
         {
             myHeightToDisplay = 0;
-            mySelectedVertex = -1;
+            mySelectedVertex = {};
+            mySelectedFace = -1;
         }
         ImGui::Separator();
         ImGui::TreePop();

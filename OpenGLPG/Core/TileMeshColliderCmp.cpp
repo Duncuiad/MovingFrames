@@ -32,14 +32,14 @@ float TileMeshColliderCmp::RayCastHit(const Vec3& aRayStart, const Vec3& aRayDir
         const float distance {-rayStart.z / rayDirection.z};
         if (distance >= 0.f)
         {
-            const std::pair<int, int> hitVertexFace {
-                myTileMesh->GetVertexAndFace(Vec2 {rayStart + distance * rayDirection}, myMaxFaceHeight)};
-            const int vertexIdx {hitVertexFace.first};
+            const std::pair<Dodec, int> hitVertexFace {
+                myTileMesh->GetVertexAndFace(Vec2 {rayStart + distance * rayDirection}, myFaceHeight)};
+            const Dodec vertex {hitVertexFace.first};
             const int faceIdx {hitVertexFace.second};
 
             if (faceIdx != -1)
             {
-                myData.myHitVertex = vertexIdx;
+                myData.myHitVertex = vertex;
                 myData.myHitFace = faceIdx;
                 return distance;
             }

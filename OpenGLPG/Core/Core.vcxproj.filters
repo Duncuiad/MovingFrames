@@ -315,6 +315,9 @@
     <ClInclude Include="SliderThresholdWidgetBlock.h">
       <Filter>Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Engine\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -597,5 +600,8 @@
     <None Include="SliderThresholdWidgetBlock.inl">
       <Filter>Editor</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="CustomTypes.natvis" />
   </ItemGroup>
 </Project>

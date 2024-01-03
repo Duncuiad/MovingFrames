@@ -6,6 +6,7 @@
 #include "TileMesh.h"
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 class TileMeshEditorWidget : public EditorWidget
@@ -39,7 +40,7 @@ public:
     ShowBlocks myShowBlocks {ShowBlocks::Vertices};
     ActionMode myActionMode {ActionMode::Vertices};
     ClickAction myClickAction {ClickAction::Inspect};
-    int mySelectedVertex {-1};
+    std::optional<Dodec> mySelectedVertex;
     int mySelectedFace {-1};
 
 private:
@@ -59,7 +60,7 @@ private:
         IntegerIZ
     };
 
-    std::vector<std::unique_ptr<ThresholdWidgetBlock<TileVertex>>> myThresholdBlocks;
+    std::vector<std::unique_ptr<ThresholdWidgetBlock<TileVertex::Pair>>> myThresholdBlocks;
     DodecDisplayStyle myDodecDisplayStyle {DodecDisplayStyle::IntegerIN};
     float myVertexColorThreshold {0.f};
 };

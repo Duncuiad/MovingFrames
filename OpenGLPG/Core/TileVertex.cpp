@@ -4,27 +4,14 @@
 
 #include "Serializer.h"
 
-TileVertex::TileVertex(int anIndex, int aHeight, const Dodec& aDodec)
-    : myIndex {anIndex}
-    , myHeight {aHeight}
-    , myCoordinates {aDodec}
+TileVertex::TileVertex(int aHeight)
+    : myHeight {aHeight}
 {}
 
 void TileVertex::Serialize(Serializer& aSerializer)
 {
-    aSerializer.Process("myIndex", myIndex);
     aSerializer.Process("myHeight", myHeight);
-    aSerializer.Process("myCoordinates", myCoordinates);
     aSerializer.Process("myData", myData);
-}
-
-const Vec2& TileVertex::GetPosition() const
-{
-    if (!myCachedPosition)
-    {
-        myCachedPosition = myCoordinates.Pos();
-    }
-    return *myCachedPosition;
 }
 
 void TileVertex::Data::Serialize(Serializer& aSerializer)

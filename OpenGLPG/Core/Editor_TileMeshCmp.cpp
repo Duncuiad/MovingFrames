@@ -17,6 +17,7 @@
 
 #include <functional>
 #include <utility>
+#include <variant>
 #include <vector>
 
 namespace
@@ -24,7 +25,7 @@ namespace
 void AddFace(const TileFace& aFace, const TileMesh& aTileMesh, bool anIsDisplayingFaces, Vertex::List& someVerticesOut,
              Vertex::IndexList& someIndicesOut)
 {
-    const Array<TileVertex>& tileMeshVertices {aTileMesh.GetVertices()};
+    const TileVertex::Map& tileMeshVertices {aTileMesh.GetVertices()};
     const Array<TileHalfEdge>& tileMeshEdges {aTileMesh.GetEdges()};
 
     const unsigned int firstVertexIdx {static_cast<unsigned int>(someVerticesOut.size())};
@@ -35,18 +36,18 @@ void AddFace(const TileFace& aFace, const TileMesh& aTileMesh, bool anIsDisplayi
     const TileHalfEdge& edge0 {tileMeshEdges[aFace.myEdge]};
     const TileHalfEdge& edge1 {tileMeshEdges[edge0.myNext]};
     const TileHalfEdge& edge2 {tileMeshEdges[edge1.myNext]};
-    const TileVertex& v0 {tileMeshVertices[edge0.myVertex]};
-    const TileVertex& v1 {tileMeshVertices[edge1.myVertex]};
-    const TileVertex& v2 {tileMeshVertices[edge2.myVertex]};
+    const TileVertex& v0 {*tileMeshVertices.Find(edge0.myVertex)};
+    const TileVertex& v1 {*tileMeshVertices.Find(edge1.myVertex)};
+    const TileVertex& v2 {*tileMeshVertices.Find(edge2.myVertex)};
 
     if (aFace.IsTriangle())
     {
         const bool isTypeA {aFace.myType == TileType::TriangleA};
-        Vertex vertex0 {Vec3 {v0.GetPosition(), 0.f}, Vec3 {v0.myData.myColor, 0.f, 0.f},
+        Vertex vertex0 {Vec3 {edge0.myVertex.Pos(), 0.f}, Vec3 {v0.myData.myColor, 0.f, 0.f},
                         isTypeA ? Vec2 {0.5f, 0.5f} : Vec2 {0.f, 0.f}};
-        Vertex vertex1 {Vec3 {v1.GetPosition(), 0.f}, Vec3 {0.f, v1.myData.myColor, 0.f},
+        Vertex vertex1 {Vec3 {edge1.myVertex.Pos(), 0.f}, Vec3 {0.f, v1.myData.myColor, 0.f},
                         isTypeA ? Vec2 {0.f, 0.5f} : Vec2 {0.5f, 0.f}};
-        Vertex vertex2 {Vec3 {v2.GetPosition(), 0.f}, Vec3 {0.f, 0.f, v2.myData.myColor},
+        Vertex vertex2 {Vec3 {edge2.myVertex.Pos(), 0.f}, Vec3 {0.f, 0.f, v2.myData.myColor},
                         isTypeA ? Vec2 {0.f, 0.f} : Vec2 {0.5f, 0.5f}};
 
         if (anIsDisplayingFaces)
@@ -68,15 +69,19 @@ void AddFace(const TileFace& aFace, const TileMesh& aTileMesh, bool anIsDisplayi
         someIndicesOut.push_back(firstVertexIdx);
 
         const TileHalfEdge& edge3 {tileMeshEdges[edge2.myNext]};
-        const TileVertex& v3 {tileMeshVertices[edge3.myVertex]};
+        const TileVertex& v3 {*tileMeshVertices.Find(edge3.myVertex)};
 
         const Vec2 uvOffset {aFace.myType == TileType::SquareA   ? Vec2 {0.5f, 0.f}
                              : aFace.myType == TileType::SquareB ? Vec2 {0.5f, 0.5f}
                                                                  : Vec2 {0.f, 0.5f}};
-        Vertex vertex0 {Vec3 {v0.GetPosition(), 0.f}, Vec3 {v0.myData.myColor, 0.f, 0.f}, uvOffset + Vec2 {0.f, 0.f}};
-        Vertex vertex1 {Vec3 {v1.GetPosition(), 0.f}, Vec3 {0.f, v1.myData.myColor, 0.f}, uvOffset + Vec2 {0.5f, 0.f}};
-        Vertex vertex2 {Vec3 {v2.GetPosition(), 0.f}, Vec3 {0.f, 0.f, v2.myData.myColor}, uvOffset + Vec2 {0.5, 0.5f}};
-        Vertex vertex3 {Vec3 {v3.GetPosition(), 0.f}, Vec3 {0.f, v3.myData.myColor, 0.f}, uvOffset + Vec2 {0.f, 0.5f}};
+        Vertex vertex0 {Vec3 {edge0.myVertex.Pos(), 0.f}, Vec3 {v0.myData.myColor, 0.f, 0.f},
+                        uvOffset + Vec2 {0.f, 0.f}};
+        Vertex vertex1 {Vec3 {edge1.myVertex.Pos(), 0.f}, Vec3 {0.f, v1.myData.myColor, 0.f},
+                        uvOffset + Vec2 {0.5f, 0.f}};
+        Vertex vertex2 {Vec3 {edge2.myVertex.Pos(), 0.f}, Vec3 {0.f, 0.f, v2.myData.myColor},
+                        uvOffset + Vec2 {0.5, 0.5f}};
+        Vertex vertex3 {Vec3 {edge3.myVertex.Pos(), 0.f}, Vec3 {0.f, v3.myData.myColor, 0.f},
+                        uvOffset + Vec2 {0.f, 0.5f}};
 
         if (anIsDisplayingFaces)
         {
@@ -142,7 +147,7 @@ void Editor_TileMeshCmp::Update()
         ASSERT(vertexData != nullptr, "Invalid vertex index");
         ASSERT(faceData != nullptr, "Invalid face index");
 
-        int* selectedResource {nullptr};
+        std::variant<int*, std::optional<Dodec>*, bool> selectedResource {false};
         float* color {nullptr};
         switch (myWidget.myActionMode)
         {
@@ -160,10 +165,16 @@ void Editor_TileMeshCmp::Update()
             break;
         }
 
-        if (selectedResource != nullptr && color != nullptr)
+        if (!std::holds_alternative<bool>(selectedResource) && color != nullptr)
         {
-            *selectedResource =
-                myWidget.myActionMode == ActionMode::Vertices ? hit.myData.myHitVertex : hit.myData.myHitFace;
+            if (std::holds_alternative<std::optional<Dodec>*>(selectedResource))
+            {
+                *std::get<std::optional<Dodec>*>(selectedResource) = hit.myData.myHitVertex;
+            }
+            else if (std::holds_alternative<int*>(selectedResource))
+            {
+                *std::get<int*>(selectedResource) = hit.myData.myHitFace;
+            }
 
             switch (myWidget.myClickAction)
             {
@@ -195,7 +206,7 @@ void Editor_TileMeshCmp::OnChanged() const
     graphCmp.GetShader().SetUniformInt("ShowGraphs", static_cast<int>(myWidget.myShowGraphs));
     graphCmp.GetShader().SetUniformInt("ShowEdges", static_cast<int>(myWidget.myShowEdges));
     graphCmp.GetShader().SetUniformInt("ShowBlocks", static_cast<int>(myWidget.myShowBlocks));
-    GetTileMeshColliderCmp().myMaxFaceHeight = myWidget.myHeightToDisplay;
+    GetTileMeshColliderCmp().myFaceHeight = myWidget.myHeightToDisplay;
 }
 
 TileMeshCmp& Editor_TileMeshCmp::GetTileMeshCmp() const

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Dodec.h"
+#include "Map.h"
 #include "MathDefines.h"
 #include "Serializable.h"
 
@@ -9,18 +10,16 @@
 
 struct TileVertex : public Serializable
 {
-    using Predicate = std::function<bool(const TileVertex&)>;
-    using Evaluation = std::function<float(const TileVertex&)>;
+    using Predicate = std::function<bool(const std::pair<Dodec, TileVertex>&)>;
+    using Evaluation = std::function<float(const std::pair<Dodec, TileVertex>&)>;
+    using Map = Map<Dodec, TileVertex>;
+    using Pair = Map::ValueType;
 
     TileVertex() = default;
-    TileVertex(int anIndex, int aHeight, const Dodec& aDodec);
+    explicit TileVertex(int aHeight);
     virtual void Serialize(Serializer& aSerializer) override;
 
-    const Vec2& GetPosition() const;
-
-    int myIndex {-1};
     int myHeight {-1};
-    Dodec myCoordinates;
 
     struct Data : public Serializable
     {
@@ -30,5 +29,4 @@ struct TileVertex : public Serializable
     };
 
     Data myData;
-    mutable std::optional<Vec2> myCachedPosition {std::nullopt};
 };

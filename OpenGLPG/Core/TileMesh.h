@@ -25,23 +25,22 @@ public:
     void RandomizeVertexColors(float aRatio);
     void ColorVertices(const TileVertex::Evaluation& anEvaluation);
     void ColorVerticesSatisfying(const TileVertex::Predicate& aPredicate);
-    TileVertex::Data* GetVertexData(int aVertexIdx);
+    TileVertex::Data* GetVertexData(const Dodec& someCoords);
     TileFace::Data* GetFaceData(int aFaceIdx);
-    const Dodec& GetCoordinates(int aVertexIdx);
 
     int GetMaxHeight() const;
     std::pair<Vec2, float> GetBoundingCircle(const TileFace& aFace) const;
     bool Contains(const TileFace& aFace, const Vec2& aPosition) const;
-    int GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) const;
-    std::pair<int, int> GetVertexAndFace(const Vec2& aPosition, int aMaxFaceHeight = -1) const;
-    const Array<TileVertex>& GetVertices() const;
+    Dodec GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) const;
+    std::pair<Dodec, int> GetVertexAndFace(const Vec2& aPosition, int aFaceHeight = -1) const;
+    const TileVertex::Map& GetVertices() const;
     const Array<TileHalfEdge>& GetEdges() const;
     const Array<TileFace>& GetFaces() const;
 
 private:
     void CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 = -1);
-    const TileHalfEdge& CreateFullEdge(int aBeginIdx, int anEndIdx, bool anIsAlternating);
-    const TileVertex& CreateInflationVertex(const TileVertex& aBegin, const TileVertex& anEnd);
+    const TileHalfEdge& CreateFullEdge(const Dodec& aBegin, const Dodec& anEnd, bool anIsAlternating);
+    Dodec CreateInflationVertex(const Dodec& aBegin, const Dodec& anEnd);
     void SubdivideFace(int aFaceIdx);
     void SubdivideTriangle(int aTriangleIdx);
     void SubdivideSquare(int aSquareIdx);
@@ -49,7 +48,7 @@ private:
 
     int FindFirstEdge(int aBeginFromHalfEdgeIdx) const;
 
-    Array<TileVertex> myVertices;
+    TileVertex::Map myVertices;
     Array<TileHalfEdge> myHalfEdges;
     Array<TileFace> myFaces;
 };

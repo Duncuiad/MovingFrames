@@ -4,8 +4,8 @@
 
 #include "Serializer.h"
 
-TileHalfEdge::TileHalfEdge(int anIndex, int aHeight, bool anIsReversed, bool anIsAlternating, int aVertex, int aNext,
-                           int anOpposite, int aFace)
+TileHalfEdge::TileHalfEdge(int anIndex, int aHeight, bool anIsReversed, bool anIsAlternating, const Dodec& aVertex,
+                           int aNext, int anOpposite, int aFace)
     : myIndex {anIndex}
     , myHeight {aHeight}
     , myIsReversed {anIsReversed}

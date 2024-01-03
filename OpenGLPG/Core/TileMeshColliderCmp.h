@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ColliderCmp.h"
+#include "Dodec.h"
 #include "MathDefines.h"
 
 class TileMesh;
@@ -10,7 +11,7 @@ class TransformCmp;
 struct TileMeshCollisionData
 {
     int myHitFace {-1};
-    int myHitVertex {-1};
+    Dodec myHitVertex;
 };
 
 class TileMeshColliderCmp : public ColliderCmpT<TileMeshCollisionData>
@@ -21,7 +22,7 @@ class TileMeshColliderCmp : public ColliderCmpT<TileMeshCollisionData>
 public:
     void OnEnterWorld() override;
 
-    int myMaxFaceHeight {-1};
+    int myFaceHeight {-1};
 
 private:
     float RayCastHit(const Vec3& aRayStart, const Vec3& aRayDirection) const override;

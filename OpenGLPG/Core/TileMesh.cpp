@@ -45,25 +45,25 @@ void TileMesh::Reset(TileType aType)
 
     myFaces.EmplaceBack(0, 0, aType, 0);
 
-    myVertices.EmplaceBack(0, 0, Dodec {0, 0, 0, 0});
-    myVertices.EmplaceBack(1, 0, Dodec {1, 0, 0, 0});
+    myVertices.Emplace(Dodec {0, 0, 0, 0}, 0);
+    myVertices.Emplace(Dodec {1, 0, 0, 0}, 0);
     if (aType == TileType::TriangleA || aType == TileType::TriangleB)
     {
-        myVertices.EmplaceBack(2, 0, Dodec {1, 1, -1, 0});
+        myVertices.Emplace(Dodec {1, 1, -1, 0}, 0);
 
-        myHalfEdges.EmplaceBack(0, 0, false, true, 0, 1, -1, 0);
-        myHalfEdges.EmplaceBack(1, 0, true, true, 1, 2, -1, 0);
-        myHalfEdges.EmplaceBack(2, 0, true, true, 2, 0, -1, 0);
+        myHalfEdges.EmplaceBack(0, 0, false, true, Dodec {0, 0, 0, 0}, 1, -1, 0);
+        myHalfEdges.EmplaceBack(1, 0, true, true, Dodec {1, 0, 0, 0}, 2, -1, 0);
+        myHalfEdges.EmplaceBack(2, 0, true, true, Dodec {1, 1, -1, 0}, 0, -1, 0);
     }
     else
     {
-        myVertices.EmplaceBack(2, 0, Dodec {1, 1, 0, 0});
-        myVertices.EmplaceBack(3, 0, Dodec {0, 1, 0, 0});
+        myVertices.Emplace(Dodec {1, 1, 0, 0}, 0);
+        myVertices.Emplace(Dodec {0, 1, 0, 0}, 0);
 
-        myHalfEdges.EmplaceBack(0, 0, false, true, 0, 1, -1, 0);
-        myHalfEdges.EmplaceBack(1, 0, false, false, 1, 2, -1, 0);
-        myHalfEdges.EmplaceBack(2, 0, true, true, 2, 3, -1, 0);
-        myHalfEdges.EmplaceBack(3, 0, true, false, 3, 0, -1, 0);
+        myHalfEdges.EmplaceBack(0, 0, false, true, Dodec {0, 0, 0, 0}, 1, -1, 0);
+        myHalfEdges.EmplaceBack(1, 0, false, false, Dodec {1, 0, 0, 0}, 2, -1, 0);
+        myHalfEdges.EmplaceBack(2, 0, true, true, Dodec {1, 1, 0, 0}, 3, -1, 0);
+        myHalfEdges.EmplaceBack(3, 0, true, false, Dodec {0, 1, 0, 0}, 0, -1, 0);
     }
 
     if (aType == TileType::TriangleB)
@@ -103,7 +103,7 @@ void TileMesh::RandomizeVertexColors(float aRatio)
     std::random_device rd;
     std::mt19937 e2(rd());
     std::uniform_real_distribution<float> dist {};
-    for (TileVertex& vertex : myVertices)
+    for (auto& [coords, vertex] : myVertices)
     {
         vertex.myData.myColor = dist(e2) < aRatio ? 0.f : 1.f;
     }
@@ -111,35 +111,34 @@ void TileMesh::RandomizeVertexColors(float aRatio)
 
 void TileMesh::ColorVertices(const TileVertex::Evaluation& anEvaluation)
 {
-    const auto [minIt, maxIt] = std::minmax_element(myVertices.begin(), myVertices.end(),
-                                                    [&anEvaluation](const TileVertex& aLeft, const TileVertex& aRight) {
-                                                        return anEvaluation(aLeft) < anEvaluation(aRight);
-                                                    });
+    const auto [minIt, maxIt] = std::minmax_element(
+        myVertices.begin(), myVertices.end(),
+        [&anEvaluation](const auto& aLeft, const auto& aRight) { return anEvaluation(aLeft) < anEvaluation(aRight); });
     const float m {anEvaluation(*minIt)};
     const float M {anEvaluation(*maxIt)};
 
     if (m < M)
     {
-        for (TileVertex& vertex : myVertices)
+        for (auto& it : myVertices)
         {
-            vertex.myData.myColor = (anEvaluation(vertex) - m) / (M - m);
+            it.second.myData.myColor = (anEvaluation(it) - m) / (M - m);
         }
     }
 }
 
 void TileMesh::ColorVerticesSatisfying(const TileVertex::Predicate& aPredicate)
 {
-    for (TileVertex& vertex : myVertices)
+    for (auto& it : myVertices)
     {
-        vertex.myData.myColor = aPredicate(vertex) ? 0.f : 1.f;
+        it.second.myData.myColor = aPredicate(it) ? 0.f : 1.f;
     }
 }
 
-TileVertex::Data* TileMesh::GetVertexData(int aVertexIdx)
+TileVertex::Data* TileMesh::GetVertexData(const Dodec& someCoords)
 {
-    if (0 <= aVertexIdx && aVertexIdx < myVertices.Count())
+    if (TileVertex* vertex = myVertices.Find(someCoords))
     {
-        return &myVertices[aVertexIdx].myData;
+        return &(vertex->myData);
     }
     return nullptr;
 }
@@ -153,11 +152,6 @@ TileFace::Data* TileMesh::GetFaceData(int aFaceIdx)
     return nullptr;
 }
 
-const Dodec& TileMesh::GetCoordinates(int aVertexIdx)
-{
-    return myVertices[aVertexIdx].myCoordinates;
-}
-
 int TileMesh::GetMaxHeight() const
 {
     if (!myVertices.Count())
@@ -167,8 +161,8 @@ int TileMesh::GetMaxHeight() const
 
     return std::max_element(
                myVertices.begin(), myVertices.end(),
-               [](const TileVertex& aLeft, const TileVertex& aRight) { return aLeft.myHeight < aRight.myHeight; })
-        ->myHeight;
+               [](const auto& aLeft, const auto& aRight) { return aLeft.second.myHeight < aRight.second.myHeight; })
+        ->second.myHeight;
 }
 
 std::pair<Vec2, float> TileMesh::GetBoundingCircle(const TileFace& aFace) const
@@ -180,9 +174,9 @@ std::pair<Vec2, float> TileMesh::GetBoundingCircle(const TileFace& aFace) const
     const TileHalfEdge& edge0 {myHalfEdges[aFace.myEdge]};
     const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
     const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
-    const Vec2& vertex0 {myVertices[edge0.myVertex].GetPosition()};
-    const Vec2& vertex1 {myVertices[edge1.myVertex].GetPosition()};
-    const Vec2& vertex2 {myVertices[edge2.myVertex].GetPosition()};
+    const Vec2 vertex0 {edge0.myVertex.Pos()};
+    const Vec2 vertex1 {edge1.myVertex.Pos()};
+    const Vec2 vertex2 {edge2.myVertex.Pos()};
     Vec2 resultCenter {vertex0 + vertex1 + vertex2};
     float resultRadiusSqd {glm::dot(vertex1 - vertex0, vertex1 - vertex0)};
 
@@ -194,7 +188,7 @@ std::pair<Vec2, float> TileMesh::GetBoundingCircle(const TileFace& aFace) const
     else
     {
         const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
-        const Vec2& vertex3 {myVertices[edge3.myVertex].GetPosition()};
+        const Vec2 vertex3 {edge3.myVertex.Pos()};
         resultCenter = (resultCenter + vertex3) * 0.25f;
         resultRadiusSqd *= squareUpperBound;
     }
@@ -208,9 +202,9 @@ bool TileMesh::Contains(const TileFace& aFace, const Vec2& aPosition) const
     const TileHalfEdge& edge0 {myHalfEdges[aFace.myEdge]};
     const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
     const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
-    const Vec2& vertex0 {myVertices[edge0.myVertex].GetPosition()};
-    const Vec2& vertex1 {myVertices[edge1.myVertex].GetPosition()};
-    const Vec2& vertex2 {myVertices[edge2.myVertex].GetPosition()};
+    const Vec2 vertex0 {edge0.myVertex.Pos()};
+    const Vec2 vertex1 {edge1.myVertex.Pos()};
+    const Vec2 vertex2 {edge2.myVertex.Pos()};
     isInside &= Deviation(vertex1 - vertex0, aPosition - vertex0) > 0.f;
     isInside &= Deviation(vertex2 - vertex1, aPosition - vertex1) > 0.f;
     if (aFace.IsTriangle())
@@ -220,57 +214,57 @@ bool TileMesh::Contains(const TileFace& aFace, const Vec2& aPosition) const
     else
     {
         const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
-        const Vec2& vertex3 {myVertices[edge3.myVertex].GetPosition()};
+        const Vec2 vertex3 {edge3.myVertex.Pos()};
         isInside &= Deviation(vertex3 - vertex2, aPosition - vertex2) > 0.f;
         isInside &= Deviation(vertex0 - vertex3, aPosition - vertex3) > 0.f;
     }
     return isInside;
 }
 
-int TileMesh::GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) const
+Dodec TileMesh::GetClosestVertex(const TileFace& aFace, const Vec2& aPosition) const
 {
     const TileHalfEdge& edge0 {myHalfEdges[aFace.myEdge]};
     const TileHalfEdge& edge1 {myHalfEdges[edge0.myNext]};
     const TileHalfEdge& edge2 {myHalfEdges[edge1.myNext]};
-    const Vec2& vertex0 {myVertices[edge0.myVertex].GetPosition()};
-    const Vec2& vertex1 {myVertices[edge1.myVertex].GetPosition()};
-    const Vec2& vertex2 {myVertices[edge2.myVertex].GetPosition()};
+    const Vec2 vertex0 {edge0.myVertex.Pos()};
+    const Vec2 vertex1 {edge1.myVertex.Pos()};
+    const Vec2 vertex2 {edge2.myVertex.Pos()};
 
-    int vertexIdx = edge0.myVertex;
+    Dodec vertex = edge0.myVertex;
     float minDistance {glm::distance(vertex0, aPosition)};
     if (const float distance = glm::distance(vertex1, aPosition); distance < minDistance)
     {
         minDistance = distance;
-        vertexIdx = edge1.myVertex;
+        vertex = edge1.myVertex;
     }
     if (const float distance = glm::distance(vertex2, aPosition); distance < minDistance)
     {
         minDistance = distance;
-        vertexIdx = edge2.myVertex;
+        vertex = edge2.myVertex;
     }
     if (aFace.IsSquare())
     {
         const TileHalfEdge& edge3 {myHalfEdges[edge2.myNext]};
-        const Vec2& vertex3 {myVertices[edge3.myVertex].GetPosition()};
+        const Vec2 vertex3 {edge3.myVertex.Pos()};
         if (const float distance = glm::distance(vertex3, aPosition); distance < minDistance)
         {
             minDistance = distance;
-            vertexIdx = edge3.myVertex;
+            vertex = edge3.myVertex;
         }
     }
-    return vertexIdx;
+    return vertex;
 }
 
-std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition, int aMaxFaceHeight) const
+std::pair<Dodec, int> TileMesh::GetVertexAndFace(const Vec2& aPosition, int aFaceHeight) const
 {
     if (myFaces.Count() == 0)
     {
-        return {-1, -1};
+        return {{}, -1};
     }
 
     int currentHeight {-1};
     int faceIdx {-1};
-    int vertexIdx {-1};
+    Dodec vertex;
     std::deque<int> faceQueue;
     ASSERT(myFaces.GetFirst().myHeight == 0, "Missing root face");
     faceQueue.push_back(myFaces.GetFirst().myIndex);
@@ -280,7 +274,7 @@ std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition, int aMaxFa
         const TileFace& face {myFaces[faceQueue.front()]};
         faceQueue.pop_front();
 
-        if (aMaxFaceHeight != -1 && face.myHeight > aMaxFaceHeight)
+        if (aFaceHeight != -1 && face.myHeight > aFaceHeight)
         {
             continue;
         }
@@ -304,14 +298,18 @@ std::pair<int, int> TileMesh::GetVertexAndFace(const Vec2& aPosition, int aMaxFa
         }
     }
 
-    if (faceIdx != -1)
+    if (faceIdx != -1 && (aFaceHeight == -1 || myFaces[faceIdx].myHeight == aFaceHeight))
     {
-        vertexIdx = GetClosestVertex(myFaces[faceIdx], aPosition);
+        vertex = GetClosestVertex(myFaces[faceIdx], aPosition);
     }
-    return {vertexIdx, faceIdx};
+    else
+    {
+        faceIdx = -1;
+    }
+    return {vertex, faceIdx};
 }
 
-const Array<TileVertex>& TileMesh::GetVertices() const
+const TileVertex::Map& TileMesh::GetVertices() const
 {
     return myVertices;
 }
@@ -361,23 +359,24 @@ void TileMesh::CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, in
     myFaces[aParentFaceIdx].myChildren.PushBack(faceIdx);
 }
 
-const TileHalfEdge& TileMesh::CreateFullEdge(int aBeginIdx, int anEndIdx, bool anIsAlternating)
+const TileHalfEdge& TileMesh::CreateFullEdge(const Dodec& aBegin, const Dodec& anEnd, bool anIsAlternating)
 {
-    const int height = glm::max(myVertices[aBeginIdx].myHeight, myVertices[anEndIdx].myHeight);
+    const int height = glm::max(myVertices.Find(aBegin)->myHeight, myVertices.Find(anEnd)->myHeight);
     const int newIndex0 {myHalfEdges.Count()};
     const int newIndex1 {newIndex0 + 1};
-    myHalfEdges.EmplaceBack(newIndex0, height, false, anIsAlternating, aBeginIdx, -1, newIndex1, -1);
-    myHalfEdges.EmplaceBack(newIndex1, height, true, anIsAlternating, anEndIdx, -1, newIndex0, -1);
+    myHalfEdges.EmplaceBack(newIndex0, height, false, anIsAlternating, aBegin, -1, newIndex1, -1);
+    myHalfEdges.EmplaceBack(newIndex1, height, true, anIsAlternating, anEnd, -1, newIndex0, -1);
 
     return myHalfEdges[newIndex0];
 }
 
-const TileVertex& TileMesh::CreateInflationVertex(const TileVertex& aBegin, const TileVertex& anEnd)
+Dodec TileMesh::CreateInflationVertex(const Dodec& aBegin, const Dodec& anEnd)
 {
-    const Dodec coordinates {aBegin.myCoordinates + (anEnd.myCoordinates - aBegin.myCoordinates) * Dodec::N()};
-    myVertices.EmplaceBack(myVertices.Count(), glm::max(aBegin.myHeight, anEnd.myHeight) + 1, coordinates);
-    TileVertex& vertex {myVertices.GetLast()};
-    return vertex;
+    const Dodec coordinates {aBegin + (anEnd - aBegin) * Dodec::N()};
+    const TileVertex* newVertex {myVertices.Emplace(
+        coordinates, glm::max(myVertices.Find(aBegin)->myHeight, myVertices.Find(anEnd)->myHeight) + 1)};
+    ASSERT(newVertex != nullptr, "A vertex already exists at these coordinates");
+    return coordinates;
 }
 
 void TileMesh::SubdivideFace(int aFaceIdx)
@@ -403,12 +402,12 @@ void TileMesh::SubdivideTriangle(int aTriangleIdx)
     SubdivideHalfEdge(edge1Idx);
     SubdivideHalfEdge(edge2Idx);
 
-    const int vertex0Idx {myHalfEdges[myHalfEdges[edge0Idx].myRightChild].myVertex};
-    const int vertex1Idx {myHalfEdges[myHalfEdges[edge1Idx].myRightChild].myVertex};
-    const int vertex2Idx {myHalfEdges[myHalfEdges[edge2Idx].myRightChild].myVertex};
+    const Dodec vertex0 {myHalfEdges[myHalfEdges[edge0Idx].myRightChild].myVertex};
+    const Dodec vertex1 {myHalfEdges[myHalfEdges[edge1Idx].myRightChild].myVertex};
+    const Dodec vertex2 {myHalfEdges[myHalfEdges[edge2Idx].myRightChild].myVertex};
 
-    const int edgeAIdx {CreateFullEdge(vertex0Idx, vertex1Idx, triangle.myType == TileType::TriangleA).myIndex};
-    const int edgeBIdx {CreateFullEdge(vertex2Idx, vertex0Idx, triangle.myType == TileType::TriangleB).myIndex};
+    const int edgeAIdx {CreateFullEdge(vertex0, vertex1, triangle.myType == TileType::TriangleA).myIndex};
+    const int edgeBIdx {CreateFullEdge(vertex2, vertex0, triangle.myType == TileType::TriangleB).myIndex};
 
     CreateFace(aTriangleIdx, myHalfEdges[edge0Idx].myRightChild, myHalfEdges[edge1Idx].myLeftChild,
                myHalfEdges[edgeAIdx].myOpposite);
@@ -431,17 +430,17 @@ void TileMesh::SubdivideSquare(int aSquareIdx)
     SubdivideHalfEdge(edge2Idx);
     SubdivideHalfEdge(edge3Idx);
 
-    const int vertex0Idx {myHalfEdges[myHalfEdges[edge0Idx].myRightChild].myVertex};
-    const int vertex1Idx {myHalfEdges[myHalfEdges[edge1Idx].myRightChild].myVertex};
-    const int vertex2Idx {myHalfEdges[myHalfEdges[edge2Idx].myRightChild].myVertex};
-    const int vertex3Idx {myHalfEdges[myHalfEdges[edge3Idx].myRightChild].myVertex};
+    const Dodec vertex0 {myHalfEdges[myHalfEdges[edge0Idx].myRightChild].myVertex};
+    const Dodec vertex1 {myHalfEdges[myHalfEdges[edge1Idx].myRightChild].myVertex};
+    const Dodec vertex2 {myHalfEdges[myHalfEdges[edge2Idx].myRightChild].myVertex};
+    const Dodec vertex3 {myHalfEdges[myHalfEdges[edge3Idx].myRightChild].myVertex};
 
     if (square.myType == TileType::SquareC)
     {
-        const int edgeAIdx {CreateFullEdge(vertex0Idx, vertex1Idx, true).myIndex};
-        const int edgeBIdx {CreateFullEdge(vertex1Idx, vertex2Idx, false).myIndex};
-        const int edgeCIdx {CreateFullEdge(vertex2Idx, vertex3Idx, true).myIndex};
-        const int edgeDIdx {CreateFullEdge(vertex3Idx, vertex0Idx, false).myIndex};
+        const int edgeAIdx {CreateFullEdge(vertex0, vertex1, true).myIndex};
+        const int edgeBIdx {CreateFullEdge(vertex1, vertex2, false).myIndex};
+        const int edgeCIdx {CreateFullEdge(vertex2, vertex3, true).myIndex};
+        const int edgeDIdx {CreateFullEdge(vertex3, vertex0, false).myIndex};
 
         CreateFace(aSquareIdx, myHalfEdges[edge0Idx].myRightChild, myHalfEdges[edge1Idx].myLeftChild,
                    myHalfEdges[edgeAIdx].myOpposite);
@@ -456,17 +455,17 @@ void TileMesh::SubdivideSquare(int aSquareIdx)
     }
     else
     {
-        const TileVertex& begin {myVertices[myHalfEdges[edge0Idx].myVertex]};
-        const TileVertex& end {myVertices[myHalfEdges[edge2Idx].myVertex]};
-        const int vertex4Idx {CreateInflationVertex(begin, end).myIndex};
-        const int vertex5Idx {myHalfEdges[edge3Idx].myVertex};
+        const Dodec begin {myHalfEdges[edge0Idx].myVertex};
+        const Dodec end {myHalfEdges[edge2Idx].myVertex};
+        const Dodec vertex4 {CreateInflationVertex(begin, end)};
+        const Dodec vertex5 {myHalfEdges[edge3Idx].myVertex};
 
         const bool isTypeA {square.myType == TileType::SquareA};
-        const int edgeAIdx {CreateFullEdge(vertex0Idx, vertex1Idx, isTypeA).myIndex};
-        const int edgeBIdx {CreateFullEdge(vertex4Idx, vertex1Idx, isTypeA).myIndex};
-        const int edgeCIdx {CreateFullEdge(vertex0Idx, vertex4Idx, isTypeA).myIndex};
-        const int edgeDIdx {CreateFullEdge(vertex2Idx, vertex4Idx, !isTypeA).myIndex};
-        const int edgeFIdx {CreateFullEdge(vertex4Idx, vertex3Idx, !isTypeA).myIndex};
+        const int edgeAIdx {CreateFullEdge(vertex0, vertex1, isTypeA).myIndex};
+        const int edgeBIdx {CreateFullEdge(vertex4, vertex1, isTypeA).myIndex};
+        const int edgeCIdx {CreateFullEdge(vertex0, vertex4, isTypeA).myIndex};
+        const int edgeDIdx {CreateFullEdge(vertex2, vertex4, !isTypeA).myIndex};
+        const int edgeFIdx {CreateFullEdge(vertex4, vertex3, !isTypeA).myIndex};
 
         CreateFace(aSquareIdx, myHalfEdges[edge0Idx].myRightChild, myHalfEdges[edge1Idx].myLeftChild,
                    myHalfEdges[edgeAIdx].myOpposite);
@@ -479,7 +478,7 @@ void TileMesh::SubdivideSquare(int aSquareIdx)
 
         if (isTypeA)
         {
-            const int edgeEIdx {CreateFullEdge(vertex4Idx, vertex5Idx, false).myIndex};
+            const int edgeEIdx {CreateFullEdge(vertex4, vertex5, false).myIndex};
             CreateFace(aSquareIdx, myHalfEdges[edge2Idx].myRightChild, myHalfEdges[edgeEIdx].myOpposite,
                        myHalfEdges[edgeDIdx].myOpposite);
             CreateFace(aSquareIdx, myHalfEdges[edgeEIdx].myIndex, myHalfEdges[edge3Idx].myLeftChild,
@@ -487,7 +486,7 @@ void TileMesh::SubdivideSquare(int aSquareIdx)
         }
         else
         {
-            const int edgeEIdx {CreateFullEdge(vertex5Idx, vertex4Idx, true).myIndex};
+            const int edgeEIdx {CreateFullEdge(vertex5, vertex4, true).myIndex};
             CreateFace(aSquareIdx, myHalfEdges[edgeEIdx].myIndex, myHalfEdges[edgeDIdx].myOpposite,
                        myHalfEdges[edge2Idx].myRightChild);
             CreateFace(aSquareIdx, myHalfEdges[edge3Idx].myLeftChild, myHalfEdges[edgeFIdx].myOpposite,
@@ -504,7 +503,7 @@ void TileMesh::SubdivideHalfEdge(int aHalfEdgeIdx)
     myHalfEdges.EmplaceBack(myHalfEdges.Count(), newHeight, isReversed != isAlternating, isReversed == isAlternating,
                             myHalfEdges[aHalfEdgeIdx].myVertex, -1, -1, -1);
     myHalfEdges.EmplaceBack(myHalfEdges.Count(), newHeight, isReversed != isAlternating, isReversed != isAlternating,
-                            -1, -1, -1, -1);
+                            Dodec {}, -1, -1, -1);
     TileHalfEdge& halfEdge {myHalfEdges[aHalfEdgeIdx]};
 
     TileHalfEdge& leftChild {myHalfEdges[myHalfEdges.Count() - 2]};
@@ -514,11 +513,13 @@ void TileMesh::SubdivideHalfEdge(int aHalfEdgeIdx)
     halfEdge.myRightChild = rightChild.myIndex;
     rightChild.myParent = halfEdge.myIndex;
 
-    int& vertexIdx {rightChild.myVertex};
+    bool oppositeWasSubdivided {false};
+    Dodec& inflationVertex {rightChild.myVertex};
     if (halfEdge.myOpposite != -1)
     {
         const TileHalfEdge& oppositeHEdge {myHalfEdges[halfEdge.myOpposite]};
-        if (oppositeHEdge.myLeftChild != -1)
+        oppositeWasSubdivided = oppositeHEdge.myLeftChild != -1;
+        if (oppositeWasSubdivided)
         {
             TileHalfEdge& oppositeLeftChild {myHalfEdges[oppositeHEdge.myLeftChild]};
             TileHalfEdge& oppositeRightChild {myHalfEdges[oppositeHEdge.myRightChild]};
@@ -526,20 +527,19 @@ void TileMesh::SubdivideHalfEdge(int aHalfEdgeIdx)
             oppositeRightChild.myOpposite = leftChild.myIndex;
             leftChild.myOpposite = oppositeRightChild.myIndex;
             rightChild.myOpposite = oppositeLeftChild.myIndex;
-            vertexIdx = oppositeRightChild.myVertex;
+            inflationVertex = oppositeRightChild.myVertex;
         }
     }
-    if (vertexIdx == -1)
+    if (!oppositeWasSubdivided)
     {
         const TileHalfEdge& nextHEdge {myHalfEdges[halfEdge.myNext]};
-        vertexIdx = myVertices.Count();
         if (halfEdge.myIsReversed)
         {
-            CreateInflationVertex(myVertices[nextHEdge.myVertex], myVertices[halfEdge.myVertex]);
+            inflationVertex = CreateInflationVertex(nextHEdge.myVertex, halfEdge.myVertex);
         }
         else
         {
-            CreateInflationVertex(myVertices[halfEdge.myVertex], myVertices[nextHEdge.myVertex]);
+            inflationVertex = CreateInflationVertex(halfEdge.myVertex, nextHEdge.myVertex);
         }
     }
 }
