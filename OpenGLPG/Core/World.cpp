@@ -24,16 +24,13 @@ void World::Init()
 {
     SpawnQueuedEntities();
 
-    // Temporary camera activation flow:
-
-    // CameraActivationRequest request {{CameraType::FreeCam, glm::radians(45.f), 16.f / 9.f, 0.1f, 200.f}};
-    // Keep this around in case I ever break the serialization
-
-    CameraActivationRequest request {{myClientLoader.myAssetFolder + "Camera/ortho.camera"}};
+    if (myWorldSettings.myCameraAsset == "")
+    {
+        myWorldSettings.myCameraAsset = "freecam.camera";
+    }
+    CameraActivationRequest request {{myClientLoader.myAssetFolder + "Camera/" + myWorldSettings.myCameraAsset}};
     myGameplayCamera = request.GetCameraUID();
     myCameraManager.ActivateCamera(request);
-
-    //
 }
 
 void World::Shutdown()

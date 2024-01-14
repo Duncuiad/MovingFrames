@@ -1,3 +1,16 @@
+myWorldSettings
+{
+	myCameraAsset
+	{
+		myPath
+		{
+			ortho.camera
+		}
+
+	}
+
+}
+
 myCount
 {
 	1
@@ -193,6 +206,29 @@ myCount
 
 					K
 					{
+						1						0						0						1
+					}
+
+					V
+					{
+						myHeight
+						{
+							1
+						}
+
+						myData
+						{
+							myColor
+							{
+								1.000000
+							}
+
+						}
+
+					}
+
+					K
+					{
 						1						1						0						0
 					}
 
@@ -224,29 +260,6 @@ myCount
 						myHeight
 						{
 							0
-						}
-
-						myData
-						{
-							myColor
-							{
-								1.000000
-							}
-
-						}
-
-					}
-
-					K
-					{
-						1						0						0						1
-					}
-
-					V
-					{
-						myHeight
-						{
-							1
 						}
 
 						myData

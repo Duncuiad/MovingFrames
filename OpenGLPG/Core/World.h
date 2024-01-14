@@ -7,6 +7,7 @@
 #include "Entity.h"
 #include "Filepath.h"
 #include "UID.h"
+#include "WorldSettings.h"
 
 class World
 {
@@ -43,6 +44,7 @@ private:
 
     friend class WorldLoader;
 
+    WorldSettings myWorldSettings;
     Entity::Container myEntities;
     Array<Entity> myEntityQueue;
 

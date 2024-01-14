@@ -1,0 +1,18 @@
+myWorldSettings
+{
+	myCameraAsset
+	{
+		myPath
+		{
+			freecam.camera
+		}
+
+	}
+
+}
+
+myCount
+{
+	0
+}
+

@@ -218,6 +218,7 @@
     <ClInclude Include="Widget.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="WorldLoader.h" />
+    <ClInclude Include="WorldSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -295,6 +296,7 @@
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="World.cpp" />
     <ClCompile Include="WorldLoader.cpp" />
+    <ClCompile Include="WorldSettings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc" />

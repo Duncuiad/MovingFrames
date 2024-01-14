@@ -42,6 +42,7 @@ void WorldLoader::SaveWorld(const Filepath& aFilename, World* aWorld)
 
     {
         SerializerSaver saver {myWorldFolder + aFilename};
+        saver.Process("myWorldSettings", aWorld->myWorldSettings);
 
         // @improvement: This needs to be kept in sync with the Array class deserialization parsing. Maybe let's make it
         // smell a bit less
@@ -65,6 +66,7 @@ void WorldLoader::LoadWorld(const Filepath& aFilename, World* aWorld)
     if (aFilename != "")
     {
         SerializerLoader loader(myWorldFolder + aFilename);
+        loader.Process("myWorldSettings", aWorld->myWorldSettings);
         aWorld->myEntityQueue.Serialize(loader);
     }
 }

@@ -318,6 +318,9 @@
     <ClInclude Include="Map.h">
       <Filter>Engine\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="WorldSettings.h">
+      <Filter>World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -544,6 +547,9 @@
     </ClCompile>
     <ClCompile Include="TileMeshEditorWidget.cpp">
       <Filter>Tiles\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldSettings.cpp">
+      <Filter>World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
