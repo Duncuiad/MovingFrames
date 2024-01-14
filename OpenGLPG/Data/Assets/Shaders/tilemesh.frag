@@ -2,8 +2,8 @@
 out vec4 FragColor;
 
 in vec3 vertexColor;
+in vec3 faceColor;
 in vec2 uvs;
-flat in float faceColor;
 
 uniform int ShowGraphs;
 uniform int ShowEdges;
@@ -65,9 +65,9 @@ void DrawMarchingTriangles(in vec2 UV, in vec3 vertColor, inout vec4 fragColor)
     }
 }
 
-void DrawFaces(in float aFaceColor, inout vec4 fragColor)
+void DrawFaces(in vec3 aFaceColor, inout vec4 fragColor)
 {
-    vec4 blockColor = aFaceColor < 1.0 ? vec4(0.,0.,0.,1.) : vec4(0.);
+    vec4 blockColor = vec4(vec3(aFaceColor.x + aFaceColor.y + aFaceColor.z), 1.f);
     fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
 }
 

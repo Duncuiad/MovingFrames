@@ -53,9 +53,9 @@ void AddFace(const TileFace& aFace, const TileMesh& aTileMesh, bool anIsDisplayi
         if (anIsDisplayingFaces)
         {
             const float faceColor {aFace.myData.myColor};
-            vertex0.myNormal = {faceColor, faceColor, faceColor};
-            vertex1.myNormal = {faceColor, faceColor, faceColor};
-            vertex2.myNormal = {faceColor, faceColor, faceColor};
+            vertex0.myNormal = {faceColor, 0.f, 0.f};
+            vertex1.myNormal = {0.f, faceColor, 0.f};
+            vertex2.myNormal = {0.f, 0.f, faceColor};
         }
 
         someVerticesOut.push_back(std::move(vertex0));
@@ -86,10 +86,10 @@ void AddFace(const TileFace& aFace, const TileMesh& aTileMesh, bool anIsDisplayi
         if (anIsDisplayingFaces)
         {
             const float faceColor {aFace.myData.myColor};
-            vertex0.myNormal = {faceColor, faceColor, faceColor};
-            vertex1.myNormal = {faceColor, faceColor, faceColor};
-            vertex2.myNormal = {faceColor, faceColor, faceColor};
-            vertex3.myNormal = {faceColor, faceColor, faceColor};
+            vertex0.myNormal = {faceColor, 0.f, 0.f};
+            vertex1.myNormal = {0.f, faceColor, 0.f};
+            vertex2.myNormal = {0.f, 0.f, faceColor};
+            vertex3.myNormal = {0.f, faceColor, 0.f};
         }
         someVerticesOut.push_back(std::move(vertex0));
         someVerticesOut.push_back(std::move(vertex1));
@@ -134,7 +134,7 @@ void Editor_TileMeshCmp::Update()
     // @todo: refactor function
 
     using ClickAction = TileMeshEditorWidget::ClickAction;
-    using ActionMode = TileMeshEditorWidget::ActionMode;
+    using ShowBlocks = TileMeshEditorWidget::ShowBlocks;
 
     const TileMeshColliderCmp& collider {GetTileMeshColliderCmp()};
     for (const TileMeshColliderCmp::Hit& hit : collider.myHits)
@@ -152,14 +152,14 @@ void Editor_TileMeshCmp::Update()
 
         std::variant<int*, std::optional<Dodec>*, bool> selectedResource {false};
         float* color {nullptr};
-        switch (myWidget.myActionMode)
+        switch (myWidget.myShowBlocks)
         {
-        case ActionMode::Vertices: {
+        case ShowBlocks::Vertices: {
             selectedResource = &myWidget.mySelectedVertex;
             color = &vertexData->myColor;
             break;
         }
-        case ActionMode::Faces: {
+        case ShowBlocks::Faces: {
             selectedResource = &myWidget.mySelectedFace;
             color = &faceData->myColor;
             break;
@@ -200,7 +200,7 @@ void Editor_TileMeshCmp::Update()
                 {
                     desiredColor = 1.f;
                 }
-                if (desiredColor.has_value() && myWidget.myActionMode == ActionMode::Vertices)
+                if (desiredColor.has_value() && myWidget.myShowBlocks == ShowBlocks::Vertices)
                 {
                     *color = *desiredColor;
                     for (const Dodec& neighbour :

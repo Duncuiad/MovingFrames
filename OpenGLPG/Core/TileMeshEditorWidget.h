@@ -22,11 +22,6 @@ public:
         Faces
     };
 
-    enum class ActionMode {
-        Vertices,
-        Faces
-    };
-
     enum class ClickAction {
         Inspect,
         Paint,
@@ -39,7 +34,6 @@ public:
     bool myShowGraphs {false};
     bool myShowEdges {true};
     ShowBlocks myShowBlocks {ShowBlocks::Vertices};
-    ActionMode myActionMode {ActionMode::Vertices};
     ClickAction myClickAction {ClickAction::Inspect};
     std::optional<Dodec> mySelectedVertex;
     int mySelectedFace {-1};
@@ -51,6 +45,7 @@ private:
     void DrawEditing();
     bool DrawBrushes();
     bool DrawBrushRandom();
+    bool DrawVertexSpecificBrushes();
     bool DrawReset();
     void DrawCoordinates(const Dodec& aDodec);
     void DrawDodec(const char* aName, const Dodec& aDodec);
@@ -64,5 +59,5 @@ private:
 
     std::vector<std::unique_ptr<ThresholdWidgetBlock<TileVertex::Pair>>> myThresholdBlocks;
     DodecDisplayStyle myDodecDisplayStyle {DodecDisplayStyle::IntegerIN};
-    float myVertexColorThreshold {0.f};
+    float myRandomColorThreshold {0.f};
 };

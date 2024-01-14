@@ -98,14 +98,25 @@ void TileMesh::SubdivideAllFaces()
     }
 }
 
-void TileMesh::RandomizeVertexColors(float aRatio)
+void TileMesh::RandomizeColors(float aRatio, bool aColorVertices)
 {
     std::random_device rd;
     std::mt19937 e2(rd());
     std::uniform_real_distribution<float> dist {};
-    for (auto& [coords, vertex] : myVertices)
+
+    if (aColorVertices)
     {
-        vertex.myData.myColor = dist(e2) < aRatio ? 0.f : 1.f;
+        for (auto& [coords, vertex] : myVertices)
+        {
+            vertex.myData.myColor = dist(e2) < aRatio ? 0.f : 1.f;
+        }
+    }
+    else
+    {
+        for (TileFace& face : myFaces)
+        {
+            face.myData.myColor = dist(e2) < aRatio ? 0.f : 1.f;
+        }
     }
 }
 

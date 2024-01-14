@@ -22,7 +22,7 @@ public:
 
     void Reset(TileType aType);
     void SubdivideAllFaces();
-    void RandomizeVertexColors(float aRatio);
+    void RandomizeColors(float aRatio, bool aColorVertices);
     void ColorVertices(const TileVertex::Evaluation& anEvaluation);
     void ColorVerticesSatisfying(const TileVertex::Predicate& aPredicate);
     TileVertex::Data* GetVertexData(const Dodec& someCoords);

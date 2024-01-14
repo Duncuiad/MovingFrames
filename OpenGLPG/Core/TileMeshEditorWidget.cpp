@@ -103,7 +103,7 @@ bool TileMeshEditorWidget::DrawShowdata()
 
 void TileMeshEditorWidget::DrawEditing()
 {
-    if (mySelectedVertex.has_value() && myActionMode == ActionMode::Vertices)
+    if (mySelectedVertex.has_value() && myShowBlocks == ShowBlocks::Vertices)
     {
         const Dodec& coords {*mySelectedVertex};
         const TileVertex::Data* vertexData {myTileMesh->GetVertexData(coords)};
@@ -117,7 +117,7 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::EndChild();
         ImGui::Separator();
     }
-    else if (mySelectedFace != -1 && myActionMode == ActionMode::Faces)
+    else if (mySelectedFace != -1 && myShowBlocks == ShowBlocks::Faces)
     {
         const TileFace::Data* faceData {myTileMesh->GetFaceData(mySelectedFace)};
         ASSERT(faceData != nullptr, "Invalid face");
@@ -133,11 +133,6 @@ void TileMeshEditorWidget::DrawEditing()
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
     if (ImGui::TreeNode("Editing"))
     {
-        ImGui::Text("Mode");
-        Widgets::RadioButton("Vertices", &myActionMode, ActionMode::Vertices);
-        ImGui::SameLine();
-        Widgets::RadioButton("Faces", &myActionMode, ActionMode::Faces);
-
         ImGui::Spacing();
         ImGui::Text("Action");
         Widgets::RadioButton("Inspect", &myClickAction, ClickAction::Inspect);
@@ -159,82 +154,9 @@ bool TileMeshEditorWidget::DrawBrushes()
         changed |= DrawBrushRandom();
         ImGui::PopID();
 
-        for (auto& block : myThresholdBlocks)
+        if (myShowBlocks == ShowBlocks::Vertices)
         {
-            ImGui::Bullet();
-            changed |= block->Draw();
-        }
-
-        ImGui::Bullet();
-        if (ImGui::Button("Height"))
-        {
-            changed = true;
-            myTileMesh->ColorVertices([](const auto& aVertex) { return static_cast<float>(aVertex.second.myHeight); });
-        }
-
-        ImGui::Bullet();
-        if (ImGui::Button("Norm"))
-        {
-            changed = true;
-            myTileMesh->ColorVertices([](const auto& aVertex) { return static_cast<float>(aVertex.first.Norm()); });
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("Norm^(1/4)"))
-        {
-            changed = true;
-            myTileMesh->ColorVertices(
-                [](const auto& aVertex) { return sqrt(sqrt(static_cast<float>(aVertex.first.Norm()))); });
-        }
-
-        ImGui::Bullet();
-        if (ImGui::Button("ComplexNorm"))
-        {
-            changed = true;
-            myTileMesh->ColorVertices([](const auto& aVertex) {
-                const Dodec& coords {aVertex.first};
-                return (coords * coords.Conj()).Pos().x;
-            });
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("Sqrt(ComplexNorm)"))
-        {
-            changed = true;
-            myTileMesh->ColorVertices([](const auto& aVertex) {
-                const Dodec& coords {aVertex.first};
-                return sqrt((coords * coords.Conj()).Pos().x);
-            });
-        }
-
-        ImGui::Bullet();
-        if (ImGui::Button("NormAlt"))
-        {
-            changed = true;
-            myTileMesh->ColorVertices([](const auto& aVertex) {
-                const Dodec& coords {aVertex.first};
-                return (coords.ConjNM() * coords.ConjNM().Conj()).Pos().x;
-            });
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("Sqrt(NormAlt)"))
-        {
-            changed = true;
-            myTileMesh->ColorVertices([](const auto& aVertex) {
-                const Dodec& coords {aVertex.first};
-                return sqrt((coords.ConjNM() * coords.ConjNM().Conj()).Pos().x);
-            });
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("Log2(Sqrt(NormAlt))"))
-        {
-            changed = true;
-            myTileMesh->ColorVertices([](const auto& aVertex) {
-                const Dodec& coords {aVertex.first};
-                return std::max(0.5f * log2((coords.ConjNM() * coords.ConjNM().Conj()).Pos().x), 0.f);
-            });
+            changed |= DrawVertexSpecificBrushes();
         }
 
         ImGui::Separator();
@@ -248,14 +170,99 @@ bool TileMeshEditorWidget::DrawBrushRandom()
 {
     ImGui::Bullet();
     ImGui::Text("Random");
-    ImGui::SliderFloat("##Random Color", &myVertexColorThreshold, 0., 1., "p = %.3f", ImGuiSliderFlags_AlwaysClamp);
+    ImGui::SliderFloat("##Random Color", &myRandomColorThreshold, 0., 1., "p = %.3f", ImGuiSliderFlags_AlwaysClamp);
     ImGui::SameLine();
-    if (ImGui::Button("Run"))
+    if (ImGui::Button("Run") && (myShowBlocks == ShowBlocks::Vertices || myShowBlocks == ShowBlocks::Faces))
     {
-        myTileMesh->RandomizeVertexColors(myVertexColorThreshold);
+        myTileMesh->RandomizeColors(myRandomColorThreshold, myShowBlocks == ShowBlocks::Vertices);
         return true;
     }
     return false;
+}
+
+bool TileMeshEditorWidget::DrawVertexSpecificBrushes()
+{
+    bool changed {false};
+
+    for (auto& block : myThresholdBlocks)
+    {
+        ImGui::Bullet();
+        changed |= block->Draw();
+    }
+
+    ImGui::Bullet();
+    if (ImGui::Button("Height"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) { return static_cast<float>(aVertex.second.myHeight); });
+    }
+
+    ImGui::Bullet();
+    if (ImGui::Button("Norm"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) { return static_cast<float>(aVertex.first.Norm()); });
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Norm^(1/4)"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices(
+            [](const auto& aVertex) { return sqrt(sqrt(static_cast<float>(aVertex.first.Norm()))); });
+    }
+
+    ImGui::Bullet();
+    if (ImGui::Button("ComplexNorm"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            const Dodec& coords {aVertex.first};
+            return (coords * coords.Conj()).Pos().x;
+        });
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Sqrt(ComplexNorm)"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            const Dodec& coords {aVertex.first};
+            return sqrt((coords * coords.Conj()).Pos().x);
+        });
+    }
+
+    ImGui::Bullet();
+    if (ImGui::Button("NormAlt"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            const Dodec& coords {aVertex.first};
+            return (coords.ConjNM() * coords.ConjNM().Conj()).Pos().x;
+        });
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Sqrt(NormAlt)"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            const Dodec& coords {aVertex.first};
+            return sqrt((coords.ConjNM() * coords.ConjNM().Conj()).Pos().x);
+        });
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Log2(Sqrt(NormAlt))"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            const Dodec& coords {aVertex.first};
+            return std::max(0.5f * log2((coords.ConjNM() * coords.ConjNM().Conj()).Pos().x), 0.f);
+        });
+    }
+
+    return changed;
 }
 
 bool TileMeshEditorWidget::DrawReset()
