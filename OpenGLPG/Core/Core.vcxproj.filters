@@ -64,6 +64,9 @@
     <Filter Include="Collision\Components">
       <UniqueIdentifier>{9d69b9ab-480b-47ea-9288-992895671de9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Image">
+      <UniqueIdentifier>{8c7ba6c2-0bcf-4316-81c0-c401edd8a624}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -321,6 +324,9 @@
     <ClInclude Include="WorldSettings.h">
       <Filter>World</Filter>
     </ClInclude>
+    <ClInclude Include="ImageUtils.h">
+      <Filter>Engine\Image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -550,6 +556,9 @@
     </ClCompile>
     <ClCompile Include="WorldSettings.cpp">
       <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageUtils.cpp">
+      <Filter>Engine\Image</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

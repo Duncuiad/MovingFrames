@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);C:\Users\feder\Documents\GLFW\lib-vc2022;C:\Users\feder\Documents\Assimp</LibraryPath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\feder\Documents\GLAD\include;C:\Users\feder\Documents\GLFW\include;C:\Users\feder\Documents\GLM\glm;C:\Users\feder\Documents\Assimp\include;C:\Users\feder\Documents\imgui;C:\Users\feder\Documents\imgui\backends</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\feder\Documents\GLAD\include;C:\Users\feder\Documents\GLFW\include;C:\Users\feder\Documents\GLM\glm;C:\Users\feder\Documents\Assimp\include;C:\Users\feder\Documents\imgui;C:\Users\feder\Documents\imgui\backends;C:\Users\feder\Documents\STB Image</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -177,6 +177,7 @@
     <ClInclude Include="GraphCmp.h" />
     <ClInclude Include="Dual.h" />
     <ClInclude Include="FrameSpline.h" />
+    <ClInclude Include="ImageUtils.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="SliderThresholdWidgetBlock.h" />
     <ClInclude Include="ThresholdWidgetBlock.h" />
@@ -260,6 +261,7 @@
     <ClCompile Include="ClientLoader.cpp" />
     <ClCompile Include="GameInputData.cpp" />
     <ClCompile Include="GraphCmp.cpp" />
+    <ClCompile Include="ImageUtils.cpp" />
     <ClCompile Include="ImGuiWidgets.cpp" />
     <ClCompile Include="InputOrthoSizeCameraBehavior.cpp" />
     <ClCompile Include="InputOrthoTranslationCameraBehavior.cpp" />

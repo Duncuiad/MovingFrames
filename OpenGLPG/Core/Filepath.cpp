@@ -34,7 +34,16 @@ const char* Filepath::GetBuffer() const
 
 bool Filepath::HasExtension(const char* anExtension) const
 {
+    if (anExtension == "")
+    {
+        return myPath.find(".") != std::string::npos;
+    }
     return myPath.ends_with(std::format(".{}", anExtension));
+}
+
+void Filepath::RemoveExtension()
+{
+    myPath = myPath.substr(0, myPath.find("."));
 }
 
 void Filepath::Append(const char* aString)

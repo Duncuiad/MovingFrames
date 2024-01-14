@@ -16,7 +16,8 @@ public:
     void Serialize(Serializer& aSerializer) override;
 
     const char* GetBuffer() const;
-    bool HasExtension(const char* anExtension) const;
+    bool HasExtension(const char* anExtension = "") const;
+    void RemoveExtension();
     void Append(const char* aString);
 
     Filepath operator+(const Filepath& anOther) const;
