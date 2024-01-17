@@ -35,6 +35,8 @@ void ClientInputManager::ProcessInput()
     AddKeyboardInput(GLFW_KEY_Q, GameInput::theKeyboardMoveDown);
     AddKeyboardInput(GLFW_KEY_E, GameInput::theKeyboardMoveUp);
 
+    AddKeyboardInput(GLFW_KEY_P, GameInput::theTakeScreenshot);
+
     if (glfwGetKey(myWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         ImGui::OpenPopup("##ExitGame");

@@ -179,6 +179,8 @@
     <ClInclude Include="FrameSpline.h" />
     <ClInclude Include="ImageUtils.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="RenderPass.h" />
+    <ClInclude Include="ScreenshotManager.h" />
     <ClInclude Include="SliderThresholdWidgetBlock.h" />
     <ClInclude Include="ThresholdWidgetBlock.h" />
     <ClInclude Include="InputOrthoSizeCameraBehavior.h" />
@@ -278,6 +280,8 @@
     <ClCompile Include="MovingFrame.cpp" />
     <ClCompile Include="FrameSpline.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderPass.cpp" />
+    <ClCompile Include="ScreenshotManager.cpp" />
     <ClCompile Include="Serializable.cpp" />
     <ClCompile Include="SerializationTest.cpp" />
     <ClCompile Include="Serializer.cpp" />

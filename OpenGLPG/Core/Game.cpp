@@ -3,9 +3,11 @@
 #include "Game.h"
 
 #include "Assert.h"
+#include "Defines.h"
 
 Game::Game(const ConstructionParams& someParams)
-    : myWorld {{someParams.myLoader, someParams.myLevelName}}
+    : myScreenshotManager {{myRenderManager, GLOBALPATH_LOCALFOLDER}}
+    , myWorld {{someParams.myLoader, someParams.myLevelName}}
 {}
 
 void Game::Init()
@@ -24,7 +26,9 @@ void Game::Update(const UpdateParams& someParams)
     myWorld.Update({myInputData, someParams.myDeltaTime});
 
     const World* worldToRender {myWorld.IsAvailable() ? &myWorld : nullptr};
+    myScreenshotManager.Update({worldToRender, myInputData});
     myRenderManager.Render({worldToRender, someParams.myViewportTL, someParams.myViewportBR});
+    myRenderManager.Update();
 
     DebugGameInput();
 }

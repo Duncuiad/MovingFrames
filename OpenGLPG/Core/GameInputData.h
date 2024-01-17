@@ -32,6 +32,8 @@ constexpr const char* theMouseHoldRight {"MouseHoldRight"};
 constexpr const char* theMouseReleaseLeft {"MouseReleaseLeft"};
 constexpr const char* theMouseReleaseRight {"MouseReleaseRight"};
 
+constexpr const char* theTakeScreenshot {"TakeScreenshot"};
+
 const std::initializer_list<const char*> theInputs {theKeyboardLookRight,
                                                     theKeyboardLookLeft,
                                                     theKeyboardLookUp,
@@ -54,7 +56,8 @@ const std::initializer_list<const char*> theInputs {theKeyboardLookRight,
                                                     theMouseHoldLeft,
                                                     theMouseHoldRight,
                                                     theMouseReleaseLeft,
-                                                    theMouseReleaseRight};
+                                                    theMouseReleaseRight,
+                                                    theTakeScreenshot};
 } // namespace GameInput
 
 struct GameInputData

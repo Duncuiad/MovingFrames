@@ -12,4 +12,5 @@ constexpr int DEFAULT_WINDOW_HEIGHT = 600;
 
 constexpr const char* GLOBALPATH_ASSETFOLDER = "../Data/Assets/";
 constexpr const char* GLOBALPATH_TEMPFOLDER = "../Data/Temp/";
+constexpr const char* GLOBALPATH_LOCALFOLDER = "../Data/Local/";
 constexpr const char* GLOBALNAME_WORLDINDEX = "main.worldindex";

@@ -3,6 +3,7 @@
 OpenGLPG/Data/Assets/Test/*
 OpenGLPG/Data/Assets/Models/*
 OpenGLPG/Data/Temp/*
+OpenGLPG/Data/Local/*
 OpenGLPG/Core/ext/*
 
 # CUSTOM FILES:

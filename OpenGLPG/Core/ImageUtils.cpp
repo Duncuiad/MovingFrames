@@ -20,7 +20,7 @@
 
 namespace ImageUtils_Private
 {
-Filepath ProcessName(const Filepath& aName, const char* anExtension)
+Filepath ProcessPath(const Filepath& aFolder, const Filepath& aName, const char* anExtension)
 {
     Filepath name {aName};
     if (name == "")
@@ -29,10 +29,10 @@ Filepath ProcessName(const Filepath& aName, const char* anExtension)
         tm localtime;
         localtime_s(&localtime, &t);
         std::ostringstream stream;
-        stream << std::put_time(&localtime, "%D_%T");
+        stream << std::put_time(&localtime, "%d-%m-%y_%H-%M-%S");
         name = stream.str();
     }
-    if (!name.HasExtension(anExtension))
+    else if (!name.HasExtension(anExtension))
     {
         name.RemoveExtension();
         std::cerr << "Requested saving image with wrong file extension. Overriding with ." << anExtension << std::endl;
@@ -41,36 +41,43 @@ Filepath ProcessName(const Filepath& aName, const char* anExtension)
     {
         name = name + "." + anExtension;
     }
-    return name;
+    return aFolder + name;
 }
 } // namespace ImageUtils_Private
 
-bool SaveImage(unsigned char const* someData, int aWidth, int aHeight, int aChannelCount, const Filepath& aName)
+bool SaveImage(unsigned char const* someData, int aWidth, int aHeight, int aChannelCount, const Filepath& aFolder,
+               const Filepath& aName)
 {
-    Filepath name = ImageUtils_Private::ProcessName(aName, "png");
-    return stbi_write_png(name.GetBuffer(), aWidth, aHeight, aChannelCount, someData, aChannelCount * aWidth) != 0;
+    stbi_flip_vertically_on_write(true);
+    Filepath path = ImageUtils_Private::ProcessPath(aFolder, aName, "png");
+    return stbi_write_png(path.GetBuffer(), aWidth, aHeight, aChannelCount, someData, aChannelCount * aWidth) != 0;
 }
 
-bool SaveImage(unsigned int const* someData, int aWidth, int aHeight, int aChannelCount, const Filepath& aName)
+bool SaveImage(unsigned int const* someData, int aWidth, int aHeight, int aChannelCount, const Filepath& aFolder,
+               const Filepath& aName)
 {
-    Filepath name = ImageUtils_Private::ProcessName(aName, "png");
-    return stbi_write_png(name.GetBuffer(), aWidth, aHeight, aChannelCount, someData, aChannelCount * aWidth * 4);
+    stbi_flip_vertically_on_write(true);
+    Filepath path = ImageUtils_Private::ProcessPath(aFolder, aName, "png");
+    return stbi_write_png(path.GetBuffer(), aWidth, aHeight, aChannelCount, someData, aChannelCount * aWidth * 4);
 }
 
-bool SaveImage(float const* someData, int aWidth, int aHeight, int aChannelCount, const Filepath& aName)
+bool SaveImage(float const* someData, int aWidth, int aHeight, int aChannelCount, const Filepath& aFolder,
+               const Filepath& aName)
 {
+    stbi_flip_vertically_on_write(true);
     unsigned char* data = new unsigned char[aWidth * aHeight * aChannelCount];
     for (int i = 0; i < aWidth * aHeight * aChannelCount; ++i)
     {
         data[i] = static_cast<unsigned char>(someData[i] * 255.f);
     }
-    const bool result = SaveImage(data, aWidth, aHeight, aChannelCount, aName);
+    const bool result = SaveImage(data, aWidth, aHeight, aChannelCount, aFolder, aName);
     delete[] data;
     return result;
 }
 
-bool SaveImageHDR(float const* someData, int aWidth, int aHeight, const Filepath& aName)
+bool SaveImageHDR(float const* someData, int aWidth, int aHeight, const Filepath& aFolder, const Filepath& aName)
 {
-    Filepath name = ImageUtils_Private::ProcessName(aName, "hdr");
-    return stbi_write_hdr(name.GetBuffer(), aWidth, aHeight, STBI_rgb, someData) != 0;
+    stbi_flip_vertically_on_write(true);
+    Filepath path = ImageUtils_Private::ProcessPath(aFolder, aName, "hdr");
+    return stbi_write_hdr(path.GetBuffer(), aWidth, aHeight, STBI_rgb, someData) != 0;
 }

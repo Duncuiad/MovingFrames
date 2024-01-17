@@ -6,6 +6,7 @@
 #include "GameInputData.h"
 #include "MathDefines.h"
 #include "Renderer.h"
+#include "ScreenshotManager.h"
 #include "World.h"
 
 struct GLFWwindow;
@@ -34,6 +35,7 @@ public:
 
 protected:
     Renderer myRenderManager;
+    ScreenshotManager myScreenshotManager;
     World myWorld;
 
     GameInputData myInputData;

@@ -327,6 +327,12 @@
     <ClInclude Include="ImageUtils.h">
       <Filter>Engine\Image</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenshotManager.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -559,6 +565,12 @@
     </ClCompile>
     <ClCompile Include="ImageUtils.cpp">
       <Filter>Engine\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenshotManager.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
