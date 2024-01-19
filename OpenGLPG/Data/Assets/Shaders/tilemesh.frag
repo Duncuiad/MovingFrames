@@ -86,7 +86,8 @@ void DrawEdges(in vec2 UV, in vec2 gradX, in vec2 gradY, inout vec4 fragColor)
     
     float dist2 = min(min(distX2, distY2), distD2);
     float edgeValue = 1. - smoothstep(0., smoothSize, sqrt(dist2));
-    fragColor = fragColor * (1. - edgeValue) + (vec4(1., 1., 1., 2. * fragColor.a) - fragColor) * edgeValue;
+    float edgeColor = fragColor.r + fragColor.g + fragColor.b >= 1.5 ? 0. : 1.;
+    fragColor = fragColor * (1. - edgeValue) + vec4(vec3(edgeColor), fragColor.a) * edgeValue;
 }
 
 void DrawDualGraph(in vec2 UV, in vec2 gradX, in vec2 gradY, inout vec4 fragColor)
