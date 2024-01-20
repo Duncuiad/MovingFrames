@@ -5,11 +5,11 @@ in vec3 vertexColor;
 in vec3 faceColor;
 in vec2 uvs;
 
+uniform float SmoothSize;
 uniform int ShowGraphs;
 uniform int ShowEdges;
 uniform int ShowBlocks;
 
-float smoothSize = 3.;
 
 void DrawBlocks(vec2 UV, vec3 vertColor, inout vec4 fragColor)
 {
@@ -85,8 +85,9 @@ void DrawEdges(in vec2 UV, in vec2 gradX, in vec2 gradY, inout vec4 fragColor)
     distD2 = distD2 * distD2 / dot(gradX - gradY, gradX - gradY);
     
     float dist2 = min(min(distX2, distY2), distD2);
-    float edgeValue = 1. - smoothstep(0., smoothSize, sqrt(dist2));
+    float edgeValue = 1. - smoothstep(0., SmoothSize, sqrt(dist2));
     float edgeColor = fragColor.r + fragColor.g + fragColor.b >= 1.5 ? 0. : 1.;
+    edgeColor = ShowBlocks == 2 ? 0.5 : edgeColor;
     fragColor = fragColor * (1. - edgeValue) + vec4(vec3(edgeColor), fragColor.a) * edgeValue;
 }
 
@@ -117,8 +118,8 @@ void DrawDualGraph(in vec2 UV, in vec2 gradX, in vec2 gradY, inout vec4 fragColo
     float distA2 = min(min(min(distAS * distAS / lenGradX2, distA12 * distA12 / lenGrad12), distA21 * distA21 / lenGrad21), distA11 * distA11 / lenGrad11);
     float distB2 = min(min(min(distBS * distBS / lenGradY2, distB12 * distB12 / lenGrad12), distB21 * distB21 / lenGrad21), distB11 * distB11 / lenGrad11);
 
-    vec4 graphAColor = vec4(1., 0.7, 0., 1.) * (1. - smoothstep(0., smoothSize, sqrt(distA2)));
-    vec4 graphBColor = vec4(0.5, 1., 0., 1.) * (1. - smoothstep(0., smoothSize, sqrt(distB2)));
+    vec4 graphAColor = vec4(0.9, 0.65, 0., 1. - smoothstep(0., SmoothSize, sqrt(distA2)));
+    vec4 graphBColor = vec4(0.45, 0.9, 0., 1. - smoothstep(0., SmoothSize, sqrt(distB2)));
 
     fragColor = fragColor * (1. - graphAColor.a) + graphAColor * graphAColor.a;
     fragColor = fragColor * (1. - graphBColor.a) + graphBColor * graphBColor.a;

@@ -45,5 +45,52 @@ Shader::Ptr ShaderLoader::GetShader(const Filepath& aFilepath)
 
     const Filepath* maybeGeometryShader {strcmp(geometryPath, "") ? &geometryShader : nullptr};
     const auto& pair {myShaders.try_emplace(aFilepath, new Shader {vertexShader, fragmentShader, maybeGeometryShader})};
+    myFloatHijacks.emplace(std::make_pair(aFilepath, HijackedUniforms {}));
     return pair.first->second;
+}
+
+std::unique_ptr<ShaderLoader::HijackToken> ShaderLoader::Hijack(const char* aUniformName,
+                                                                const std::function<float(float)>& aNewValue)
+{
+    const std::string name {aUniformName};
+    for (auto& [shaderName, hijackedUniforms] : myFloatHijacks)
+    {
+        Shader::Ptr shader {GetShader(shaderName)};
+        float currentValue {0.f};
+        if (shader->GetUniformFloat(aUniformName, currentValue))
+        {
+            auto& uniforms {hijackedUniforms.myUniforms};
+            ASSERT(uniforms.find(name) != uniforms.end() || uniforms.empty(),
+                   "This uniform has already been hijacked!");
+            uniforms.emplace(std::make_pair(name, currentValue));
+            shader->SetUniformFloat(aUniformName, aNewValue(currentValue));
+        }
+    }
+
+    return std::make_unique<HijackToken>(name, *this);
+}
+
+void ShaderLoader::Restore(const char* aUniformName)
+{
+    const std::string name {aUniformName};
+    for (auto& [shaderName, hijackedUniforms] : myFloatHijacks)
+    {
+        Shader::Ptr shader {GetShader(shaderName)};
+        auto& uniforms {hijackedUniforms.myUniforms};
+        if (const auto iterator {uniforms.find(name)}; iterator != uniforms.end())
+        {
+            shader->SetUniformFloat(aUniformName, iterator->second);
+            uniforms.erase(iterator);
+        }
+    }
+}
+
+ShaderLoader::HijackToken::HijackToken(const std::string& aUniformName, ShaderLoader& aShaderLoader)
+    : myUniformName {aUniformName}
+    , myLoader {aShaderLoader}
+{}
+
+ShaderLoader::HijackToken::~HijackToken()
+{
+    myLoader.Restore(myUniformName.c_str());
 }

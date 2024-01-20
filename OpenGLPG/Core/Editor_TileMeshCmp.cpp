@@ -230,6 +230,7 @@ void Editor_TileMeshCmp::OnChanged() const
     graphCmp.GetShader().SetUniformInt("ShowGraphs", static_cast<int>(myWidget.myShowGraphs));
     graphCmp.GetShader().SetUniformInt("ShowEdges", static_cast<int>(myWidget.myShowEdges));
     graphCmp.GetShader().SetUniformInt("ShowBlocks", static_cast<int>(myWidget.myShowBlocks));
+    graphCmp.GetShader().SetUniformFloat("SmoothSize", 3.f);
     GetTileMeshColliderCmp().myFaceHeight = myWidget.myHeightToDisplay;
 }
 

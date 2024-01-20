@@ -16,8 +16,8 @@ public:
     ~Shader();
 
     void Use() const;
-    void GetUniformInt(const char* aName, int& aValueOut) const;
-    void GetUniformFloat(const char* aName, float& aValueOut) const;
+    bool GetUniformInt(const char* aName, int& aValueOut) const;
+    bool GetUniformFloat(const char* aName, float& aValueOut) const;
     void SetUniformInt(const char* aName, int aValue) const;
     void SetUniformFloat(const char* aName, float aValue) const;
     void SetUniformMat3(const char* aName, const glm::mat3& aValue) const;

@@ -4,6 +4,7 @@
 #include "GameInputData.h"
 #include "Renderer.h"
 #include "ScreenshotWidget.h"
+#include "ShaderLoader.h"
 
 class World;
 
@@ -13,6 +14,7 @@ public:
     struct ConstructionParams
     {
         Renderer& myRenderer;
+        ShaderLoader& myShaderLoader;
         const Filepath& myLocalFolder;
     };
     struct UpdateParams
@@ -26,6 +28,7 @@ public:
 
 private:
     Renderer& myRenderer;
+    ShaderLoader& myShaderLoader;
     Filepath myLocalScreenshotFolder;
 
     ScreenshotWidget myWidget;

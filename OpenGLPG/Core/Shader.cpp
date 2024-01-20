@@ -41,14 +41,26 @@ void Shader::Use() const
     glUseProgram(myID);
 }
 
-void Shader::GetUniformInt(const char* aName, int& aValueOut) const
+bool Shader::GetUniformInt(const char* aName, int& aValueOut) const
 {
-    glGetUniformiv(myID, glGetUniformLocation(myID, aName), &aValueOut);
+    const int location {glGetUniformLocation(myID, aName)};
+    if (location != -1)
+    {
+        glGetUniformiv(myID, location, &aValueOut);
+        return true;
+    }
+    return false;
 }
 
-void Shader::GetUniformFloat(const char* aName, float& aValueOut) const
+bool Shader::GetUniformFloat(const char* aName, float& aValueOut) const
 {
-    glGetUniformfv(myID, glGetUniformLocation(myID, aName), &aValueOut);
+    const int location {glGetUniformLocation(myID, aName)};
+    if (location != -1)
+    {
+        glGetUniformfv(myID, location, &aValueOut);
+        return true;
+    }
+    return false;
 }
 
 void Shader::SetUniformInt(const char* aName, int aValue) const

@@ -6,7 +6,7 @@
 #include "Defines.h"
 
 Game::Game(const ConstructionParams& someParams)
-    : myScreenshotManager {{myRenderManager, GLOBALPATH_LOCALFOLDER}}
+    : myScreenshotManager {{myRenderManager, someParams.myLoader.GetShaderLoader(), GLOBALPATH_LOCALFOLDER}}
     , myWorld {{someParams.myLoader, someParams.myLevelName}}
 {}
 

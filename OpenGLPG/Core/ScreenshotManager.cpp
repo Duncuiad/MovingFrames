@@ -11,6 +11,7 @@ constexpr const char* theScreenshotRenderPassName {"Screenshot"};
 
 ScreenshotManager::ScreenshotManager(const ConstructionParams& someParams)
     : myRenderer {someParams.myRenderer}
+    , myShaderLoader {someParams.myShaderLoader}
     , myLocalScreenshotFolder {someParams.myLocalFolder + "Screenshots/"}
 {
     myRenderer.CreateRenderPass(ScreenshotManager_Private::theScreenshotRenderPassName, myWidget.GetMaxWidth(),
@@ -40,6 +41,10 @@ void ScreenshotManager::Update(const UpdateParams& someParams)
         const int width {myWidget.GetWidth()};
         const int height {myWidget.GetHeight()};
 
+        const auto hijacker = myShaderLoader.Hijack("SmoothSize", [height](float aCurrentValue) {
+            const float fHeight {static_cast<float>(height)};
+            return fHeight / 1080.f * aCurrentValue;
+        });
         myRenderer.Render({someParams.myWorld,
                            {0.f, 0.f},
                            {static_cast<float>(width), static_cast<float>(height)},
