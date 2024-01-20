@@ -23,6 +23,9 @@ void ClientInputManager::ProcessInput()
     AddMouseButtonInput(GLFW_MOUSE_BUTTON_RIGHT, GameInput::theMouseClickRight, GameInput::theMouseHoldRight,
                         GameInput::theMouseReleaseRight, myRightMouseButtonDown);
 
+    AddKeyboardInput(GLFW_KEY_LEFT_SHIFT, GameInput::theHoldShift);
+    AddKeyboardInput(GLFW_KEY_RIGHT_SHIFT, GameInput::theHoldShift);
+
     AddKeyboardInput(GLFW_KEY_LEFT, GameInput::theKeyboardLookLeft);
     AddKeyboardInput(GLFW_KEY_RIGHT, GameInput::theKeyboardLookRight);
     AddKeyboardInput(GLFW_KEY_UP, GameInput::theKeyboardLookUp);

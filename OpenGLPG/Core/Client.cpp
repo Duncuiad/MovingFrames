@@ -138,6 +138,10 @@ bool Client::GLADInit()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return false;
     }
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
     return true;
 }
 

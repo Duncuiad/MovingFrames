@@ -6,6 +6,8 @@
 
 namespace GameInput
 {
+constexpr const char* theHoldShift {"HoldShift"};
+
 constexpr const char* theKeyboardLookRight {"KeyboardLookRight"};
 constexpr const char* theKeyboardLookLeft {"KeyboardLookLeft"};
 constexpr const char* theKeyboardLookUp {"KeyboardLookUp"};
@@ -34,30 +36,16 @@ constexpr const char* theMouseReleaseRight {"MouseReleaseRight"};
 
 constexpr const char* theTakeScreenshot {"TakeScreenshot"};
 
-const std::initializer_list<const char*> theInputs {theKeyboardLookRight,
-                                                    theKeyboardLookLeft,
-                                                    theKeyboardLookUp,
-                                                    theKeyboardLookDown,
-                                                    theGamepadLookHorizontal,
-                                                    theGamepadLookVertical,
-                                                    theKeyboardMoveForward,
-                                                    theKeyboardMoveBackward,
-                                                    theKeyboardMoveLeft,
-                                                    theKeyboardMoveRight,
-                                                    theKeyboardMoveUp,
-                                                    theKeyboardMoveDown,
-                                                    theGamepadMoveFrontal,
-                                                    theGamepadMoveLateral,
-                                                    theGamepadMoveVertical,
-                                                    theMousePosX,
-                                                    theMousePosY,
-                                                    theMouseClickLeft,
-                                                    theMouseClickRight,
-                                                    theMouseHoldLeft,
-                                                    theMouseHoldRight,
-                                                    theMouseReleaseLeft,
-                                                    theMouseReleaseRight,
-                                                    theTakeScreenshot};
+const std::initializer_list<const char*> theInputs {
+    theHoldShift,           theKeyboardLookRight,   theKeyboardLookLeft,
+    theKeyboardLookUp,      theKeyboardLookDown,    theGamepadLookHorizontal,
+    theGamepadLookVertical, theKeyboardMoveForward, theKeyboardMoveBackward,
+    theKeyboardMoveLeft,    theKeyboardMoveRight,   theKeyboardMoveUp,
+    theKeyboardMoveDown,    theGamepadMoveFrontal,  theGamepadMoveLateral,
+    theGamepadMoveVertical, theMousePosX,           theMousePosY,
+    theMouseClickLeft,      theMouseClickRight,     theMouseHoldLeft,
+    theMouseHoldRight,      theMouseReleaseLeft,    theMouseReleaseRight,
+    theTakeScreenshot};
 } // namespace GameInput
 
 struct GameInputData

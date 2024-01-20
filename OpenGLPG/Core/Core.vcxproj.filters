@@ -333,6 +333,9 @@
     <ClInclude Include="ScreenshotManager.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="ScreenshotWidget.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -570,6 +573,9 @@
       <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="ScreenshotManager.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenshotWidget.cpp">
       <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>

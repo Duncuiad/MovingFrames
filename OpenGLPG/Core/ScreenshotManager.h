@@ -3,6 +3,7 @@
 #include "Filepath.h"
 #include "GameInputData.h"
 #include "Renderer.h"
+#include "ScreenshotWidget.h"
 
 class World;
 
@@ -27,6 +28,5 @@ private:
     Renderer& myRenderer;
     Filepath myLocalScreenshotFolder;
 
-    int myWidth {3840};
-    int myHeight {2160};
+    ScreenshotWidget myWidget;
 };
