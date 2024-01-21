@@ -41,7 +41,7 @@ void Game::ResetGameInputData()
 void Game::AddGameInput(const char* anInputName, float aValue)
 {
     ASSERT(myInputData.myInputs.contains(anInputName), "Updating unknown input! Input name: {}", anInputName);
-    myInputData.myInputs[anInputName] = glm::clamp(myInputData.myInputs[anInputName] + aValue, 0.f, 1.f);
+    myInputData.myInputs[anInputName] += aValue;
 }
 
 #if DEBUG_IMGUI
