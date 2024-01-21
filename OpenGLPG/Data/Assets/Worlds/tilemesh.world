@@ -8,6 +8,16 @@ myWorldSettings
 		}
 
 	}
+	
+	myHasBackgroundColor
+	{
+		1
+	}
+	
+	myBackgroundColor
+	{
+		0.0						0.0						0.0
+	}
 
 }
 

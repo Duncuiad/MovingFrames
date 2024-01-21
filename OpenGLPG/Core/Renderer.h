@@ -25,6 +25,7 @@ public:
     void Update();
     void Shutdown();
 
+    void SetBackgroundColor(const Vec3& aColor);
     void Render(const RenderParams& someParams);
     void CreateRenderPass(const std::string& aRenderPassID, int aMaxWidth, int aMaxHeight);
     unsigned char* GetRenderedTexture(const std::string& aRenderPassID);

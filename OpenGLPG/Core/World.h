@@ -33,6 +33,7 @@ public:
     UID RequestEntitySpawn(const Filepath& aTemplateFilepath);
     void RequestEntityUnspawn(const UID& anEntityUID);
 
+    const WorldSettings& GetWorldSettings() const { return myWorldSettings; };
     const CollisionSystem& GetCollisionSystem() const { return myCollisionSystem; }
     const CameraData& GetActiveCameraData() const;
     const Entity::Container& GetEntities() const { return myEntities; }

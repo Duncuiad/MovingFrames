@@ -18,6 +18,7 @@ Renderer::Renderer()
 {
     SetClearColor();
 }
+
 void Renderer::Update()
 {
     for (auto& [id, pass] : myRenderPasses)
@@ -32,6 +33,11 @@ void Renderer::Shutdown()
     {
         pass.Shutdown();
     }
+}
+
+void Renderer::SetBackgroundColor(const Vec3& aColor)
+{
+    glClearColor(aColor.x, aColor.y, aColor.z, 1.0f);
 }
 
 void Renderer::Render(const RenderParams& someParams)
@@ -83,7 +89,7 @@ unsigned char* Renderer::GetRenderedTexture(const std::string& aRenderPassID)
 
 void Renderer::SetClearColor()
 {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    SetBackgroundColor({0.2f, 0.3f, 0.3f});
 }
 
 bool Renderer::Bind(RenderPass& aRenderPass, const Vec2& aViewportSize)

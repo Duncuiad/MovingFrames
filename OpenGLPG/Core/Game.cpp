@@ -8,7 +8,13 @@
 Game::Game(const ConstructionParams& someParams)
     : myScreenshotManager {{myRenderManager, someParams.myLoader.GetShaderLoader(), GLOBALPATH_LOCALFOLDER}}
     , myWorld {{someParams.myLoader, someParams.myLevelName}}
-{}
+{
+    const WorldSettings& settings {myWorld.GetWorldSettings()};
+    if (settings.myBackgroundColor.has_value())
+    {
+        myRenderManager.SetBackgroundColor(*settings.myBackgroundColor);
+    }
+}
 
 void Game::Init()
 {
