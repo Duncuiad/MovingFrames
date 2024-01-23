@@ -113,7 +113,7 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::Text("Selected Vertex");
         ImGui::BeginChild("SelectedVertex", ImVec2(0, 150), true, ImGuiWindowFlags_AlwaysAutoResize);
         DrawCoordinates(coords);
-        ImGui::Text("Color: %.3f", vertexData->myColor);
+        ImGui::Text("Color: %.3f %.3f %.3f", vertexData->myColor.x, vertexData->myColor.y, vertexData->myColor.z);
         ImGui::EndChild();
         ImGui::Separator();
     }
@@ -125,7 +125,7 @@ void TileMeshEditorWidget::DrawEditing()
         ImGui::Separator();
         ImGui::Text("Selected Face");
         ImGui::BeginChild("SelectedFace", ImVec2(0, 30), true, ImGuiWindowFlags_AlwaysAutoResize);
-        ImGui::Text("Color: %.3f", faceData->myColor);
+        ImGui::Text("Color: %.3f %.3f %.3f", faceData->myColor.x, faceData->myColor.y, faceData->myColor.z);
         ImGui::EndChild();
         ImGui::Separator();
     }
@@ -139,6 +139,23 @@ void TileMeshEditorWidget::DrawEditing()
         Widgets::RadioButton("Paint", &myClickAction, ClickAction::Paint);
         Widgets::RadioButton("Neighbours", &myClickAction, ClickAction::Neighbours);
         ImGui::Separator();
+
+        if (myClickAction > ClickAction::Inspect)
+        {
+            DrawPaintSettings();
+        }
+
+        ImGui::TreePop();
+    }
+}
+
+void TileMeshEditorWidget::DrawPaintSettings()
+{
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    if (ImGui::TreeNode("Paint Settings"))
+    {
+        ImGui::ColorEdit4("Color 1", &myPaintPrimaryColor[0], ImGuiColorEditFlags_AlphaBar);
+        ImGui::ColorEdit4("Color 2", &myPaintSecondaryColor[0], ImGuiColorEditFlags_AlphaBar);
         ImGui::TreePop();
     }
 }

@@ -1,8 +1,9 @@
 #version 450 core
 out vec4 FragColor;
 
-in vec3 vertexColor;
-in vec3 faceColor;
+in vec3 redChannel;
+in vec3 greenChannel;
+in vec3 blueChannel;
 in vec2 uvs;
 
 uniform float SmoothSize;
@@ -10,25 +11,7 @@ uniform int ShowGraphs;
 uniform int ShowEdges;
 uniform int ShowBlocks;
 
-
-void DrawBlocks(vec2 UV, vec3 vertColor, inout vec4 fragColor)
-{
-    float vertexColorValue = max(max(vertColor.x, vertColor.y), vertColor.z);
-    float centerColorValue = 0.;
-    if (max(UV.x - 0.5, UV.y - 0.5) < 0.)
-    {
-        centerColorValue = vertColor.x + vertColor.y + vertColor.z;
-    }
-    else
-    {
-        vec2 doubleUVs = mod(UV * 2., 1.);
-        centerColorValue = (doubleUVs.x - 0.5) * (doubleUVs.y - 0.5) < 0. && vertColor.y > 0. ? 1. : 0.;
-    }
-    vec4 blockColor = vertexColorValue >= 0.5 || centerColorValue >= 0.5 ? vec4(0.) : vec4(0.,0.,0.,1.);
-    fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
-}
-
-void DrawMarchingSquares(in vec2 UV, in vec3 vertColor, inout vec4 fragColor)
+void DrawMarchingSquares(in vec2 UV, in vec3 aRedChannel, in vec3 aGreenChannel, in vec3 aBlueChannel, inout vec4 fragColor)
 {
     if (max(UV.x - 0.5, UV.y - 0.5) > 0.)
     {   
@@ -37,37 +20,41 @@ void DrawMarchingSquares(in vec2 UV, in vec3 vertColor, inout vec4 fragColor)
         vec2 doubleUVs = mod(UV * 2., 1.);
         vec3 barycentric = doubleUVs.x < doubleUVs.y ? vec3(1. - doubleUVs.y, doubleUVs.y - doubleUVs.x, doubleUVs.x)
                                                      : vec3(1. - doubleUVs.x, doubleUVs.x - doubleUVs.y, doubleUVs.y);
-        float relevantColorValue = vertColor.y;
-        relevantColorValue = (doubleUVs.x <= 0.5 && doubleUVs.y <= 0.5) ? vertColor.x : relevantColorValue;
-        relevantColorValue = (doubleUVs.x >= 0.5 && doubleUVs.y >= 0.5) ? vertColor.z : relevantColorValue;
+        vec3 relevantColorValue = vec3(aRedChannel.y, aGreenChannel.y, aBlueChannel.y);
+        relevantColorValue = (doubleUVs.x <= 0.5 && doubleUVs.y <= 0.5) ? vec3(aRedChannel.x, aGreenChannel.x, aBlueChannel.x) : relevantColorValue;
+        relevantColorValue = (doubleUVs.x >= 0.5 && doubleUVs.y >= 0.5) ? vec3(aRedChannel.z, aGreenChannel.z, aBlueChannel.z) : relevantColorValue;
         float relevantBarycentric = barycentric.y;
         relevantBarycentric = (doubleUVs.x <= 0.5 && doubleUVs.y <= 0.5) ? barycentric.x : relevantBarycentric;
         relevantBarycentric = (doubleUVs.x >= 0.5 && doubleUVs.y >= 0.5) ? barycentric.z : relevantBarycentric;
-        vec4 blockColor = vec4(vec3(relevantColorValue / relevantBarycentric), 1.);
+        vec4 blockColor = vec4(relevantColorValue / relevantBarycentric, 1.);
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
 }
 
-void DrawMarchingTriangles(in vec2 UV, in vec3 vertColor, inout vec4 fragColor)
+void DrawMarchingTriangles(in vec2 UV, in vec3 aRedChannel, in vec3 aGreenChannel, in vec3 aBlueChannel, inout vec4 fragColor)
 {
     if (max(UV.x - 0.5, UV.y - 0.5) < 0.)
     {
         vec2 doubleUVs = clamp(UV, vec2(0.00001), vec2(0.49999)) * 2.;
         vec3 barycentric = doubleUVs.x < doubleUVs.y ? vec3(doubleUVs.x, doubleUVs.y - doubleUVs.x, 1. - doubleUVs.y)
                                                      : vec3(1. - doubleUVs.x, doubleUVs.x - doubleUVs.y, doubleUVs.y);
-        float relevantColorValue = 0.;
-        relevantColorValue = (barycentric.x >= barycentric.z && barycentric.x >= barycentric.y) ? vertColor.x : relevantColorValue;
-        relevantColorValue = (barycentric.y >= barycentric.x && barycentric.y >= barycentric.z) ? vertColor.y : relevantColorValue;
-        relevantColorValue = (barycentric.z >= barycentric.y && barycentric.z >= barycentric.x) ? vertColor.z : relevantColorValue;
+        vec3 relevantColorValue = vec3(0.);
+        relevantColorValue = (barycentric.x >= barycentric.z && barycentric.x >= barycentric.y) ? vec3(aRedChannel.x, aGreenChannel.x, aBlueChannel.x) : relevantColorValue;
+        relevantColorValue = (barycentric.y >= barycentric.x && barycentric.y >= barycentric.z) ? vec3(aRedChannel.y, aGreenChannel.y, aBlueChannel.y) : relevantColorValue;
+        relevantColorValue = (barycentric.z >= barycentric.y && barycentric.z >= barycentric.x) ? vec3(aRedChannel.z, aGreenChannel.z, aBlueChannel.z) : relevantColorValue;
         float relevantBarycentric = max(max(barycentric.x, barycentric.y), barycentric.z);
-        vec4 blockColor = vec4(vec3(relevantColorValue / relevantBarycentric), 1.);
+        vec4 blockColor = vec4(relevantColorValue / relevantBarycentric, 1.);
         fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
     }
 }
 
-void DrawFaces(in vec3 aFaceColor, inout vec4 fragColor)
+void DrawFaces(in vec3 aRedChannel, in vec3 aGreenChannel, in vec3 aBlueChannel, inout vec4 fragColor)
 {
-    vec4 blockColor = vec4(vec3(aFaceColor.x + aFaceColor.y + aFaceColor.z), 1.f);
+    vec4 blockColor = vec4(vec3(
+        aRedChannel.x + aRedChannel.y + aRedChannel.z, 
+        aGreenChannel.x + aGreenChannel.y + aGreenChannel.z, 
+        aBlueChannel.x + aBlueChannel.y + aBlueChannel.z
+        ), 1.f);
     fragColor = fragColor * (1. - blockColor.a) + blockColor * blockColor.a;
 }
 
@@ -134,13 +121,12 @@ void main()
 
     if (ShowBlocks == 1)
     {
-        //DrawBlocks(UV, vertexColor, fragColor);
-        DrawMarchingSquares(UV, vertexColor, fragColor);
-        DrawMarchingTriangles(UV, vertexColor, fragColor);
+        DrawMarchingSquares(UV, redChannel, greenChannel, blueChannel, fragColor);
+        DrawMarchingTriangles(UV, redChannel, greenChannel, blueChannel, fragColor);
     }
     else if (ShowBlocks == 2)
     {
-        DrawFaces(faceColor, fragColor);
+        DrawFaces(redChannel, greenChannel, blueChannel, fragColor);
     }
     if (ShowEdges > 0)
     {

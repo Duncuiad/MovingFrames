@@ -108,14 +108,14 @@ void TileMesh::RandomizeColors(float aRatio, bool aColorVertices)
     {
         for (auto& [coords, vertex] : myVertices)
         {
-            vertex.myData.myColor = dist(e2) < aRatio ? 0.f : 1.f;
+            vertex.myData.myColor = dist(e2) < aRatio ? Vec3 {0.f} : Vec3 {1.f};
         }
     }
     else
     {
         for (TileFace& face : myFaces)
         {
-            face.myData.myColor = dist(e2) < aRatio ? 0.f : 1.f;
+            face.myData.myColor = dist(e2) < aRatio ? Vec3 {0.f} : Vec3 {1.f};
         }
     }
 }
@@ -132,7 +132,7 @@ void TileMesh::ColorVertices(const TileVertex::Evaluation& anEvaluation)
     {
         for (auto& it : myVertices)
         {
-            it.second.myData.myColor = (anEvaluation(it) - m) / (M - m);
+            it.second.myData.myColor = Vec3 {(anEvaluation(it) - m) / (M - m)};
         }
     }
 }
@@ -141,7 +141,7 @@ void TileMesh::ColorVerticesSatisfying(const TileVertex::Predicate& aPredicate)
 {
     for (auto& it : myVertices)
     {
-        it.second.myData.myColor = aPredicate(it) ? 0.f : 1.f;
+        it.second.myData.myColor = aPredicate(it) ? Vec3 {0.f} : Vec3 {1.f};
     }
 }
 

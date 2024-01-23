@@ -43,19 +43,28 @@ void AddFace(const TileFace& aFace, const TileMesh& aTileMesh, bool anIsDisplayi
     if (aFace.IsTriangle())
     {
         const bool isTypeA {aFace.myType == TileType::TriangleA};
-        Vertex vertex0 {Vec3 {edge0.myVertex.Pos(), 0.f}, Vec3 {v0.myData.myColor, 0.f, 0.f},
-                        isTypeA ? Vec2 {0.49998f, 0.49999f} : Vec2 {0.00002f, 0.00001f}};
-        Vertex vertex1 {Vec3 {edge1.myVertex.Pos(), 0.f}, Vec3 {0.f, v1.myData.myColor, 0.f},
-                        isTypeA ? Vec2 {0.00001f, 0.49999f} : Vec2 {0.49999f, 0.00001f}};
-        Vertex vertex2 {Vec3 {edge2.myVertex.Pos(), 0.f}, Vec3 {0.f, 0.f, v2.myData.myColor},
-                        isTypeA ? Vec2 {0.00001f, 0.00002f} : Vec2 {0.49999f, 0.49998f}};
+        const Vec3 color0 {v0.myData.myColor};
+        const Vec3 color1 {v1.myData.myColor};
+        const Vec3 color2 {v2.myData.myColor};
+        Vertex vertex0 {Vec3 {edge0.myVertex.Pos(), 0.f}, Vec3 {color0.x, 0.f, 0.f}, Vec3 {color0.y, 0.f, 0.f},
+                        Vec3 {color0.z, 0.f, 0.f}, isTypeA ? Vec2 {0.49998f, 0.49999f} : Vec2 {0.00002f, 0.00001f}};
+        Vertex vertex1 {Vec3 {edge1.myVertex.Pos(), 0.f}, Vec3 {0.f, color1.x, 0.f}, Vec3 {0.f, color1.y, 0.f},
+                        Vec3 {0.f, color1.z, 0.f}, isTypeA ? Vec2 {0.00001f, 0.49999f} : Vec2 {0.49999f, 0.00001f}};
+        Vertex vertex2 {Vec3 {edge2.myVertex.Pos(), 0.f}, Vec3 {0.f, 0.f, color2.x}, Vec3 {0.f, 0.f, color2.y},
+                        Vec3 {0.f, 0.f, color2.z}, isTypeA ? Vec2 {0.00001f, 0.00002f} : Vec2 {0.49999f, 0.49998f}};
 
         if (anIsDisplayingFaces)
         {
-            const float faceColor {aFace.myData.myColor};
-            vertex0.myNormal = {faceColor, 0.f, 0.f};
-            vertex1.myNormal = {0.f, faceColor, 0.f};
-            vertex2.myNormal = {0.f, 0.f, faceColor};
+            const Vec3 faceColor {aFace.myData.myColor};
+            vertex0.myNormal = {faceColor.x, 0.f, 0.f};
+            vertex1.myNormal = {0.f, faceColor.x, 0.f};
+            vertex2.myNormal = {0.f, 0.f, faceColor.x};
+            vertex0.myColor = {faceColor.y, 0.f, 0.f};
+            vertex1.myColor = {0.f, faceColor.y, 0.f};
+            vertex2.myColor = {0.f, 0.f, faceColor.y};
+            vertex0.myExtraData = {faceColor.z, 0.f, 0.f};
+            vertex1.myExtraData = {0.f, faceColor.z, 0.f};
+            vertex2.myExtraData = {0.f, 0.f, faceColor.z};
         }
 
         someVerticesOut.push_back(std::move(vertex0));
@@ -74,22 +83,34 @@ void AddFace(const TileFace& aFace, const TileMesh& aTileMesh, bool anIsDisplayi
         const Vec2 uvOffset {aFace.myType == TileType::SquareA   ? Vec2 {0.50001f, 0.f}
                              : aFace.myType == TileType::SquareB ? Vec2 {0.50001f, 0.50001f}
                                                                  : Vec2 {0.f, 0.50001f}};
-        Vertex vertex0 {Vec3 {edge0.myVertex.Pos(), 0.f}, Vec3 {v0.myData.myColor, 0.f, 0.f},
-                        uvOffset + Vec2 {0.f, 0.f}};
-        Vertex vertex1 {Vec3 {edge1.myVertex.Pos(), 0.f}, Vec3 {0.f, v1.myData.myColor, 0.f},
-                        uvOffset + Vec2 {0.49999f, 0.f}};
-        Vertex vertex2 {Vec3 {edge2.myVertex.Pos(), 0.f}, Vec3 {0.f, 0.f, v2.myData.myColor},
-                        uvOffset + Vec2 {0.49999f, 0.49999f}};
-        Vertex vertex3 {Vec3 {edge3.myVertex.Pos(), 0.f}, Vec3 {0.f, v3.myData.myColor, 0.f},
-                        uvOffset + Vec2 {0.f, 0.49999f}};
+        const Vec3 color0 {v0.myData.myColor};
+        const Vec3 color1 {v1.myData.myColor};
+        const Vec3 color2 {v2.myData.myColor};
+        const Vec3 color3 {v3.myData.myColor};
+        Vertex vertex0 {Vec3 {edge0.myVertex.Pos(), 0.f}, Vec3 {color0.x, 0.f, 0.f}, Vec3 {color0.y, 0.f, 0.f},
+                        Vec3 {color0.z, 0.f, 0.f}, uvOffset + Vec2 {0.f, 0.f}};
+        Vertex vertex1 {Vec3 {edge1.myVertex.Pos(), 0.f}, Vec3 {0.f, color1.x, 0.f}, Vec3 {0.f, color1.y, 0.f},
+                        Vec3 {0.f, color1.z, 0.f}, uvOffset + Vec2 {0.49999f, 0.f}};
+        Vertex vertex2 {Vec3 {edge2.myVertex.Pos(), 0.f}, Vec3 {0.f, 0.f, color2.x}, Vec3 {0.f, 0.f, color2.y},
+                        Vec3 {0.f, 0.f, color2.z}, uvOffset + Vec2 {0.49999f, 0.49999f}};
+        Vertex vertex3 {Vec3 {edge3.myVertex.Pos(), 0.f}, Vec3 {0.f, color3.x, 0.f}, Vec3 {0.f, color3.y, 0.f},
+                        Vec3 {0.f, color3.z, 0.f}, uvOffset + Vec2 {0.f, 0.49999f}};
 
         if (anIsDisplayingFaces)
         {
-            const float faceColor {aFace.myData.myColor};
-            vertex0.myNormal = {faceColor, 0.f, 0.f};
-            vertex1.myNormal = {0.f, faceColor, 0.f};
-            vertex2.myNormal = {0.f, 0.f, faceColor};
-            vertex3.myNormal = {0.f, faceColor, 0.f};
+            const Vec3 faceColor {aFace.myData.myColor};
+            vertex0.myNormal = {faceColor.x, 0.f, 0.f};
+            vertex1.myNormal = {0.f, faceColor.x, 0.f};
+            vertex2.myNormal = {0.f, 0.f, faceColor.x};
+            vertex3.myNormal = {0.f, faceColor.x, 0.f};
+            vertex0.myColor = {faceColor.y, 0.f, 0.f};
+            vertex1.myColor = {0.f, faceColor.y, 0.f};
+            vertex2.myColor = {0.f, 0.f, faceColor.y};
+            vertex3.myColor = {0.f, faceColor.y, 0.f};
+            vertex0.myExtraData = {faceColor.z, 0.f, 0.f};
+            vertex1.myExtraData = {0.f, faceColor.z, 0.f};
+            vertex2.myExtraData = {0.f, 0.f, faceColor.z};
+            vertex3.myExtraData = {0.f, faceColor.z, 0.f};
         }
         someVerticesOut.push_back(std::move(vertex0));
         someVerticesOut.push_back(std::move(vertex1));
@@ -115,6 +136,11 @@ void UpdateMesh(const int aHeightToDisplay, bool anIsDisplayingFaces, const Tile
     }
 
     aGraphCmpOut.SetMesh(std::move(vertices), std::move(indices));
+}
+
+Vec3 Blend(const Vec3& aColor, const Vec4& aNewColor)
+{
+    return aColor * (1.f - aNewColor.w) + aNewColor.xyz * aNewColor.w;
 }
 } // namespace
 
@@ -151,7 +177,7 @@ void Editor_TileMeshCmp::Update()
         ASSERT(faceData != nullptr, "Invalid face index");
 
         std::variant<int*, std::optional<Dodec>*, bool> selectedResource {false};
-        float* color {nullptr};
+        Vec3* color {nullptr};
         switch (myWidget.myShowBlocks)
         {
         case ShowBlocks::Vertices: {
@@ -185,28 +211,31 @@ void Editor_TileMeshCmp::Update()
                 break;
             }
             case ClickAction::Paint: {
-                *color = (hit.myTag == CollisionTag::PickLeftClick)
-                             ? 0.f
-                             : ((hit.myTag == CollisionTag::PickRightClick) ? 1.f : *color);
+                *color =
+                    (hit.myTag == CollisionTag::PickLeftClick)
+                        ? Blend(*color, myWidget.myPaintPrimaryColor)
+                        : ((hit.myTag == CollisionTag::PickRightClick) ? Blend(*color, myWidget.myPaintSecondaryColor)
+                                                                       : *color);
                 break;
             }
             case ClickAction::Neighbours: {
-                std::optional<float> desiredColor;
+                std::optional<Vec4> desiredColor;
                 if (hit.myTag == CollisionTag::PickLeftClick)
                 {
-                    desiredColor = 0.f;
+                    desiredColor = myWidget.myPaintPrimaryColor;
                 }
                 else if (hit.myTag == CollisionTag::PickRightClick)
                 {
-                    desiredColor = 1.f;
+                    desiredColor = myWidget.myPaintSecondaryColor;
                 }
                 if (desiredColor.has_value() && myWidget.myShowBlocks == ShowBlocks::Vertices)
                 {
-                    *color = *desiredColor;
+                    *color = Blend(*color, *desiredColor);
                     for (const Dodec& neighbour :
                          tileMesh.GetNeighbouringVertices(hit.myData.myHitVertex, myWidget.myHeightToDisplay))
                     {
-                        tileMesh.GetVertexData(neighbour)->myColor = *desiredColor;
+                        Vec3& neighbourColor {tileMesh.GetVertexData(neighbour)->myColor};
+                        neighbourColor = Blend(neighbourColor, *desiredColor);
                     }
                 }
                 break;

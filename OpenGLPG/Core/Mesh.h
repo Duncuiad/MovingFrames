@@ -14,6 +14,8 @@ struct Vertex
 
     glm::vec3 myPosition;
     glm::vec3 myNormal;
+    glm::vec3 myColor;
+    glm::vec3 myExtraData;
     glm::vec2 myTexCoords;
 };
 

@@ -35,6 +35,8 @@ public:
     bool myShowEdges {true};
     ShowBlocks myShowBlocks {ShowBlocks::Vertices};
     ClickAction myClickAction {ClickAction::Inspect};
+    Vec4 myPaintPrimaryColor {0.f, 0.f, 0.f, 1.f};
+    Vec4 myPaintSecondaryColor {1.f, 1.f, 1.f, 1.f};
     std::optional<Dodec> mySelectedVertex;
     int mySelectedFace {-1};
 
@@ -43,6 +45,7 @@ private:
 
     bool DrawShowdata();
     void DrawEditing();
+    void DrawPaintSettings();
     bool DrawBrushes();
     bool DrawBrushRandom();
     bool DrawVertexSpecificBrushes();

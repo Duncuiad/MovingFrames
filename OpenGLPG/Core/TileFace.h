@@ -36,7 +36,7 @@ struct TileFace : public Serializable
     {
         virtual void Serialize(Serializer& aSerializer) override;
 
-        float myColor {1.f};
+        Vec3 myColor {1.f};
     };
 
     Data myData;
