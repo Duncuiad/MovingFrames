@@ -1625,6 +1625,30 @@ myCount
 
 				}
 
+				myRootFaces
+				{
+					myCount
+					{
+						1
+					}
+
+					0
+					{
+						0
+					}
+
+				}
+
+				myMinPos
+				{
+					0.000000					0.000000
+				}
+
+				myMaxPos
+				{
+					1.000000					1.000000
+				}
+
 			}
 
 		}
@@ -1648,7 +1672,7 @@ myCount
 			TileMeshColliderCmp
 			myBoundingSphereRadius
 			{
-				0.800000
+				0.848528
 			}
 
 			myBoundingSphereCenter

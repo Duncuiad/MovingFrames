@@ -3,6 +3,7 @@
 #include "TileMeshEditorWidget.h"
 
 #include "Assert.h"
+#include "ColorCurve.h"
 #include "ImGuiWidgets.h"
 #include "SliderThresholdWidgetBlock.h"
 
@@ -279,6 +280,40 @@ bool TileMeshEditorWidget::DrawVertexSpecificBrushes()
         });
     }
 
+    ImGui::Bullet();
+    if (ImGui::Button("Arg"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices(
+            [](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const Vec2 pos {coords.Pos()};
+                return glm::mod(atan2(pos.y, pos.x), glm::two_pi<float>());
+            },
+            [](float aT) {
+                static const ColorCurve colorCurve {
+                    Array<Vec3> {Vec3 {1.f, 1.f, 1.f}, Vec3 {1.f, 0.f, 0.f}, Vec3 {0.f, 0.6f, 1.f}}};
+                return colorCurve.GetColorRGBAt(aT);
+            });
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("ConjNMArg"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices(
+            [](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const Vec2 pos {coords.ConjNM().Pos()};
+                return glm::mod(atan2(pos.y, pos.x), glm::two_pi<float>());
+            },
+            [](float aT) {
+                static const ColorCurve colorCurve {
+                    Array<Vec3> {Vec3 {1.f, 1.f, 1.f}, Vec3 {1.f, 0.f, 0.25f}, Vec3 {0.f, 0.6f, 1.f}}};
+                return colorCurve.GetColorRGBAt(aT);
+            });
+    }
+
     return changed;
 }
 
@@ -310,6 +345,24 @@ bool TileMeshEditorWidget::DrawReset()
         if (ImGui::Button("Square C"))
         {
             myTileMesh->Reset(TileType::SquareC);
+            isResetting = true;
+        }
+
+        if (ImGui::Button("2x2"))
+        {
+            myTileMesh->Reset(2);
+            isResetting = true;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("4x4"))
+        {
+            myTileMesh->Reset(4);
+            isResetting = true;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("8x8"))
+        {
+            myTileMesh->Reset(8);
             isResetting = true;
         }
         if (isResetting)

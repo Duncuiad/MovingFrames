@@ -260,7 +260,13 @@ void Editor_TileMeshCmp::OnChanged() const
     graphCmp.GetShader().SetUniformInt("ShowEdges", static_cast<int>(myWidget.myShowEdges));
     graphCmp.GetShader().SetUniformInt("ShowBlocks", static_cast<int>(myWidget.myShowBlocks));
     graphCmp.GetShader().SetUniformFloat("SmoothSize", 3.f);
-    GetTileMeshColliderCmp().myFaceHeight = myWidget.myHeightToDisplay;
+
+    const TileMesh& tileMesh {GetTileMeshCmp().myTileMesh};
+    TileMeshColliderCmp& colliderCmp {GetTileMeshColliderCmp()};
+    colliderCmp.myFaceHeight = myWidget.myHeightToDisplay;
+    const Vec2& m {tileMesh.GetMinPos()};
+    const Vec2& M {tileMesh.GetMaxPos()};
+    colliderCmp.SetBoundingSphere(glm::length(M - m) * 0.6, Vec3 {(m + M) * 0.5f, 0.f});
 }
 
 TileMeshCmp& Editor_TileMeshCmp::GetTileMeshCmp() const

@@ -11,6 +11,9 @@ template <typename ElemT, bool IsDynamic = false>
 class Array : public Serializable
 {
 public:
+    template <class... ValT>
+    explicit Array(ValT&&... someVals);
+
     void Serialize(Serializer& aSerializer) override;
     int Count() const;
     ElemT& PushBack(const ElemT& anElement);
@@ -125,6 +128,12 @@ inline bool Array<ElemT, IsDynamic>::Contains(const ElemT& anElement) const
 {
     return std::find(myElements.begin(), myElements.end(), anElement) != myElements.end();
 }
+
+template <typename ElemT, bool IsDynamic>
+template <class... ValT>
+inline Array<ElemT, IsDynamic>::Array(ValT&&... someVals)
+    : myElements {std::forward<ValT>(someVals)...}
+{}
 
 template <typename ElemT, bool IsDynamic>
 template <class... ValT>

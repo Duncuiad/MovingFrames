@@ -336,6 +336,9 @@
     <ClInclude Include="ScreenshotWidget.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="ColorCurve.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="World.cpp">
@@ -577,6 +580,9 @@
     </ClCompile>
     <ClCompile Include="ScreenshotWidget.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorCurve.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

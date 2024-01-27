@@ -151,6 +151,7 @@
     <ClInclude Include="ColliderCmp.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="CollisionTag.h" />
+    <ClInclude Include="ColorCurve.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Dodec.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="ClientInputManager.cpp" />
     <ClCompile Include="ColliderCmp.cpp" />
     <ClCompile Include="CollisionSystem.cpp" />
+    <ClCompile Include="ColorCurve.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Dodec.cpp" />

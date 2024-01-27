@@ -27,6 +27,9 @@ void TileMesh::Serialize(Serializer& aSerializer)
     aSerializer.Process("myVertices", myVertices);
     aSerializer.Process("myHalfEdges", myHalfEdges);
     aSerializer.Process("myFaces", myFaces);
+    aSerializer.Process("myRootFaces", myRootFaces);
+    aSerializer.Process("myMinPos", myMinPos);
+    aSerializer.Process("myMaxPos", myMaxPos);
 
     for (const TileFace& face : myFaces)
     {
@@ -42,8 +45,12 @@ void TileMesh::Reset(TileType aType)
     myVertices.RemoveAll();
     myHalfEdges.RemoveAll();
     myFaces.RemoveAll();
+    myRootFaces.RemoveAll();
+    myMinPos = Vec2 {0.f};
+    myMaxPos = Vec2 {1.f};
 
     myFaces.EmplaceBack(0, 0, aType, 0);
+    myRootFaces.PushBack(0);
 
     myVertices.Emplace(Dodec {0, 0, 0, 0}, 0);
     myVertices.Emplace(Dodec {1, 0, 0, 0}, 0);
@@ -86,6 +93,49 @@ void TileMesh::Reset(TileType aType)
     }
 }
 
+void TileMesh::Reset(int aGridSize)
+{
+    myVertices.RemoveAll();
+    myHalfEdges.RemoveAll();
+    myFaces.RemoveAll();
+    myRootFaces.RemoveAll();
+
+    const int n = (aGridSize + 1) / 2 * 2;
+    myMinPos = Vec2 {-static_cast<float>(n / 2)};
+    myMaxPos = -myMinPos;
+    for (int j = 0; j <= n; ++j)
+    {
+        for (int i = 0; i <= n; ++i)
+        {
+            const int vertexX {i - n / 2};
+            const int vertexY {j - n / 2};
+            myVertices.Emplace(Dodec {vertexX, vertexY, 0, 0}, 0);
+            if (i == n || j == n)
+            {
+                continue;
+            }
+
+            const int faceIdx {i + j * n};
+            const int edgeIdx {4 * faceIdx};
+            myFaces.EmplaceBack(faceIdx, 0, TileType::SquareA, edgeIdx);
+            myRootFaces.PushBack(faceIdx);
+
+            const int opposite0 {j == 0 ? -1 : edgeIdx - 4 * n + 2};
+            const int opposite1 {i == n ? -1 : edgeIdx + 7};
+            const int opposite2 {j == n ? -1 : edgeIdx + 4 * n};
+            const int opposite3 {i == 0 ? -1 : edgeIdx - 3};
+            myHalfEdges.EmplaceBack(edgeIdx, 0, false, true, Dodec {vertexX, vertexY, 0, 0}, edgeIdx + 1, opposite0,
+                                    faceIdx);
+            myHalfEdges.EmplaceBack(edgeIdx + 1, 0, false, false, Dodec {vertexX + 1, vertexY, 0, 0}, edgeIdx + 2,
+                                    opposite1, faceIdx);
+            myHalfEdges.EmplaceBack(edgeIdx + 2, 0, true, true, Dodec {vertexX + 1, vertexY + 1, 0, 0}, edgeIdx + 3,
+                                    opposite2, faceIdx);
+            myHalfEdges.EmplaceBack(edgeIdx + 3, 0, true, false, Dodec {vertexX, vertexY + 1, 0, 0}, edgeIdx, opposite3,
+                                    faceIdx);
+        }
+    }
+}
+
 void TileMesh::SubdivideAllFaces()
 {
     const int originalFaceCount {myFaces.Count()};
@@ -120,7 +170,8 @@ void TileMesh::RandomizeColors(float aRatio, bool aColorVertices)
     }
 }
 
-void TileMesh::ColorVertices(const TileVertex::Evaluation& anEvaluation)
+void TileMesh::ColorVertices(const TileVertex::Evaluation& anEvaluation,
+                             const std::function<Vec3(float)>& anRGBCurve /*= [](float aT) { return Vec3 {aT}; }*/)
 {
     const auto [minIt, maxIt] = std::minmax_element(
         myVertices.begin(), myVertices.end(),
@@ -132,7 +183,7 @@ void TileMesh::ColorVertices(const TileVertex::Evaluation& anEvaluation)
     {
         for (auto& it : myVertices)
         {
-            it.second.myData.myColor = Vec3 {(anEvaluation(it) - m) / (M - m)};
+            it.second.myData.myColor = anRGBCurve((anEvaluation(it) - m) / (M - m));
         }
     }
 }
@@ -277,8 +328,12 @@ std::pair<Dodec, int> TileMesh::GetVertexAndFace(const Vec2& aPosition, int aFac
     int faceIdx {-1};
     Dodec vertex;
     std::deque<int> faceQueue;
-    ASSERT(myFaces.GetFirst().myHeight == 0, "Missing root face");
-    faceQueue.push_back(myFaces.GetFirst().myIndex);
+    ASSERT(myRootFaces.Count() != 0, "Missing root face");
+    for (int faceIdx : myRootFaces)
+    {
+        ASSERT(myFaces[faceIdx].myHeight == 0, "Root face has invalid height");
+        faceQueue.push_back(faceIdx);
+    }
 
     while (!faceQueue.empty())
     {
@@ -352,6 +407,16 @@ const Array<TileHalfEdge>& TileMesh::GetEdges() const
 const Array<TileFace>& TileMesh::GetFaces() const
 {
     return myFaces;
+}
+
+const Vec2& TileMesh::GetMinPos() const
+{
+    return myMinPos;
+}
+
+const Vec2& TileMesh::GetMaxPos() const
+{
+    return myMaxPos;
 }
 
 void TileMesh::CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 /*= -1*/)

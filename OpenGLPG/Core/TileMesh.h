@@ -21,9 +21,12 @@ public:
     void Serialize(Serializer& aSerializer) override;
 
     void Reset(TileType aType);
+    void Reset(int aGridSize);
     void SubdivideAllFaces();
     void RandomizeColors(float aRatio, bool aColorVertices);
-    void ColorVertices(const TileVertex::Evaluation& anEvaluation);
+    void ColorVertices(
+        const TileVertex::Evaluation& anEvaluation,
+        const std::function<Vec3(float)>& anRGBCurve = [](float aT) { return Vec3 {aT}; });
     void ColorVerticesSatisfying(const TileVertex::Predicate& aPredicate);
     TileVertex::Data* GetVertexData(const Dodec& someCoords);
     TileFace::Data* GetFaceData(int aFaceIdx);
@@ -37,6 +40,8 @@ public:
     const TileVertex::Map& GetVertices() const;
     const Array<TileHalfEdge>& GetEdges() const;
     const Array<TileFace>& GetFaces() const;
+    const Vec2& GetMinPos() const;
+    const Vec2& GetMaxPos() const;
 
 private:
     void CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 = -1);
@@ -52,4 +57,7 @@ private:
     TileVertex::Map myVertices;
     Array<TileHalfEdge> myHalfEdges;
     Array<TileFace> myFaces;
+    Array<int> myRootFaces;
+    Vec2 myMinPos {0.f};
+    Vec2 myMaxPos {0.f};
 };
