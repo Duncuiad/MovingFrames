@@ -17,6 +17,7 @@ public:
     Dodec operator-(const Dodec& anOther) const;
     Dodec operator*(const Dodec& anOther) const;
     Dodec operator*(int aScalar) const;
+    Dodec operator/(int aDivisor) const;
 
     bool operator==(const Dodec& anOther) const = default;
 
@@ -28,6 +29,7 @@ public:
     std::tuple<int, int, int, int> GetCoordsININ() const;
     std::tuple<int, int, int, int> GetCoordsIZIZ() const;
     std::tuple<int, int, int, int> GetCoordsPowersP() const;
+    int GID() const; // Greatest integer divisor
 
     static Dodec O();
     static Dodec I();
@@ -44,7 +46,10 @@ private:
     int myIN;
 
     friend struct std::hash<Dodec>;
+    friend Dodec operator-(const Dodec& aDodec);
 };
+
+Dodec operator-(const Dodec& aDodec);
 
 template <>
 struct std::hash<Dodec>

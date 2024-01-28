@@ -4,6 +4,8 @@
 
 #include "Assert.h"
 
+#include <numeric>
+
 Dodec::Dodec()
     : Dodec {0, 0, 0, 0}
 {}
@@ -39,6 +41,18 @@ Dodec Dodec::operator*(const Dodec& anOther) const
 Dodec Dodec::operator*(int aScalar) const
 {
     return {myO * aScalar, myI * aScalar, myN * aScalar, myIN * aScalar};
+}
+
+Dodec Dodec::operator/(int aDivisor) const
+{
+    if (myO == 0 && myI == 0 && myN == 0 && myIN == 0)
+    {
+        return *this;
+    }
+
+    ASSERT(myO % aDivisor == 0 && myI % aDivisor == 0 && myN % aDivisor == 0 && myIN % aDivisor == 0,
+           "The provided integer doesn't divide this Dodec");
+    return {myO / aDivisor, myI / aDivisor, myN / aDivisor, myIN / aDivisor};
 }
 
 Dodec Dodec::Conj() const
@@ -109,6 +123,11 @@ std::tuple<int, int, int, int> Dodec::GetCoordsPowersP() const
     return {myO + myN - myIN, myIN, -myN, myI + myN};
 }
 
+int Dodec::GID() const
+{
+    return std::gcd(myO, std::gcd(myI, std::gcd(myN, myIN)));
+}
+
 Dodec Dodec::O()
 {
     // Returns the real unit in the complex field
@@ -167,4 +186,9 @@ Dodec Dodec::P(int aPower)
     }
     ASSERT(false, "Error in handling of exponent");
     return {};
+}
+
+Dodec operator-(const Dodec& aDodec)
+{
+    return {-aDodec.myO, -aDodec.myI, -aDodec.myN, -aDodec.myIN};
 }

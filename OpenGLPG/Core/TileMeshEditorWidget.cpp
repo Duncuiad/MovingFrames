@@ -8,6 +8,7 @@
 #include "SliderThresholdWidgetBlock.h"
 
 #include <array>
+#include <numeric>
 #include <string>
 #include <tuple>
 
@@ -314,6 +315,242 @@ bool TileMeshEditorWidget::DrawVertexSpecificBrushes()
             });
     }
 
+    ImGui::SameLine();
+    if (ImGui::Button("NormNMArg"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices(
+            [](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const Vec2 pos {(coords * coords.ConjNM()).Pos()};
+                return glm::mod(atan2(pos.y, pos.x), glm::two_pi<float>());
+            },
+            [](float aT) {
+                static const ColorCurve colorCurve {
+                    Array<Vec3> {Vec3 {1.f, 1.f, 1.f}, Vec3 {1.f, 0.f, 0.25f}, Vec3 {0.f, 0.6f, 1.f}}};
+                return colorCurve.GetColorRGBAt(aT);
+            });
+    }
+
+    // changed |= DrawInvestigationBrushes();
+
+    return changed;
+}
+
+bool TileMeshEditorWidget::DrawInvestigationBrushes()
+{
+    bool changed {false};
+
+    ImGui::PushID("X");
+    {
+        ImGui::Bullet();
+        ImGui::Text("X    ");
+        ImGui::SameLine();
+        if (ImGui::Button("LInfNorm"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const Vec2 pos {coords.ConjNM().Pos()};
+                return glm::max(abs(pos.x), abs(pos.y));
+            });
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("L1Norm"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const Vec2 pos {coords.ConjNM().Pos()};
+                return abs(pos.x) + abs(pos.y);
+            });
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("L1Coords"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const auto intCoords {coords.GetCoordsININ()};
+                return static_cast<float>(abs(std::get<0>(intCoords)) + abs(std::get<1>(intCoords)) +
+                                          abs(std::get<2>(intCoords)) + abs(std::get<3>(intCoords)));
+            });
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("L1ConjNM"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const auto intCoords {coords.ConjNM().GetCoordsININ()};
+                return static_cast<float>(abs(std::get<0>(intCoords)) + abs(std::get<1>(intCoords)) +
+                                          abs(std::get<2>(intCoords)) + abs(std::get<3>(intCoords)));
+            });
+        }
+    }
+    ImGui::PopID();
+
+    ImGui::PushID("Log2");
+    {
+        ImGui::Bullet();
+        ImGui::Text("Log2 ");
+        ImGui::SameLine();
+        if (ImGui::Button("LInfNorm"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const Vec2 pos {coords.ConjNM().Pos()};
+                return std::max(log2(glm::max(abs(pos.x), abs(pos.y))), 0.f);
+            });
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("L1Norm"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const Vec2 pos {coords.ConjNM().Pos()};
+                return std::max(log2(abs(pos.x) + abs(pos.y)), 0.f);
+            });
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("L1Coords"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const auto intCoords {coords.GetCoordsININ()};
+                return std::max(log2(static_cast<float>(abs(std::get<0>(intCoords)) + abs(std::get<1>(intCoords)) +
+                                                        abs(std::get<2>(intCoords)) + abs(std::get<3>(intCoords)))),
+                                0.f);
+            });
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("L1ConjNM"))
+        {
+            changed = true;
+            myTileMesh->ColorVertices([](const auto& aVertex) {
+                const Dodec& coords {aVertex.first};
+                const auto intCoords {coords.ConjNM().GetCoordsININ()};
+                return std::max(log2(static_cast<float>(abs(std::get<0>(intCoords)) + abs(std::get<1>(intCoords)) +
+                                                        abs(std::get<2>(intCoords)) + abs(std::get<3>(intCoords)))),
+                                0.f);
+            });
+        }
+    }
+    ImGui::PopID();
+
+    ImGui::Bullet();
+    if (ImGui::Button("Abs(Re(ConjNM))"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            const Dodec& coords {aVertex.first};
+            const Vec2 pos {coords.ConjNM().Pos()};
+            return abs(pos.x);
+        });
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Abs(Im(ConjNM))"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            const Dodec& coords {aVertex.first};
+            const Vec2 pos {coords.ConjNM().Pos()};
+            return abs(pos.y);
+        });
+    }
+
+    ImGui::Bullet();
+    if (ImGui::Button("IterDiv"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            Dodec coords {aVertex.first};
+            Vec2 pos {coords.Pos()};
+            coords = coords - Dodec {static_cast<int>(pos.x), static_cast<int>(pos.y), 0, 0};
+            int i = 0;
+            auto intCoords {coords.GetCoordsININ()};
+            while ((std::get<2>(intCoords) != 0 || std::get<3>(intCoords) != 0) && i < 10)
+            {
+                coords = coords * Dodec::N().ConjNM() * (-Dodec::I());
+                pos = coords.Pos();
+                coords = coords - Dodec {static_cast<int>(pos.x), static_cast<int>(pos.y), 0, 0};
+                intCoords = coords.GetCoordsININ();
+                ++i;
+            }
+            return static_cast<float>(i);
+        });
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("RemGID"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            Dodec coords {aVertex.first};
+            coords = coords / coords.GID();
+            const Vec2 pos {coords.ConjNM().Pos()};
+            return std::max(log2(abs(pos.x) + abs(pos.y)), 0.f);
+        });
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("ConjSum"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            Dodec coords {aVertex.first};
+            coords = coords + coords.Conj() + coords.ConjNM() + coords.Conj().ConjNM();
+            const Vec2 pos {coords.Pos()};
+            return static_cast<float>(abs(pos.x));
+        });
+    }
+
+    ImGui::Bullet();
+    if (ImGui::Button("GCD_IN"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            const Dodec& coords {aVertex.first};
+            return static_cast<float>(coords.GID());
+        });
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("GCD_IZ"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            Dodec coords {aVertex.first};
+            auto intCoords {coords.GetCoordsIZIZ()};
+            return static_cast<float>(
+                std::gcd(std::get<0>(intCoords),
+                         std::gcd(std::get<1>(intCoords), std::gcd(std::get<2>(intCoords), std::get<3>(intCoords)))));
+        });
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("GCD_P"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            Dodec coords {aVertex.first};
+            auto intCoords {coords.GetCoordsPowersP()};
+            return static_cast<float>(
+                std::gcd(std::get<0>(intCoords),
+                         std::gcd(std::get<1>(intCoords), std::gcd(std::get<2>(intCoords), std::get<3>(intCoords)))));
+        });
+    }
+
     return changed;
 }
 
@@ -390,6 +627,7 @@ void TileMeshEditorWidget::DrawCoordinates(const Dodec& aDodec)
     Widgets::RadioButton("Z[p]", &myDodecDisplayStyle, DodecDisplayStyle::PowersP);
 
     DrawDodec("Dodec", aDodec);
+    DrawDodec("ConjNM", aDodec.ConjNM());
     ImGui::Text("Norm: %d", aDodec.Norm());
     ImGui::Text("Log2(Sqrt(AltNorm)): %.3f", 0.5f * log2((aDodec.ConjNM() * aDodec.ConjNM().Conj()).Pos().x));
     DrawDodec("Norm2", aDodec * aDodec.Conj());

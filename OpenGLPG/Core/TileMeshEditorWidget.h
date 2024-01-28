@@ -49,6 +49,7 @@ private:
     bool DrawBrushes();
     bool DrawBrushRandom();
     bool DrawVertexSpecificBrushes();
+    bool DrawInvestigationBrushes();
     bool DrawReset();
     void DrawCoordinates(const Dodec& aDodec);
     void DrawDodec(const char* aName, const Dodec& aDodec);

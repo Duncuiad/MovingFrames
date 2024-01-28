@@ -266,7 +266,7 @@ void Editor_TileMeshCmp::OnChanged() const
     colliderCmp.myFaceHeight = myWidget.myHeightToDisplay;
     const Vec2& m {tileMesh.GetMinPos()};
     const Vec2& M {tileMesh.GetMaxPos()};
-    colliderCmp.SetBoundingSphere(glm::length(M - m) * 0.6, Vec3 {(m + M) * 0.5f, 0.f});
+    colliderCmp.SetBoundingSphere(glm::length(M - m) * 0.6f, Vec3 {(m + M) * 0.5f, 0.f});
 }
 
 TileMeshCmp& Editor_TileMeshCmp::GetTileMeshCmp() const
