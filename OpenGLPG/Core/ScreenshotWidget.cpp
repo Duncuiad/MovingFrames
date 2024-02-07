@@ -2,6 +2,7 @@
 
 #include "ScreenshotWidget.h"
 
+#include "Assert.h"
 #include "Defines.h"
 #include "ImGuiWidgets.h"
 
@@ -17,22 +18,13 @@ void ScreenshotWidget::DrawWidget()
         ImGui::BeginTable("##ScreenshotDataTable", 2, ImGuiTableFlags_SizingStretchSame);
 
         ImGui::TableNextColumn();
-
-        ImGui::Text("Resolution");
-        Widgets::RadioButton("1K", &myResolution, Resolution::R_1K);
-        Widgets::RadioButton("2K", &myResolution, Resolution::R_2K);
-        Widgets::RadioButton("4K", &myResolution, Resolution::R_4K);
-
+        Widgets::RadioButton("Preset", &myStrategy, Strategy::Preset);
         ImGui::TableNextColumn();
+        Widgets::RadioButton("Custom", &myStrategy, Strategy::Custom);
 
-        ImGui::Text("Aspect Ratio");
-        DrawAspectRatioRadioButton("21:9", AspectRatio::A_21_9, maxTextureSize);
-        DrawAspectRatioRadioButton("16:9", AspectRatio::A_16_9, maxTextureSize);
-        DrawAspectRatioRadioButton("4:3", AspectRatio::A_4_3, maxTextureSize);
-        DrawAspectRatioRadioButton("1:1", AspectRatio::A_1_1, maxTextureSize);
-        DrawAspectRatioRadioButton("3:4", AspectRatio::A_3_4, maxTextureSize);
-        DrawAspectRatioRadioButton("9:16", AspectRatio::A_9_16, maxTextureSize);
-        DrawAspectRatioRadioButton("9:21", AspectRatio::A_9_21, maxTextureSize);
+        ImGui::TableNextRow();
+
+        DrawResolutionSelection(maxTextureSize);
 
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
@@ -55,6 +47,47 @@ void ScreenshotWidget::DrawWidget()
     }
 }
 
+void ScreenshotWidget::DrawResolutionSelection(float aMaxTextureSize)
+{
+    switch (myStrategy)
+    {
+    case Strategy::Preset: {
+        ImGui::TableNextColumn();
+
+        ImGui::Text("Resolution");
+        Widgets::RadioButton("1K", &myResolution, Resolution::R_1K);
+        Widgets::RadioButton("2K", &myResolution, Resolution::R_2K);
+        Widgets::RadioButton("4K", &myResolution, Resolution::R_4K);
+
+        ImGui::TableNextColumn();
+
+        ImGui::Text("Aspect Ratio");
+        DrawAspectRatioRadioButton("21:9", AspectRatio::A_21_9, aMaxTextureSize);
+        DrawAspectRatioRadioButton("16:9", AspectRatio::A_16_9, aMaxTextureSize);
+        DrawAspectRatioRadioButton("4:3", AspectRatio::A_4_3, aMaxTextureSize);
+        DrawAspectRatioRadioButton("1:1", AspectRatio::A_1_1, aMaxTextureSize);
+        DrawAspectRatioRadioButton("3:4", AspectRatio::A_3_4, aMaxTextureSize);
+        DrawAspectRatioRadioButton("9:16", AspectRatio::A_9_16, aMaxTextureSize);
+        DrawAspectRatioRadioButton("9:21", AspectRatio::A_9_21, aMaxTextureSize);
+        break;
+    }
+    case Strategy::Custom: {
+        ImGui::TableNextColumn();
+
+        ImGui::Text("Width");
+        ImGui::SliderInt("##Width", &myCustomResolution[0], 1, GetMaxWidth(), "%d", ImGuiSliderFlags_AlwaysClamp);
+
+        ImGui::TableNextColumn();
+
+        ImGui::Text("Height");
+        ImGui::SliderInt("##Height", &myCustomResolution[1], 1, GetMaxHeight(), "%d", ImGuiSliderFlags_AlwaysClamp);
+        break;
+    }
+    default: {
+    }
+    }
+}
+
 int ScreenshotWidget::GetMaxWidth() const
 {
     return 2160 * 21 / 9;
@@ -67,12 +100,30 @@ int ScreenshotWidget::GetMaxHeight() const
 
 int ScreenshotWidget::GetWidth() const
 {
-    return GetWidth(myResolution, myAspectRatio);
+    switch (myStrategy)
+    {
+    case Strategy::Preset:
+        return GetWidth(myResolution, myAspectRatio);
+    case Strategy::Custom:
+        return myCustomResolution[0];
+    default:
+        ASSERT(false, "Unsupported option");
+        return -1;
+    }
 }
 
 int ScreenshotWidget::GetHeight() const
 {
-    return GetHeight(myResolution);
+    switch (myStrategy)
+    {
+    case Strategy::Preset:
+        return GetHeight(myResolution);
+    case Strategy::Custom:
+        return myCustomResolution[1];
+    default:
+        ASSERT(false, "Unsupported option");
+        return -1;
+    }
 }
 
 void ScreenshotWidget::ActivateWidget()

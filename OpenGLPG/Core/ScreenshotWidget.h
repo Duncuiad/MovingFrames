@@ -1,11 +1,13 @@
 #pragma once
 
+#include <array>
 #include <string>
 
 class ScreenshotWidget
 {
 public:
     void DrawWidget();
+    void DrawResolutionSelection(float aMaxTextureSize);
     void ActivateWidget();
     bool ShouldTakeScreenshot() const;
     int GetMaxWidth() const;
@@ -14,6 +16,10 @@ public:
     int GetHeight() const;
 
 private:
+    enum class Strategy {
+        Preset,
+        Custom
+    };
     enum class Resolution {
         R_1K,
         R_2K,
@@ -37,8 +43,10 @@ private:
     void DrawAspectRatioRadioButton(const char* aLabel, AspectRatio aCase, int aMaxTextureSize);
     void DrawTakeScreenshot(int aMaxTextureSize);
 
+    Strategy myStrategy {Strategy::Preset};
     Resolution myResolution {Resolution::R_4K};
     AspectRatio myAspectRatio {AspectRatio::A_16_9};
+    std::array<int, 2> myCustomResolution {800, 800};
     bool myIsActive {false};
     bool myShouldTakeScreenshot {false};
 };

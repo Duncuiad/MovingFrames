@@ -281,6 +281,17 @@ bool TileMeshEditorWidget::DrawVertexSpecificBrushes()
         });
     }
 
+    ImGui::SameLine();
+    if (ImGui::Button("Diff"))
+    {
+        changed = true;
+        myTileMesh->ColorVertices([](const auto& aVertex) {
+            const Dodec& coords {aVertex.first};
+            return abs(std::max(0.5f * log2((coords.ConjNM() * coords.ConjNM().Conj()).Pos().x), 0.f) -
+                       static_cast<float>(aVertex.second.myHeight));
+        });
+    }
+
     ImGui::Bullet();
     if (ImGui::Button("Arg"))
     {
