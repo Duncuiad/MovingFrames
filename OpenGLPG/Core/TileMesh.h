@@ -22,7 +22,9 @@ public:
 
     void Reset(TileType aType);
     void Reset(int aGridSize);
+    void Inflate(int aScale);
     void SubdivideAllFaces();
+    void SplitAllFaces();
     void RandomizeColors(float aRatio, bool aColorVertices);
     void ColorVertices(
         const TileVertex::Evaluation& anEvaluation,
@@ -45,12 +47,18 @@ public:
 
 private:
     void CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 = -1);
+    void CreateSimpleFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3 = -1);
     const TileHalfEdge& CreateFullEdge(const Dodec& aBegin, const Dodec& anEnd, bool anIsAlternating);
     Dodec CreateInflationVertex(const Dodec& aBegin, const Dodec& anEnd);
+    Dodec CreateMidpointVertex(const Dodec& aBegin, const Dodec& anEnd);
     void SubdivideFace(int aFaceIdx);
     void SubdivideTriangle(int aTriangleIdx);
     void SubdivideSquare(int aSquareIdx);
     void SubdivideHalfEdge(int aHalfEdgeIdx);
+    void SplitFace(int aFaceIdx);
+    void SplitTriangle(int aTriangleIdx);
+    void SplitSquare(int aSquareIdx);
+    void SplitHalfEdge(int aHalfEdgeIdx);
 
     int FindFirstEdge(int aBeginFromHalfEdgeIdx) const;
 

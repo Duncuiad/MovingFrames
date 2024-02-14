@@ -26,6 +26,7 @@ public:
     ElemT* Emplace(const KeyT& aKey, ValT&&... someVals);
     ElemT& operator[](const KeyT& aKey);
     void RemoveAll();
+    void Swap(Map& anOther);
 
     Iterator begin() noexcept;
     ConstIterator begin() const noexcept;
@@ -137,6 +138,12 @@ template <typename KeyT, typename ElemT>
 inline void Map<KeyT, ElemT>::RemoveAll()
 {
     myElements.clear();
+}
+
+template <typename KeyT, typename ElemT>
+inline void Map<KeyT, ElemT>::Swap(Map& anOther)
+{
+    myElements.swap(anOther.myElements);
 }
 
 template <typename KeyT, typename ElemT>

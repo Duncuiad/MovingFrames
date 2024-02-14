@@ -136,6 +136,24 @@ void TileMesh::Reset(int aGridSize)
     }
 }
 
+void TileMesh::Inflate(int aScale)
+{
+    ASSERT(aScale > 0, "Invalid inflation scale");
+
+    TileVertex::Map newVertices;
+    for (const TileVertex::Map::ValueType& pair : myVertices)
+    {
+        const Dodec newCoords {pair.first * aScale};
+        newVertices.Insert(newCoords, pair.second);
+    }
+    myVertices.Swap(newVertices);
+
+    for (TileHalfEdge& halfEdge : myHalfEdges)
+    {
+        halfEdge.myVertex = halfEdge.myVertex * aScale;
+    }
+}
+
 void TileMesh::SubdivideAllFaces()
 {
     const int originalFaceCount {myFaces.Count()};
@@ -144,6 +162,22 @@ void TileMesh::SubdivideAllFaces()
         if (!myFaces[i].myChildren.Count())
         {
             SubdivideFace(i);
+        }
+    }
+}
+
+void TileMesh::SplitAllFaces()
+{
+    myMinPos *= 2.f;
+    myMaxPos *= 2.f;
+    Inflate(2);
+
+    const int originalFaceCount {myFaces.Count()};
+    for (int i = 0; i < originalFaceCount; ++i)
+    {
+        if (!myFaces[i].myChildren.Count())
+        {
+            SplitFace(i);
         }
     }
 }
@@ -454,6 +488,38 @@ void TileMesh::CreateFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, in
     myFaces[aParentFaceIdx].myChildren.PushBack(faceIdx);
 }
 
+void TileMesh::CreateSimpleFace(int aParentFaceIdx, int aHalfEdge0, int aHalfEdge1, int aHalfEdge2, int aHalfEdge3)
+{
+    TileHalfEdge& edge0 {myHalfEdges[aHalfEdge0]};
+    TileHalfEdge& edge1 {myHalfEdges[aHalfEdge1]};
+    TileHalfEdge& edge2 {myHalfEdges[aHalfEdge2]};
+
+    ASSERT(edge0.myHeight == edge1.myHeight && edge1.myHeight == edge2.myHeight && edge2.myHeight == edge0.myHeight,
+           "Faces are made of edges at the same height");
+
+    const int faceIdx {myFaces.Count()};
+    myFaces.EmplaceBack(faceIdx, edge0.myHeight, TileType::TriangleA, -1);
+    edge0.myFace = faceIdx;
+    edge1.myFace = faceIdx;
+    edge2.myFace = faceIdx;
+    edge0.myNext = edge1.myIndex;
+    edge1.myNext = edge2.myIndex;
+    edge2.myNext = edge0.myIndex;
+
+    if (aHalfEdge3 != -1)
+    {
+        TileHalfEdge& edge3 {myHalfEdges[aHalfEdge3]};
+        edge3.myFace = faceIdx;
+        edge2.myNext = edge3.myIndex;
+        edge3.myNext = edge0.myIndex;
+
+        myFaces[faceIdx].myType = TileType::SquareA;
+    }
+    myFaces[faceIdx].myEdge = FindFirstEdge(edge0.myIndex);
+    myFaces[faceIdx].myParent = myFaces[aParentFaceIdx].myIndex;
+    myFaces[aParentFaceIdx].myChildren.PushBack(faceIdx);
+}
+
 const TileHalfEdge& TileMesh::CreateFullEdge(const Dodec& aBegin, const Dodec& anEnd, bool anIsAlternating)
 {
     const int height = glm::max(myVertices.Find(aBegin)->myHeight, myVertices.Find(anEnd)->myHeight);
@@ -468,6 +534,15 @@ const TileHalfEdge& TileMesh::CreateFullEdge(const Dodec& aBegin, const Dodec& a
 Dodec TileMesh::CreateInflationVertex(const Dodec& aBegin, const Dodec& anEnd)
 {
     const Dodec coordinates {aBegin + (anEnd - aBegin) * Dodec::N()};
+    const TileVertex* newVertex {myVertices.Emplace(
+        coordinates, glm::max(myVertices.Find(aBegin)->myHeight, myVertices.Find(anEnd)->myHeight) + 1)};
+    ASSERT(newVertex != nullptr, "A vertex already exists at these coordinates");
+    return coordinates;
+}
+
+Dodec TileMesh::CreateMidpointVertex(const Dodec& aBegin, const Dodec& anEnd)
+{
+    const Dodec coordinates {(aBegin + anEnd) / 2};
     const TileVertex* newVertex {myVertices.Emplace(
         coordinates, glm::max(myVertices.Find(aBegin)->myHeight, myVertices.Find(anEnd)->myHeight) + 1)};
     ASSERT(newVertex != nullptr, "A vertex already exists at these coordinates");
@@ -635,6 +710,137 @@ void TileMesh::SubdivideHalfEdge(int aHalfEdgeIdx)
         else
         {
             inflationVertex = CreateInflationVertex(halfEdge.myVertex, nextHEdge.myVertex);
+        }
+    }
+}
+
+void TileMesh::SplitFace(int aFaceIdx)
+{
+    if (myFaces[aFaceIdx].IsTriangle())
+    {
+        SplitTriangle(aFaceIdx);
+    }
+    else
+    {
+        SplitSquare(aFaceIdx);
+    }
+}
+
+void TileMesh::SplitTriangle(int aTriangleIdx)
+{
+    const TileFace& triangle {myFaces[aTriangleIdx]};
+    const int height {triangle.myHeight + 1};
+    const int edge0Idx {triangle.myEdge};
+    const int edge1Idx {myHalfEdges[edge0Idx].myNext};
+    const int edge2Idx {myHalfEdges[edge1Idx].myNext};
+
+    SplitHalfEdge(edge0Idx);
+    SplitHalfEdge(edge1Idx);
+    SplitHalfEdge(edge2Idx);
+
+    const Dodec vertex0 {myHalfEdges[myHalfEdges[edge0Idx].myRightChild].myVertex};
+    const Dodec vertex1 {myHalfEdges[myHalfEdges[edge1Idx].myRightChild].myVertex};
+    const Dodec vertex2 {myHalfEdges[myHalfEdges[edge2Idx].myRightChild].myVertex};
+
+    const int internalIdx = myHalfEdges.Count();
+    myHalfEdges.EmplaceBack(internalIdx, height, false, false, vertex0, -1, internalIdx + 1, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 1, height, false, false, vertex1, -1, internalIdx, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 2, height, false, false, vertex1, -1, internalIdx + 3, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 3, height, false, false, vertex2, -1, internalIdx + 2, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 4, height, false, false, vertex2, -1, internalIdx + 5, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 5, height, false, false, vertex0, -1, internalIdx + 4, -1);
+
+    CreateSimpleFace(aTriangleIdx, myHalfEdges[edge0Idx].myRightChild, myHalfEdges[edge1Idx].myLeftChild,
+                     internalIdx + 1);
+    CreateSimpleFace(aTriangleIdx, myHalfEdges[edge0Idx].myLeftChild, internalIdx + 5,
+                     myHalfEdges[edge2Idx].myRightChild);
+    CreateSimpleFace(aTriangleIdx, internalIdx + 3, myHalfEdges[edge1Idx].myRightChild,
+                     myHalfEdges[edge2Idx].myLeftChild);
+    CreateSimpleFace(aTriangleIdx, internalIdx + 2, internalIdx + 4, internalIdx);
+}
+
+void TileMesh::SplitSquare(int aSquareIdx)
+{
+    const TileFace& square {myFaces[aSquareIdx]};
+    const int height {square.myHeight + 1};
+    const int edge0Idx {square.myEdge};
+    const int edge1Idx {myHalfEdges[edge0Idx].myNext};
+    const int edge2Idx {myHalfEdges[edge1Idx].myNext};
+    const int edge3Idx {myHalfEdges[edge2Idx].myNext};
+
+    SplitHalfEdge(edge0Idx);
+    SplitHalfEdge(edge1Idx);
+    SplitHalfEdge(edge2Idx);
+    SplitHalfEdge(edge3Idx);
+
+    const Dodec vertex0 {myHalfEdges[myHalfEdges[edge0Idx].myRightChild].myVertex};
+    const Dodec vertex1 {myHalfEdges[myHalfEdges[edge1Idx].myRightChild].myVertex};
+    const Dodec vertex2 {myHalfEdges[myHalfEdges[edge2Idx].myRightChild].myVertex};
+    const Dodec vertex3 {myHalfEdges[myHalfEdges[edge3Idx].myRightChild].myVertex};
+    const Dodec vertexM {CreateMidpointVertex(vertex0, vertex2)};
+
+    const int internalIdx = myHalfEdges.Count();
+    myHalfEdges.EmplaceBack(internalIdx, height, false, false, vertex0, -1, internalIdx + 1, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 1, height, false, false, vertexM, -1, internalIdx, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 2, height, false, false, vertex1, -1, internalIdx + 3, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 3, height, false, false, vertexM, -1, internalIdx + 2, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 4, height, false, false, vertex2, -1, internalIdx + 5, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 5, height, false, false, vertexM, -1, internalIdx + 4, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 6, height, false, false, vertex3, -1, internalIdx + 7, -1);
+    myHalfEdges.EmplaceBack(internalIdx + 7, height, false, false, vertexM, -1, internalIdx + 6, -1);
+
+    CreateSimpleFace(aSquareIdx, myHalfEdges[edge0Idx].myRightChild, myHalfEdges[edge1Idx].myLeftChild, internalIdx + 2,
+                     internalIdx + 1);
+    CreateSimpleFace(aSquareIdx, internalIdx + 3, myHalfEdges[edge1Idx].myRightChild, myHalfEdges[edge2Idx].myLeftChild,
+                     internalIdx + 4);
+    CreateSimpleFace(aSquareIdx, internalIdx + 6, internalIdx + 5, myHalfEdges[edge2Idx].myRightChild,
+                     myHalfEdges[edge3Idx].myLeftChild);
+    CreateSimpleFace(aSquareIdx, myHalfEdges[edge0Idx].myLeftChild, internalIdx, internalIdx + 7,
+                     myHalfEdges[edge3Idx].myRightChild);
+}
+
+void TileMesh::SplitHalfEdge(int aHalfEdgeIdx)
+{
+    const int newHeight {myHalfEdges[aHalfEdgeIdx].myHeight + 1};
+    myHalfEdges.EmplaceBack(myHalfEdges.Count(), newHeight, false, false, myHalfEdges[aHalfEdgeIdx].myVertex, -1, -1,
+                            -1);
+    myHalfEdges.EmplaceBack(myHalfEdges.Count(), newHeight, false, false, Dodec {}, -1, -1, -1);
+    TileHalfEdge& halfEdge {myHalfEdges[aHalfEdgeIdx]};
+
+    TileHalfEdge& leftChild {myHalfEdges[myHalfEdges.Count() - 2]};
+    halfEdge.myLeftChild = leftChild.myIndex;
+    leftChild.myParent = halfEdge.myIndex;
+    TileHalfEdge& rightChild {myHalfEdges.GetLast()};
+    halfEdge.myRightChild = rightChild.myIndex;
+    rightChild.myParent = halfEdge.myIndex;
+
+    bool oppositeWasSubdivided {false};
+    Dodec& inflationVertex {rightChild.myVertex};
+    if (halfEdge.myOpposite != -1)
+    {
+        const TileHalfEdge& oppositeHEdge {myHalfEdges[halfEdge.myOpposite]};
+        oppositeWasSubdivided = oppositeHEdge.myLeftChild != -1;
+        if (oppositeWasSubdivided)
+        {
+            TileHalfEdge& oppositeLeftChild {myHalfEdges[oppositeHEdge.myLeftChild]};
+            TileHalfEdge& oppositeRightChild {myHalfEdges[oppositeHEdge.myRightChild]};
+            oppositeLeftChild.myOpposite = rightChild.myIndex;
+            oppositeRightChild.myOpposite = leftChild.myIndex;
+            leftChild.myOpposite = oppositeRightChild.myIndex;
+            rightChild.myOpposite = oppositeLeftChild.myIndex;
+            inflationVertex = oppositeRightChild.myVertex;
+        }
+    }
+    if (!oppositeWasSubdivided)
+    {
+        const TileHalfEdge& nextHEdge {myHalfEdges[halfEdge.myNext]};
+        if (halfEdge.myIsReversed)
+        {
+            inflationVertex = CreateMidpointVertex(nextHEdge.myVertex, halfEdge.myVertex);
+        }
+        else
+        {
+            inflationVertex = CreateMidpointVertex(halfEdge.myVertex, nextHEdge.myVertex);
         }
     }
 }

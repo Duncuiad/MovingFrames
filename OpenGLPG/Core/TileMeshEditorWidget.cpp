@@ -34,9 +34,20 @@ void TileMeshEditorWidget::Draw()
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
     if (ImGui::TreeNode("Mesh"))
     {
-        if (ImGui::Button("Inflate"))
+        if (myCanDeflate)
         {
-            myTileMesh->SubdivideAllFaces();
+            if (ImGui::Button("Deflate"))
+            {
+                myTileMesh->SubdivideAllFaces();
+                ++myHeightToDisplay;
+                changed = true;
+            }
+            ImGui::SameLine();
+        }
+        if (ImGui::Button("Split"))
+        {
+            myCanDeflate = false;
+            myTileMesh->SplitAllFaces();
             ++myHeightToDisplay;
             changed = true;
         }

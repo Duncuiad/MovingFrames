@@ -33,6 +33,7 @@ public:
     int myHeightToDisplay {0};
     bool myShowGraphs {false};
     bool myShowEdges {true};
+    bool myCanDeflate {true};
     ShowBlocks myShowBlocks {ShowBlocks::Vertices};
     ClickAction myClickAction {ClickAction::Inspect};
     Vec4 myPaintPrimaryColor {0.f, 0.f, 0.f, 1.f};
